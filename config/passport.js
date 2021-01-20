@@ -2,7 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
-const GitHubStrategy = require('passport-github2').Strategy;
+//const GitHubStrategy = require('passport-github2').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { User } = require('../models/index');
 const makeJWT = require('../utils');
@@ -27,7 +27,8 @@ module.exports = function (passport) {
   passport.deserializeUser(function (user, done) {
     done(null, user);
   });
-  //*Estrategia para registro de un nuevo usuario
+
+  //Estrategia para registro de un nuevo usuario
   passport.use(
     'register-local',  
     new LocalStrategy(
@@ -46,7 +47,7 @@ module.exports = function (passport) {
             password,
             cellphone,
           } = req.body;
-
+          
           const user_data = {
             firstName,
             lastName,
@@ -54,12 +55,12 @@ module.exports = function (passport) {
             birthdate,
             password,
             cellphone,
-            isAdmin: false,
           };
+          console.log('user_data', user_data)
           const user = await User.create(user_data);
           //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
           let user_obj = { ...user.dataValues };
-          delete user_obj.password;
+          //delete user_obj.password;
           // console.log('REGISTER STRATEGY', user_obj);
           return done(null, user_obj);
         } catch (error) {
@@ -118,7 +119,7 @@ module.exports = function (passport) {
     secretOrKey: SECRET_KEY,
   };
 
-  passport.use(
+   passport.use(
     'jwt-cookie', 
     new JWTstrategy(jwtCookies_options, async (jwt_payload, done) => {
       console.log('jwtCookie_PAYLOAD', jwt_payload);
@@ -190,7 +191,8 @@ module.exports = function (passport) {
       }
     })
   );
-  passport.use(
+  
+  /*passport.use(
     'github',  
     new GitHubStrategy(
       {
@@ -236,9 +238,9 @@ module.exports = function (passport) {
         }
       }
     )
-  );
+  );*/
 
-  passport.use(
+/*  passport.use(
     'google',  
     new GoogleStrategy(
       {
@@ -284,5 +286,6 @@ module.exports = function (passport) {
         }
       }
     )
-  );
+  );*/
 };
+
