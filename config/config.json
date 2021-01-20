@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "flavio",
-    "password": "premio123",
+    "password": "123456",
     "database": "quizdb",
     "host": "127.0.0.1",
     "port": "5432",
