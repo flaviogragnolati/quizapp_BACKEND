@@ -6,7 +6,7 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     dialect: 'postgres',
-    logging: true,
+    logging: false,
     native: false,
   },
   FRONT_URL: process.env.FRONT_URL,
