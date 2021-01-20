@@ -1,5 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
+
+
 module.exports = (sequelize, DataTypes) => {
   class Question extends Model {
     /**
@@ -9,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-    }
+      Question.hasMany(models.Answer); //Porque también tiene las incorrectas
+      Question.hasMany(models.QuestionInstance);
+      Question.belongsTo(models.Quiz);
+     }
   }
   Question.init(
     {

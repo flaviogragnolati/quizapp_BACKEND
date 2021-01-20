@@ -1,9 +1,8 @@
 'use strict';
 const { Model } = require('sequelize');
 
-
 module.exports = (sequelize, DataTypes) => {
-  class Answer extends Model {
+  class QuizAttempt extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,25 +10,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Answer.belongsTo(models.Question);
-      Answer.hasMany(models.QuestionInstance);
+     QuizAttempt.hasOne(models.QuestionInstance);
+     QuizAttempt.belongsTo(models.Quiz);
     }
   }
-  Answer.init(
+  QuizAttempt.init(
     {
-      text: { 
-        type:  DataTypes.TEXT, 
+      finished: {
+        type:  DataTypes.BOOLEAN, 
         allowNull: false,
       },
-      correct: {
-        type: DataTypes.BOOLEAN,
+      grade: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-      }
-     },
-    {
+      },
+    },
+     {
+       timestamps: true,
       sequelize,
-      modelName: 'Answer',
+      modelName: 'QuizAttempt',
     }
   );
-  return Answer;
+  return QuizAttempt;
 };

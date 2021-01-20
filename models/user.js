@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsToMany(models.School, {through: 'School-User'});
+      User.hasMany(models.Review);
+      User.belongsToMany(models.Quiz, {through: models.Role});
     }
   }
   User.init(
@@ -34,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       birthdate: {
         type: DataTypes.DATEONLY,
         allowNull: false,
-        validation: {
+        validate: {
           isDate: true,
         },
       },
@@ -57,14 +60,11 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      timestamps: true,
+      paranoid: true,
       sequelize,
       modelName: 'User',
-    },
-    {
-      timestamps: true,
-
-      paranoid: true,
-    }
+    }  
   );
   return User;
 };
