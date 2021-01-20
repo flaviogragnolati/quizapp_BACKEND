@@ -1,7 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class QuizAttempts extends Model {
+  class Answer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,26 +9,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // Answer.belongsTo(Question);
+      // Answer.hasMany(QuizInstance) ;
     }
   }
-  QuizAttempts.init(
+  Answer.init(
     {
-      finished: {
-        type:  DataTypes.BOOLEAN, 
+      text: { // La idea es generar un array de objetos. Propiedad: true or false. Value: opción del multiple choice
+        type:  DataTypes.ARRAY(DataTypes.HSTORE), //Revisar por las dudas xD
         allowNull: false,
       },
-      grade: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-    },
-    {
-     timestamp: true,
-    },
+     },
     {
       sequelize,
-      modelName: 'QuizAttempts',
+      modelName: 'Answer',
     }
   );
-  return QuizAttempts;
+  return Answer;
 };
