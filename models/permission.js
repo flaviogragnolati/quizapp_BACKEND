@@ -13,8 +13,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Permission.init(
     {
-      type: DataTypes.SMALLINT, //O mejor TINYINT??
-      description: DataTypes.STRING,
+      type: {
+        type:  DataTypes.SMALLINT, //O mejor TINYINT??
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
     },
     {
       sequelize,
