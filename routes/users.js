@@ -5,41 +5,6 @@ const passport = require('passport');
 
 //Las protecciones en las rutas las dejo comentadas
 
-server.post("/create", (req, res, next) => {
-    let {
-      firstName,
-      lastName,
-      email,
-      birthdate,
-      cellphone,
-      password,
-    } = req.body;
-  
-    console.log("Creo o modifico USER");
-  
-    if (!email) return res.status(400);
-  
-    User.findOrCreate({
-      where: {
-        email,
-      },
-      defaults: {
-        firstName,
-        lastName,
-        email,
-        birthdate,
-        cellphone,
-        password,
-      },
-    })
-      .then((user) => {
-        return res.status(200).send('El usuario ha sido creado');
-      })
-      .catch((err) => {
-        return console.log(err);
-      });
-  });
-
 //Borrar un USER by ID
 
 server.delete('/:id',
