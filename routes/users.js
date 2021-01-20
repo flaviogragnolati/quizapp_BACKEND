@@ -33,7 +33,12 @@ server.post("/create", (req, res, next) => {
       },
     })
       .then((user) => {
-        return res.status(200).send('El usuario ha sido creado');
+        const [instance, wasCreated] = user;
+        if (!wasCreated) {
+            return res.status(200).send("El usuario ya existe");
+          } else {
+              return res.status(200).send('El usuario ha sido creado');
+          }
       })
       .catch((err) => {
         return console.log(err);
