@@ -92,19 +92,19 @@ server.get('/test',
   }
 );
 
-// Hacer admin a un user (promote User)
+// // Hacer admin a un user (promote User)
 
-server.put('/:id', 
-(req, res) => {
-  let { id } = req.params;
-  if (!id) return res.status(400).send('El usuario no existe');
+// server.put('/:id', 
+// (req, res) => {
+//   let { id } = req.params;
+//   if (!id) return res.status(400).send('El usuario no existe');
 
-  User.findByPk(id)
-    .then(User.update({ isAdmin: true }, { where: { id } }))
-    .then(() => {
-      return res.status(200).send('Se ha ascendido el usuario a Admin');
-    });
-});
+//   User.findByPk(id)
+//     .then(User.update({ isAdmin: true }, { where: { id } }))
+//     .then(() => {
+//       return res.status(200).send('Se ha ascendido el usuario a Admin');
+//     });
+// });
 
 //Reiniciar la contraseña (Modificarla para usarla desde un admin)
 
