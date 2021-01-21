@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      log: {
+      logo: {
         type: DataTypes.TEXT,
         validate: {
           isURL: true,
