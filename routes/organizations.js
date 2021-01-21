@@ -67,17 +67,21 @@ server.post("/", (req, res, next) => {
     });
 });
 
+// RUTA para EDITAR School - PUT a /org/:id
+
 server.put('/:id', async (req, res) => {
   let { id } = req.params;
   let { name, email, description, city, country, logo } = req.body;
 
   if(!id) return res.status(400).send('Es necesario indicar la escuela a actualizar/modificar')
 
-  const schoolToEdit = School.findByPk(id);
+  const schoolToEdit = await School.findByPk(id);
 
-  schoolToEdit.update({
+  const schoolEdited = await schoolToEdit.update({
     name, email, description, city, country, logo
-  })
+  });
+
+  return res.status(200).send(schoolEdited);
 });
 
 module.exports = server;
