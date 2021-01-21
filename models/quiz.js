@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     },
       modifiedBy: {
         type: DataTypes.INTEGER, // id del user que lo modificó
-        allowNull: false,
+        allowNull: true,
       },
       createdBy: {
         type: DataTypes.INTEGER, // id del user que lo creó

@@ -1,5 +1,5 @@
 const server = require("express").Router();
-const { User, Role } = require("../models/index");
+const { User } = require("../models/index");
 const { checkAdmin } = require("../utils/authTools.js");
 const passport = require("passport");
 
@@ -71,33 +71,5 @@ server.put(
     return res.status(200).json(userEdited);
   }
 );
-
-// Ruta para promover a un USER - PUT a /users/promote/:id
-
-server.put("/:id", async (req, res) => {
-  let { id } = req.params;
-
-  if (!id)
-    return res.status(400).send("Es necesario indicar el usuario a promover");
-
-  const userToEdit = User.findByPk(id);
-
-  const newRole = Role.findOne({
-    where: { name: "Teacher" },
-  });
-
-  const userEdited = await userToEdit.update(
-    {
-      idRole: newRole.id,
-    },
-    {
-      where: {
-        id,
-      },
-    }
-  );
-
-  res.status(200).json(userEdited);
-});
 
 module.exports = server;

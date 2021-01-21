@@ -2,11 +2,11 @@ const server = require('express').Router();
 const { User } = require('../models/index');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const { makeJWT, cookieMaker, refreshTime } = require('../utils/index');
+const { SECRET_KEY, FRONT_URL } = process.env;
+//const { makeJWT, cookieMaker, refreshTime } = require('../utils/index');
 
-//import { FRONT_URL } from './config/environments/index'
+// Ruta ME - GET a /auth/me
 
-// Ruta ME
 server.get('/me', async (req, res, next) => {
   try {
     if (req.user) {
@@ -19,55 +19,49 @@ server.get('/me', async (req, res, next) => {
   }
 });
 
-// Ruta para desloguearse (Habría que probarla a ver si anda)
+// Inicio de sesión con GITHUB
 
-server.get('/logout', (req, res) => {
-  req.logout();
-  res.clearCookie('refreshToken');
-  res.status(200).send('Cerrar sesión');
-});
+server.get('/github', 
+  passport.authenticate('github', { scope: ['user:email'] }),
+  (req, res) => {}
+);
 
-
-//Ruta para Registrarse
-server.post('/register', 
-  passport.authenticate('register-local', { session: false }),
+server.get('/github/callback', 
+   passport.authenticate('github'),
   async (req, res) => {
     try {
-      const user = req.user;
-      
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer');
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
       const refresh_token = makeJWT(req.user);
       cookieMaker('refreshToken', refresh_token, res);*/
-      return res.send({
-        message: 'Registro exitoso',
-        //token,
-        user,
-      });
+      return res.redirect('https://web-comm.vercel.app/catalogue');
     } catch (error) {
-      console.error(`CATCH REGISTER`, error);
+      console.error(`CATCH GIT`, error);
     }
   }
 );
 
-//Ruta para Loguearse
-server.post('/login', 
-  passport.authenticate('local-login', {
-    failWithError: false,
-    session: false,
+// Inicio de sesión con GOOGLE
+
+server.get('/google', 
+  passport.authenticate('google', {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email',
+    ],
   }),
+  (req, res) => {}
+);
+
+server.get('/google/callback', 
+  passport.authenticate('google'),
   async (req, res) => {
     try {
-      const user = req.user;
       /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
       const refresh_token = makeJWT(req.user);
       cookieMaker('refreshToken', refresh_token, res);*/
-      return res.send({
-        message: 'Login exitoso',
-        //token,
-        user,
-      });
+      return res.redirect(FRONT_URL);
     } catch (error) {
-      console.error(`CATCH LOGIN`, error);
+      console.error(`CATCH GOOGLE`, error);
     }
   }
 );
@@ -97,21 +91,97 @@ server.get('/test',
   }
 );
 
-// // Hacer admin a un user (promote User)
+// Ruta para DESLOGUEARSE - GET a /auth/logout
 
-// server.put('/:id', 
-// (req, res) => {
-//   let { id } = req.params;
-//   if (!id) return res.status(400).send('El usuario no existe');
+server.get('/logout', (req, res) => {
+  req.logout();
+  res.clearCookie('refreshToken');
+  res.status(200).send('Cerrar sesión');
+});
 
-//   User.findByPk(id)
-//     .then(User.update({ isAdmin: true }, { where: { id } }))
-//     .then(() => {
-//       return res.status(200).send('Se ha ascendido el usuario a Admin');
-//     });
-// });
+// Ruta para Registrarse / crear un usuario - POST a /auth/register
 
-//Reiniciar la contraseña (Modificarla para usarla desde un admin)
+server.post('/register', 
+  passport.authenticate('register-local', { session: false }),
+  async (req, res) => {
+    try {
+      //const user = req.user;
+      const { id, firstName, lastName, email, birthdate, cellphone, password } = req.user;
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer');
+      const refresh_token = makeJWT(req.user);
+      cookieMaker('refreshToken', refresh_token, res);*/
+      return res.send(
+        jwt.sign(
+          {
+            id,
+            firstName,
+            lastName,
+            email,
+            birthdate,
+            cellphone,
+            password,
+          },
+          SECRET_KEY
+        )
+    );
+    } catch (error) {
+      console.error(`CATCH REGISTER`, error);
+      return (error)
+    }
+  }
+);
+
+//Ruta para Loguearse - POST a /auth/login
+
+server.post('/login', 
+  passport.authenticate('local-login', {
+    failWithError: false,
+    session: false,
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user;
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
+      const refresh_token = makeJWT(req.user);
+      cookieMaker('refreshToken', refresh_token, res);*/
+      return res.send({
+        message: 'Login exitoso',
+        //token,
+        user,
+      });
+    } catch (error) {
+      console.error(`CATCH LOGIN`, error);
+    }
+  }
+);
+
+// Ruta para promover a un USER - PUT a /auth/promote/:id
+/*
+FALTA RELACIONARLO CON EL QUIZ
+
+server.put("/promote/:id", async (req, res) => {
+  let { id } = req.params;
+  let { role } = req.body;
+
+  if (!id)
+    return res.status(400).send("Es necesario indicar el usuario a promover");
+
+  const userToEdit = User.findByPk(id);
+
+  const newRole = Role.findOne({
+    where: { name: role },
+  });
+
+  const userEdited = await userToEdit.update(
+    {
+      idRole: newRole.id,
+    }
+  );
+
+  res.status(200).json(userEdited);
+});*/
+
+// Actualizar la contraseña
 
 server.put('/pass/:id', 
  (req, res) => {
@@ -128,48 +198,5 @@ server.put('/pass/:id',
         .send('Se ha modificado la contraseña correctamente');
     });
 });
-
-server.get('/github', 
-  passport.authenticate('github', { scope: ['user:email'] }),
-  (req, res) => {}
-);
-
-server.get('/github/callback', 
-   passport.authenticate('github'),
-  async (req, res) => {
-    try {
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
-      return res.redirect('https://web-comm.vercel.app/catalogue');
-    } catch (error) {
-      console.error(`CATCH GIT`, error);
-    }
-  }
-);
-
-server.get('/google', 
-  passport.authenticate('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email',
-    ],
-  }),
-  (req, res) => {}
-);
-
-server.get('/google/callback', 
-  passport.authenticate('google'),
-  async (req, res) => {
-    try {
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
-      return res.redirect(FRONT_URL);
-    } catch (error) {
-      console.error(`CATCH GOOGLE`, error);
-    }
-  }
-);
 
 module.exports = server;
