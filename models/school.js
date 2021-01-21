@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-    }
+      School.hasMany(models.Quiz);
+      School.hasMany(models.Subject);
+      School.belongsToMany(models.User, {through: 'School-User'});
+     }
   }
   School.init(
     {
@@ -17,10 +20,33 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      description:{
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        }
+      },
+      description: {
         type: DataTypes.TEXT,
         allowNull: true,
-      } 
+      },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      city: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      logo: {
+        type: DataTypes.TEXT,
+        validate: {
+          isURL: true,
+        },
+        allowNull: false,
+      }
     },
     {
       sequelize,

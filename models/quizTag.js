@@ -2,7 +2,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Review extends Model {
+  class QuizTag extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,25 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Review.belongsTo(models.Quiz);
-      Review.belongsTo(models.User);
+      QuizTag.belongsToMany(models.Quiz, {through: 'Quiz-QTag'});
+      QuizTag.belongsTo(models.Subject);
     }
   }
-  Review.init(
+  QuizTag.init(
     {
-      puntaje: {
-        type:  DataTypes.SMALLINT, //O mejor TINYINT?? 
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
+      name: {
+        type:  DataTypes.STRING, 
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: 'Review',
+      modelName: 'QuizTag',
     }
   );
-  return Review;
+  return QuizTag;
 };

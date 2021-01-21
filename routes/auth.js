@@ -1,9 +1,10 @@
 const server = require('express').Router();
-const { User } = require('../BACKEND/db.js');
+const { User } = require('../models/index');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const { makeJWT, cookieMaker, refreshTime } = require('../utils/index.js');
-import { FRONT_URL } from './config/environments/index'
+const { makeJWT, cookieMaker, refreshTime } = require('../utils/index');
+
+//import { FRONT_URL } from './config/environments/index'
 
 // Ruta ME
 server.get('/me', async (req, res, next) => {
@@ -32,13 +33,15 @@ server.post('/register',
   passport.authenticate('register-local', { session: false }),
   async (req, res) => {
     try {
-      const token = makeJWT(req.user, refreshTime, 'Bearer');
+      const user = req.user;
+      
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer');
       const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);
+      cookieMaker('refreshToken', refresh_token, res);*/
       return res.send({
         message: 'Registro exitoso',
-        token,
-        user: req.user,
+        //token,
+        user,
       });
     } catch (error) {
       console.error(`CATCH REGISTER`, error);
@@ -54,13 +57,14 @@ server.post('/login',
   }),
   async (req, res) => {
     try {
-      const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
+      const user = req.user;
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
       const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);
+      cookieMaker('refreshToken', refresh_token, res);*/
       return res.send({
         message: 'Login exitoso',
-        token,
-        user: req.user,
+        //token,
+        user,
       });
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
@@ -71,13 +75,14 @@ server.post('/login',
 server.get('/refresh', 
   passport.authenticate('jwt-refresh', { session: false }),
   async (req, res) => {
-    const newToken = makeJWT(req.user, refreshTime, 'Bearer');
+    const user = req.user;
+    /*const newToken = makeJWT(req.user, refreshTime, 'Bearer');
     const refresh_token = makeJWT(req.user);
-    cookieMaker('refreshToken', refresh_token, res);
+    cookieMaker('refreshToken', refresh_token, res);*/
     return res.send({
       message: 'Refresh exitoso',
-      newToken,
-      user: req.user,
+      //newToken,
+      user,
     });
   }
 );
@@ -92,19 +97,19 @@ server.get('/test',
   }
 );
 
-// Hacer admin a un user (promote User)
+// // Hacer admin a un user (promote User)
 
-server.put('/:id', 
-(req, res) => {
-  let { id } = req.params;
-  if (!id) return res.status(400).send('El usuario no existe');
+// server.put('/:id', 
+// (req, res) => {
+//   let { id } = req.params;
+//   if (!id) return res.status(400).send('El usuario no existe');
 
-  User.findByPk(id)
-    .then(User.update({ isAdmin: true }, { where: { id } }))
-    .then(() => {
-      return res.status(200).send('Se ha ascendido el usuario a Admin');
-    });
-});
+//   User.findByPk(id)
+//     .then(User.update({ isAdmin: true }, { where: { id } }))
+//     .then(() => {
+//       return res.status(200).send('Se ha ascendido el usuario a Admin');
+//     });
+// });
 
 //Reiniciar la contraseña (Modificarla para usarla desde un admin)
 
@@ -133,9 +138,9 @@ server.get('/github/callback',
    passport.authenticate('github'),
   async (req, res) => {
     try {
-      const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
       const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);
+      cookieMaker('refreshToken', refresh_token, res);*/
       return res.redirect('https://web-comm.vercel.app/catalogue');
     } catch (error) {
       console.error(`CATCH GIT`, error);
@@ -157,9 +162,9 @@ server.get('/google/callback',
   passport.authenticate('google'),
   async (req, res) => {
     try {
-      const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
+      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
       const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);
+      cookieMaker('refreshToken', refresh_token, res);*/
       return res.redirect(FRONT_URL);
     } catch (error) {
       console.error(`CATCH GOOGLE`, error);

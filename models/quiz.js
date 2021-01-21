@@ -1,5 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
+
+
 module.exports = (sequelize, DataTypes) => {
   class Quiz extends Model {
     /**
@@ -9,7 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-    }
+      Quiz.hasMany(models.QuizAttempt);
+      Quiz.hasMany(models.Question);
+      Quiz.belongsToMany(models.QuizTag, {through: 'Quiz-QTag'});
+      Quiz.belongsTo(models.Subject);
+      Quiz.belongsTo(models.School);
+      Quiz.hasMany(models.Review);
+      Quiz.belongsToMany(models.User, {through: models.Role});
+
+
+     }
   }
   Quiz.init(
     {

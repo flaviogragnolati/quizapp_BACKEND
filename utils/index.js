@@ -51,7 +51,7 @@ const makeJWT = (user, expiresIn, prefix) => {
     id,
     user,
     iat: Date.now(),
-    issuer: 'wineStore',
+    issuer: 'QuizzApp',
     audience: 'localhost:3000',
   };
 
