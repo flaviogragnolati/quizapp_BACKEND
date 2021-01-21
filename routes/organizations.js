@@ -67,8 +67,17 @@ server.post("/", (req, res, next) => {
     });
 });
 
-server.put('/:id', (req, res) => {
+server.put('/:id', async (req, res) => {
+  let { id } = req.params;
+  let { name, email, description, city, country, logo } = req.body;
 
+  if(!id) return res.status(400).send('Es necesario indicar la escuela a actualizar/modificar')
+
+  const schoolToEdit = School.findByPk(id);
+
+  schoolToEdit.update({
+    name, email, description, city, country, logo
+  })
 });
 
 module.exports = server;
