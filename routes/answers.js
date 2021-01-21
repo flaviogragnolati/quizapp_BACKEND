@@ -79,6 +79,9 @@ server.get("/:id", (req, res) => {
 
   Answer.findByPk(id).then((answer) => {
     return res.status(200).send(answer);
+  }).catch((error) => {
+    console.log(error);
+    return res.status(304).send(error);
   });
 });
 
