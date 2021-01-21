@@ -20,10 +20,33 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      description:{
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        }
+      },
+      description: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      city: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      log: {
+        type: DataTypes.TEXT,
+        validate: {
+          isURL: true,
+        },
+        allowNull: false,
+      }
     },
     {
       sequelize,
