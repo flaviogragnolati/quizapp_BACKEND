@@ -8,5 +8,7 @@ module.exports = {
     dialect: 'postgres',
     logging: false,
     native: false,
-  },
+   },
+  FRONT_URL: process.env.FRONT_URL,
+  SECRET_KEY: process.env.SECRET_KEY,
 };
