@@ -29,6 +29,8 @@ server.use((req, res, next) => {
 });
 server.use(cors({ origin: true, credentials: true }));
 
+server.use(passport.initialize()); //*Inicializamos el passport
+
 server.use('/', routes);
 // Error catching endware.
 server.use((err, req, res, next) => {
