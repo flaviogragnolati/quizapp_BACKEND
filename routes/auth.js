@@ -22,7 +22,7 @@ server.get("/me", async (req, res, next) => {
 // Inicio de sesión con FACEBOOK
 
 server.get("/facebook", passport.authenticate('facebook', {
-	scope: ['email']
+	scope: ['email']  // revisar si es necesario y cuáles serían los parámetros
 }),
 (req, res) => {
   console.log('entre a /facebook solamente')
