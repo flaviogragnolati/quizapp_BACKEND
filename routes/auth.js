@@ -21,31 +21,29 @@ server.get("/me", async (req, res, next) => {
 
 // Inicio de sesión con FACEBOOK
 
-server.get("/facebook", passport.authenticate('facebook', {
-	scope: ['email']  // revisar si es necesario y cuáles serían los parámetros
-}),
-(req, res) => {
-  console.log('entre a /facebook solamente')
-}
-);
+server.get("/facebook", passport.authenticate('facebook'));
 
 server.get('/facebook/callback',
 	passport.authenticate('facebook'),
-	function (req, res) {
-    console.log('entre a facebook', req)
-    const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
-		jwt.sign(
-			{
-        id,
-        firstName,
-        lastName,
-        email,
-        birthdate,
-        cellphone,
-			},
-			SECRET_KEY
-		)
-		res.redirect(FRONT_URL);
+	async (req, res) => {
+    try {
+      console.log('entre a facebook', req)
+      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
+      jwt.sign(
+        {
+          id,
+          firstName,
+          lastName,
+          email,
+          birthdate,
+          cellphone,
+        },
+        SECRET_KEY
+      )
+      return res.redirect(FRONT_URL);
+    } catch(error) {
+      console.error(`CATCH FACEBOOK`, error);
+    }
 	});
 
 // Inicio de sesión con GOOGLE

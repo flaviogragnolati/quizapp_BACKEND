@@ -209,7 +209,7 @@ module.exports = function (passport) {
             const [firstName, lastName] = displayName.split(/(?<=^\S+)\s/);
             const password = String(Date.now() + Math.random()).substring(0, 7);
             const birthdate = new Date("01-01-1500");
-            const cellphone = 00000000;
+            const cellphone = 115100;
             const user_data = {
               firstName,
               lastName: lastName || firstName,
@@ -246,14 +246,23 @@ passport.use(
       clientID: FACEBOOK_ID,
       clientSecret: FACEBOOK_SECRET,
       callbackURL: BASE_URL + "auth/facebook/callback",
+      profileFields: ['id', 'emails', 'displayName', 'photos'],
+      passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
         console.log('profile', profile)
+        let { displayName, emails } = profile;
+        const email = emails[0].value;
+        console.log('email', email)
         let user = await User.findOne({ where: { email } }); //buscamos el email que devuelve google
         // si no hay user entonces creamos uno con datos `default`
         // si encontramos un user, entonces solamente devolvemos ese user
         if (!user) {
+          const [firstName, lastName] = displayName.split(/(?<=^\S+)\s/);
+          const password = String(Date.now() + Math.random()).substring(0, 7);
+          const birthdate = new Date("01-01-1500");
+          const cellphone = 115100;
           const user_data = {
             firstName,
             lastName,
@@ -264,6 +273,7 @@ passport.use(
             resetPasswordToken,
             resetPasswordExpires,
           };
+          console.log("user_data", user_data);
           const new_user = await User.create(user_data);
           console.log("newUser", new_user);
           if (!new_user)
@@ -276,7 +286,7 @@ passport.use(
         delete user_obj.password;
         return done(null, user_obj);
       } catch (error) {
-        return done("CATCHING", error);
+        return done("CATCHING FACEBOOK", error);
       }
     }
   )
