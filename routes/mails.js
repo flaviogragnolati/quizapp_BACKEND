@@ -22,7 +22,7 @@ sendMailRouter.post("/", async (req, res) => {
   let text;
   let subject;
 
-  const user = await User.findByPk(9);
+  const user = await User.findByPk(3);
 /*   let { user, type, quiz } = req.body;
 
   // Armar mail lindo del QUIZ, con info

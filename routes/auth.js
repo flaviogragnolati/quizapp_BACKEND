@@ -264,9 +264,10 @@ server.get('/resetpassword', async (req, res) => {
     
     // Si el momento en el que intenta ingresar al link es mayor al de expiración del token se redirecciona a página que indica invalidez del mismo, sino se mostrará el formulario de cambio de contraseña.
     const now = new Date();
-    now > user.resetPasswordExpires ? res.redirect(FRONT_URL + 'invalidResetPasswordToken/') : res.redirect(FRONT_URL + 'resetPassword/');
+/*     now > user.resetPasswordExpires ? res.redirect(FRONT_URL + 'invalidresetpasswordtoken/') : res.redirect(FRONT_URL + 'resetpassword/'); */
+  now > user.resetPasswordExpires ? res.send('token inválido') : res.send('Ahora puede cambiar su contraseña'); // Para prueba, cuando el front tenga la ruta hay que redireccionarlo ahí (como está arriba)
   } catch(error) {
-    console.erro('CATCH GET RESET PASSWORD', error)
+    console.error('CATCH GET RESET PASSWORD', error)
   }
 });
 

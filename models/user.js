@@ -66,6 +66,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         defaultValue: null,
       },
+      avatar: {
+        type: DataTypes.TEXT,
+      }
     },
     {
       timestamps: true,
