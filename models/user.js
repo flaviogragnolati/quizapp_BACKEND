@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
       },
       resetPasswordExpires: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATE,
         defaultValue: null,
       },
     },

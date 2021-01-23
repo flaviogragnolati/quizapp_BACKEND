@@ -3,7 +3,7 @@ const express = require("express");
 const sendMailRouter = express.Router();
 const nodemailer = require("nodemailer");
 const { User } = require("../models/index");
-const FRONT_URL = process.env.FRONT_URL;
+const BASE_URL = process.env.BASE_URL;
 
 const transport = {
   service: "gmail",
@@ -18,10 +18,12 @@ const transporter = nodemailer.createTransport(transport);
 
 // Para registro, cambio de password, promovido
 
-sendMailRouter.post("/", (req, res) => {
+sendMailRouter.post("/", async (req, res) => {
   let text;
   let subject;
-  let { user, type, quiz } = req.body;
+
+  const user = await User.findByPk(9);
+/*   let { user, type, quiz } = req.body;
 
   // Armar mail lindo del QUIZ, con info
 
@@ -47,18 +49,19 @@ sendMailRouter.post("/", (req, res) => {
       break;
 
     case "ResetPassword":
-      const link = FRONT_URL + "resetpassword/" + user.resetPasswordToken;
+      const link = BASE_URL + "resetpassword/" + user.resetPasswordToken;
       subject = "Recuperación de contraseña";
       text = `Para restrablecer la contraseña ingrese al siguiente link: ${link}.`;
 /*       html = `${<a href="${link}">Restablecer contraseña</a>}`; */
-      break;
-  }
+    //  break;
+  //}
+  const link = BASE_URL + "auth/resetpassword/?token=" + user.resetPasswordToken;
 
   let mail = {
     from: process.env.THE_EMAIL,
-    to: user.email,
-    subject,
-    text,
+    to: 'da@gmail.com',//user.email,
+    subject: "Recuperación de contraseña",
+    text: `Para restrablecer la contraseña ingrese al siguiente link: ${link}.`,
   };
   transporter.sendMail(mail, (err, data) => {
     if (err) {

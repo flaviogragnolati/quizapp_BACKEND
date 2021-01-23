@@ -13,7 +13,7 @@ module.exports = {
           allowNull: true,
         }, { transaction: t }),
         queryInterface.addColumn('Users', 'resetPasswordExpires', {
-          type: DataTypes.INTEGER,
+          type: DataTypes.DATE,
           allowNull: true,
         }, { transaction: t })
       ]);

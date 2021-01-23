@@ -21,13 +21,14 @@ server.get("/me", async (req, res, next) => {
 
 // Inicio de sesión con FACEBOOK
 
-server.get("/facebook", passport.authenticate('facebook'));
+server.get("/facebook", passport.authenticate("facebook"));
 
-server.get('/facebook/callback',
-	passport.authenticate('facebook'),
-	async (req, res) => {
+server.get(
+  "/facebook/callback",
+  passport.authenticate("facebook"),
+  async (req, res) => {
     try {
-      console.log('entre a facebook', req)
+      console.log("entre a facebook", req);
       const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
       jwt.sign(
         {
@@ -39,12 +40,13 @@ server.get('/facebook/callback',
           cellphone,
         },
         SECRET_KEY
-      )
+      );
       return res.redirect(FRONT_URL);
-    } catch(error) {
+    } catch (error) {
       console.error(`CATCH FACEBOOK`, error);
     }
-	});
+  }
+);
 
 // Inicio de sesión con GOOGLE
 
@@ -214,23 +216,58 @@ server.put("/promote/:id", async (req, res) => {
   res.status(200).json(userEdited);
 });*/
 
-// Ruta para resetear la contraseña
+// Rutas para RESETEAR la contraseña
 
-server.put("/resetPass/:id", (req, res) => {
+// Primero se crea un token provisorio con caducidad de 5 minutos y se envía a través de un mail
+server.put("/resetpassword/:id", async (req, res) => {
   let { id } = req.params;
 
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(value, salt);
+  if(!id) return res.status(400).send('No se recibió ID del usuario que desea restaurar su contraseña');
 
-  const token = bcrypt.randomBytes(20).toString("hex");
+  try {
+    const randomToken = () => {
+      return Math.random().toString(36).substr(2); // Eliminar `0.`
+    };
+    const token = () => {
+      return randomToken() + randomToken(); // Para hacer el token más largo
+    };
 
-  User.update(
-    {
-      resetPasswordToken: token,
-      resetPasswordExpires: Date.now() + 360000,
-    },
-    { where: { id } }
-  );
+    const contador = () => {
+      var date = new Date();
+      var minutes = date.getMinutes();
+  
+      date.setMinutes(minutes + 5);
+      return date;
+  }
+    
+    const userUpdated = await User.update(
+      {
+        resetPasswordToken: token(),
+        resetPasswordExpires: contador(),
+      },
+      { where: { id } }
+      );
+    return res.status(200).send(userUpdated);
+  } catch(error) {
+    console.error('CATCH PUT RESET PASSWORD', error)
+  }
+});
+
+// Cuando el user ingresa al link se hace un GET a /auth/resetpassword/?token=
+server.get('/resetpassword', async (req, res) => {
+  let { token } = req.query;
+  
+  try {
+    const user = await User.findOne({
+      where: { resetPasswordToken: token }
+    });
+    
+    // Si el momento en el que intenta ingresar al link es mayor al de expiración del token se redirecciona a página que indica invalidez del mismo, sino se mostrará el formulario de cambio de contraseña.
+    const now = new Date();
+    now > user.resetPasswordExpires ? res.redirect(FRONT_URL + 'invalidResetPasswordToken/') : res.redirect(FRONT_URL + 'resetPassword/');
+  } catch(error) {
+    console.erro('CATCH GET RESET PASSWORD', error)
+  }
 });
 
 // Actualizar la contraseña
