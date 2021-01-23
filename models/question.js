@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
         type:  DataTypes.STRING,
         allowNull: false,
       },
+      question: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       modifiedBy: {
         type: DataTypes.INTEGER, // id del user que lo modificó
         allowNull: false,
