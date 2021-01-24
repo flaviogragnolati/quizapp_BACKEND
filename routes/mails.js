@@ -2,70 +2,90 @@ require("dotenv").config();
 const express = require("express");
 const sendMailRouter = express.Router();
 const nodemailer = require("nodemailer");
+let smtpTransport = require("nodemailer-smtp-transport");
+const handlebars = require("handlebars");
+const fs = require("fs");
 const { User } = require("../models/index");
+const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
-
-const transport = {
-  service: "gmail",
-
-  auth: {
-    user: process.env.THE_EMAIL,
-    pass: process.env.THE_PASSWORD,
-  },
-};
-
-const transporter = nodemailer.createTransport(transport);
 
 sendMailRouter.post("/", async (req, res) => {
   let text;
   let subject;
 
-  const user = await User.findByPk(1);
   let { user, type, quiz } = req.body;
 
-  // Armar mail lindo del QUIZ, con info
+  let htmlTemplate = type;
 
-  switch (type) {
-    case "Welcome":
+  var readHTMLFile = (path, callback) => {
+    fs.readFile(path, { encoding: "utf-8" }, (err, html) => {
+      if (err) {
+        throw err;
+      } else {
+        callback(null, html);
+      }
+    });
+  };
+
+  smtpTransport = nodemailer.createTransport(
+    smtpTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.THE_EMAIL,
+        pass: process.env.THE_PASSWORD,
+      },
+    })
+  );
+
+    switch (type) {
+    case "welcome":
+      var replacements = {  // Espacios que van a ser reemplazados en el HTML Mail
+      link: FRONT_URL,
+      };
       subject = `Bienvenid@, ${user.firstName} a Quizapp`;
-      text = "Te damos la bienvenida a Quizapp!";   // Activar la cuenta
       break;
 
-    case "Accepted":
+    case "accepted":
+      var replacements = {
+        name: user.firstName,
+        link: `${FRONT_URL} + /${quiz.id}`
+        };
       subject = `Bienvenido al curso ${quiz}`;
-      text = `Te informamos que tu inscripción al curso ${quiz} ya fue aceptada.`;
       break;
 
-    case "Promote":
+    case "promote":
       subject = `${user.firstName} has sido promovido a Teacher`;
       text = "Te damos la bienvenida al equipo docente de Quizapp!";
       break;
 
-    case "Dispatch":
-      subject = `Inscripción al curso ${quiz}`;
-      text = `Tu inscripción al curso ${quiz} ha sido enviada. Se te enviará una confirmación a este mismo mail.`;
-      break;
-
-    case "ResetPassword":
+    case "resetPassword":
       const link = BASE_URL + "auth/resetpassword?token=" + user.resetPasswordToken;
+      var replacements = {
+        name: user.firstName,
+        link
+        };
       subject = "Recuperación de contraseña";
-      text = `Para restrablecer la contraseña ingrese al siguiente link: ${link}.`;
-       html = `${<a href="${link}">Restablecer contraseña</a>}`;
     break;
   }
 
-  let mail = {
-    from: process.env.THE_EMAIL,
-    to: user.email,
-    subject: "Recuperación de contraseña",
-    text: `Para restrablecer la contraseña ingrese al siguiente link: ${link}.`,
-  };
-  transporter.sendMail(mail, (err, data) => {
-    if (err) {
-      console.log("NO se ha enviado el mail", err);
-    } else {
-      console.log("Se ha enviado el mail");
-    }
+  readHTMLFile(__dirname + `/mailsTemplate/${htmlTemplate}.html`, function (err, html) {
+    var template = handlebars.compile(html);
+    var htmlToSend = template(replacements);
+
+    let mail = {
+      from: process.env.THE_EMAIL,
+      to: user.email,
+      subject,
+      html: htmlToSend,
+    };
+
+    smtpTransport.sendMail(mail, (err, response) => {
+      if (err) {
+        console.log('NO se ha enviado el mail', err);
+      } else {
+        console.log('Se ha enviado el mail')
+      }
+    });
   });
 });
 

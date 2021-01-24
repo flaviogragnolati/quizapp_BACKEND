@@ -29,9 +29,9 @@ server.use((req, res, next) => {
 });
 server.use(cors({ origin: true, credentials: true }));
 
-server.use(express.session({ secret: 'barto', maxAge: null }))
+//server.use(express.session({ secret: 'barto', maxAge: null }))
 server.use(passport.initialize()); //*Inicializamos el passport
-server.use(passport.session()); // Sesión persistente
+//server.use(passport.session()); // Sesión persistente
 
 server.use('/', routes);
 // Error catching endware.
