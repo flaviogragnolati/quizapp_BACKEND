@@ -1,11 +1,10 @@
 const server = require("express").Router();
-const { User } = require("../models/index");
+const { User, Session } = require("../models/index");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const { SECRET_KEY, FRONT_URL } = process.env;
-//const { makeJWT, cookieMaker, refreshTime } = require('../utils/index');
 
-// Ruta ME - GET a /auth/me
+// Ruta PROFILE - GET a /auth/me
 
 server.get("/me", async (req, res, next) => {
   try {
@@ -68,9 +67,7 @@ server.get(
   async (req, res) => {
     try {
       const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
+
       jwt.sign(
         {
           id,
@@ -89,22 +86,6 @@ server.get(
   }
 );
 
-server.get(
-  "/refresh",
-  passport.authenticate("jwt-refresh", { session: false }),
-  async (req, res) => {
-    const user = req.user;
-    /*const newToken = makeJWT(req.user, refreshTime, 'Bearer');
-    const refresh_token = makeJWT(req.user);
-    cookieMaker('refreshToken', refresh_token, res);*/
-    return res.send({
-      message: "Refresh exitoso",
-      //newToken,
-      user,
-    });
-  }
-);
-
 //*ruta para probar la validacion con el JWT
 server.get(
   "/test",
@@ -118,10 +99,14 @@ server.get(
 
 // Ruta para DESLOGUEARSE - GET a /auth/logout
 
-server.get("/logout", (req, res) => {
-  req.logout();
-  res.clearCookie("refreshToken");
-  res.status(200).send("Cerrar sesión");
+server.get("/logout", async (req, res) => {
+  //let { id } = req.user ?
+  const sessionOff = await Session.findOne({
+    where: { userId: id }
+  });
+  await sessionOff.destroy();
+
+  res.status(200).send("Se ha cerrado la sesión");
 });
 
 // Ruta para Registrarse / crear un usuario - POST a /auth/register
@@ -131,7 +116,6 @@ server.post(
   passport.authenticate("register-local", { session: false }),
   async (req, res) => {
     try {
-      //const user = req.user;
       const {
         id,
         firstName,
@@ -141,9 +125,7 @@ server.post(
         cellphone,
         password,
       } = req.user;
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer');
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
+
       return res.send(
         jwt.sign(
           {
@@ -176,9 +158,7 @@ server.post(
   async (req, res) => {
     try {
       const user = req.user;
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
+
       return res.send({
         message: "Login exitoso",
         //token,
@@ -218,7 +198,7 @@ server.put("/promote/:id", async (req, res) => {
 
 // Rutas para RESETEAR la contraseña
 
-// Primero se crea un token provisorio con caducidad de 5 minutos y se envía a través de un mail
+// Primero se crea un token provisorio con caducidad de 5 minutos y se envía a través de un email
 server.put("/resetpassword/:id", async (req, res) => {
   let { id } = req.params;
 
@@ -226,16 +206,15 @@ server.put("/resetpassword/:id", async (req, res) => {
 
   try {
     const randomToken = () => {
-      return Math.random().toString(36).substr(2); // Eliminar `0.`
+      return Math.random().toString(36).substr(2);
     };
     const token = () => {
       return randomToken() + randomToken(); // Para hacer el token más largo
     };
 
-    const contador = () => {
+    const expiresTime = () => {
       var date = new Date();
       var minutes = date.getMinutes();
-  
       date.setMinutes(minutes + 5);
       return date;
   }
@@ -243,10 +222,11 @@ server.put("/resetpassword/:id", async (req, res) => {
     const userUpdated = await User.update(
       {
         resetPasswordToken: token(),
-        resetPasswordExpires: contador(),
+        resetPasswordExpires: expiresTime(),
       },
       { where: { id } }
       );
+
     return res.status(200).send(userUpdated);
   } catch(error) {
     console.error('CATCH PUT RESET PASSWORD', error)
@@ -261,7 +241,6 @@ server.get('/resetpassword', async (req, res) => {
     const user = await User.findOne({
       where: { resetPasswordToken: token }
     });
-    
     // Si el momento en el que intenta ingresar al link es mayor al de expiración del token se redirecciona a página que indica invalidez del mismo, sino se mostrará el formulario de cambio de contraseña.
     const now = new Date();
 /*     now > user.resetPasswordExpires ? res.redirect(FRONT_URL + 'invalidresetpasswordtoken/') : res.redirect(FRONT_URL + 'resetpassword/'); */

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon -L",
     "forever": "forever index.js",
-    "test": "mocha -w ./tests/**/*.spec.js"
+    "test": "mocha -w ./tests/**/*.spec.js",
+    "db:makemigration": "./node_modules/sequelize-auto-migrations-v2/bin/makemigration.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.17",
@@ -45,6 +47,8 @@
     "passport-twitter": "^1.0.4",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.4.0"
+    "sequelize": "^6.4.0",
+    "sequelize-auto-migrations": "github:scimonster/sequelize-auto-migrations#a063aa6535a3f580623581bf866cef2d609531ba",
+    "sequelize-auto-migrations-v2": "^1.1.0"
   }
 }

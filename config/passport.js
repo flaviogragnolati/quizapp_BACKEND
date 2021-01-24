@@ -17,11 +17,17 @@ const FACEBOOK_ID = process.env.FACEBOOK_ID;
 const FACEBOOK_SECRET = process.env.FACEBOOK_SECRET;
 
 module.exports = function (passport) {
-  passport.serializeUser(function (user, done) {
-    done(null, user);
+  passport.serializeUser(function (user, done) {  // Ya tenemos la info del usuario, ahora sele dice a passport cómo vamos a identificar al usuario en la cookie (con el userId)
+    done(null, user.id);
   });
-  passport.deserializeUser(function (user, done) {
-    done(null, user);
+  passport.deserializeUser(function (id, done) {  // Acá nos traemos la info de la cookie, debemos buscar el resto de la información en la base de datos. Esto es lo que se pasará como req.user a la ruta
+    User.findByPk(id)
+      .then(user => {
+        done(null, user);
+      })
+      .catch(error => {
+        done(error, null);
+      });
   });
 
   //Estrategia para registro de un nuevo usuario

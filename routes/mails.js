@@ -16,14 +16,12 @@ const transport = {
 
 const transporter = nodemailer.createTransport(transport);
 
-// Para registro, cambio de password, promovido
-
 sendMailRouter.post("/", async (req, res) => {
   let text;
   let subject;
 
-  const user = await User.findByPk(3);
-/*   let { user, type, quiz } = req.body;
+  const user = await User.findByPk(1);
+  let { user, type, quiz } = req.body;
 
   // Armar mail lindo del QUIZ, con info
 
@@ -49,17 +47,16 @@ sendMailRouter.post("/", async (req, res) => {
       break;
 
     case "ResetPassword":
-      const link = BASE_URL + "resetpassword/" + user.resetPasswordToken;
+      const link = BASE_URL + "auth/resetpassword?token=" + user.resetPasswordToken;
       subject = "Recuperación de contraseña";
       text = `Para restrablecer la contraseña ingrese al siguiente link: ${link}.`;
-/*       html = `${<a href="${link}">Restablecer contraseña</a>}`; */
-    //  break;
-  //}
-  const link = BASE_URL + "auth/resetpassword/?token=" + user.resetPasswordToken;
+       html = `${<a href="${link}">Restablecer contraseña</a>}`;
+    break;
+  }
 
   let mail = {
     from: process.env.THE_EMAIL,
-    to: 'da@gmail.com',//user.email,
+    to: user.email,
     subject: "Recuperación de contraseña",
     text: `Para restrablecer la contraseña ingrese al siguiente link: ${link}.`,
   };

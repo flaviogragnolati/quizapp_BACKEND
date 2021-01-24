@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsToMany(models.School, { through: "School-User" });
       User.hasMany(models.Review);
       User.belongsToMany(models.Quiz, { through: models.Role });
+      User.hasMany(models.Session);
     }
   }
   User.init(
