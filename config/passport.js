@@ -7,6 +7,7 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const { User } = require("../models/index");
 //const makeJWT = require("../utils");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -89,17 +90,24 @@ module.exports = function (passport) {
       async (email, password, done) => {
         try {
           const user = await User.findOne({ where: { email } });
+         
           if (!user) {
-            console.log("NO SUCH USER");
+           
             return done(null, false, { message: "No se encontro el usuario" });
           }
-          const validate = await user.compare(password);
-          if (!validate) {
-            return done(null, false, { message: "Contraseña incorrecta" });
-          }
+         
+          const validate = await bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err || !isMatch) {
+              return done(null, false, { message: 'Contraseña Incorrecta' });
+             }
+             return done(null, user);
+          });
+          // if (!validate) {
+          //   return done(null, false, { message: "Contraseña incorrecta" });
+          // }
           let user_obj = { ...user.dataValues };
           delete user_obj.password;
-          console.log("RETURN LOCAL_LOGIN", user_obj);
+         
           return done(null, user_obj, { message: "Login correcto" });
         } catch (error) {
           return done(error);

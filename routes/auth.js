@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const { SECRET_KEY, FRONT_URL } = process.env;
 
+
 // Ruta PROFILE - GET a /auth/me
 
 server.get("/me", async (req, res, next) => {
