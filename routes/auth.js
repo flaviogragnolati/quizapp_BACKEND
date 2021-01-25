@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const { SECRET_KEY, FRONT_URL } = process.env;
 
+//Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
 
 // Ruta PROFILE - GET a /auth/me
 
@@ -30,7 +31,7 @@ server.get(
     try {
       console.log("entre a facebook", req);
       const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
-      jwt.sign(
+      var token = jwt.sign(
         {
           id,
           firstName,
@@ -41,7 +42,8 @@ server.get(
         },
         SECRET_KEY
       );
-      return res.redirect(FRONT_URL);
+     
+      return res.redirect(`${FRONT_URL}?jwt=${token}`)
     } catch (error) {
       console.error(`CATCH FACEBOOK`, error);
     }
@@ -69,7 +71,7 @@ server.get(
     try {
       const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
 
-      jwt.sign(
+     var token = jwt.sign(
         {
           id,
           firstName,
@@ -80,8 +82,9 @@ server.get(
         },
         SECRET_KEY
       );
-      return res.redirect(FRONT_URL);
-    } catch (error) {
+     
+      return res.redirect(`${FRONT_URL}?jwt=${token}`)   //redireciona al front y pasa por params el token
+      } catch (error) {
       console.error(`CATCH GOOGLE`, error);
     }
   }
@@ -100,7 +103,7 @@ server.get(
 
 // Ruta para DESLOGUEARSE - GET a /auth/logout
 
-server.get("/logout", async (req, res) => {
+server.get("/logout", async (req, res) => {  // Esto es con sesiones, cambiarlo si usamos solo token
   //let { id } = req.user ?
   const sessionOff = await Session.findOne({
     where: { userId: id }
@@ -127,7 +130,7 @@ server.post(
         password,
       } = req.user;
 
-      return res.send(
+      return res.status(200).send(
         jwt.sign(
           {
             id,
@@ -158,13 +161,31 @@ server.post(
   }),
   async (req, res) => {
     try {
-      const user = req.user;
+      const {
+        id,
+        firstName,
+        lastName,
+        email,
+        birthdate,
+        cellphone,
+        password,
+      } = req.user;
 
-      return res.send({
-        message: "Login exitoso",
-        //token,
-        user,
-      });
+     
+       var token = jwt.sign(
+          {
+            id,
+            firstName,
+            lastName,
+            email,
+            birthdate,
+            cellphone,
+            password,
+          },
+          SECRET_KEY
+        )
+        
+        return res.redirect(`${FRONT_URL}?jwt=${token}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
