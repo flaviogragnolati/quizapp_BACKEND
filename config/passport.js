@@ -230,9 +230,7 @@ module.exports = function (passport) {
               email,
               birthdate,
               password,
-              cellphone,
-              resetPasswordToken,
-              resetPasswordExpires,
+              cellphone
             };
             const new_user = await User.create(user_data);
             console.log("newUser", new_user);
@@ -283,9 +281,7 @@ passport.use(
             email,
             birthdate,
             password,
-            cellphone,
-            resetPasswordToken,
-            resetPasswordExpires,
+            cellphone
           };
           console.log("user_data", user_data);
           const new_user = await User.create(user_data);
