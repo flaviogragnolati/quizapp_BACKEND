@@ -1,40 +1,43 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const JWTstrategy = require('passport-jwt').Strategy;
-const ExtractJWT = require('passport-jwt').ExtractJwt;
-//const GitHubStrategy = require('passport-github2').Strategy;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const { User } = require('../models/index');
-const makeJWT = require('../utils');
-const jwt = require('jsonwebtoken');
-// var cors = require('cors')
-// var corsOptions = {
-//   origin: 'https://web-comm.vercel.app',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const JWTstrategy = require("passport-jwt").Strategy;
+const ExtractJWT = require("passport-jwt").ExtractJwt;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
+const { User } = require("../models/index");
+//const makeJWT = require("../utils");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const BASE_URL = process.env.BASE_URL;
-// const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-// const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-// const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-// const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const FACEBOOK_ID = process.env.FACEBOOK_ID;
+const FACEBOOK_SECRET = process.env.FACEBOOK_SECRET;
 
 module.exports = function (passport) {
-  passport.serializeUser(function (user, done) {
-    done(null, user);
+  passport.serializeUser(function (user, done) {  // Ya tenemos la info del usuario, ahora sele dice a passport cómo vamos a identificar al usuario en la cookie (con el userId)
+    done(null, user.id);
   });
-  passport.deserializeUser(function (user, done) {
-    done(null, user);
+  passport.deserializeUser(function (id, done) {  // Acá nos traemos la info de la cookie, debemos buscar el resto de la información en la base de datos. Esto es lo que se pasará como req.user a la ruta
+    User.findByPk(id)
+      .then(user => {
+        done(null, user);
+      })
+      .catch(error => {
+        done(error, null);
+      });
   });
 
   //Estrategia para registro de un nuevo usuario
   passport.use(
-    'register-local',  
+    "register-local",
     new LocalStrategy(
       {
-        usernameField: 'email',
-        passwordField: 'password',
+        usernameField: "email",
+        passwordField: "password",
         passReqToCallback: true,
       },
       async (req, email, password, done) => {
@@ -47,7 +50,7 @@ module.exports = function (passport) {
             password,
             cellphone,
           } = req.body;
-          
+
           const user_data = {
             firstName,
             lastName,
@@ -56,11 +59,11 @@ module.exports = function (passport) {
             password,
             cellphone,
           };
-          console.log('user_data', user_data)
+          console.log("user_data", user_data);
           const user = await User.create(user_data);
           //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
           let user_obj = { ...user.dataValues };
-          //delete user_obj.password;
+          delete user_obj.password;
           // console.log('REGISTER STRATEGY', user_obj);
           return done(null, user_obj);
         } catch (error) {
@@ -77,28 +80,35 @@ module.exports = function (passport) {
      * comparando contra la info de la db
      * devuelve un JWT para ser utilizado en la autenticacion con la estrategia JWT
      */
-    'local-login',  
+    "local-login",
     new LocalStrategy(
       {
-        usernameField: 'email',
-        passwordField: 'password',
+        usernameField: "email",
+        passwordField: "password",
         session: false,
       },
       async (email, password, done) => {
         try {
           const user = await User.findOne({ where: { email } });
+         
           if (!user) {
-            console.log('NO SUCH USER');
-            return done(null, false, { message: 'No se encontro el usuario' });
+           
+            return done(null, false, { message: "No se encontro el usuario" });
           }
-          const validate = await user.compare(password);
-          if (!validate) {
-            return done(null, false, { message: 'Contraseña incorrecta' });
-          }
+         
+          const validate = await bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err || !isMatch) {
+              return done(null, false, { message: 'Contraseña Incorrecta' });
+             }
+             return done(null, user);
+          });
+          // if (!validate) {
+          //   return done(null, false, { message: "Contraseña incorrecta" });
+          // }
           let user_obj = { ...user.dataValues };
           delete user_obj.password;
-          console.log('RETURN LOCAL_LOGIN', user_obj);
-          return done(null, user_obj, { message: 'Login correcto' });
+         
+          return done(null, user_obj, { message: "Login correcto" });
         } catch (error) {
           return done(error);
         }
@@ -119,25 +129,25 @@ module.exports = function (passport) {
     secretOrKey: SECRET_KEY,
   };
 
-   passport.use(
-    'jwt-cookie', 
+  passport.use(
+    "jwt-cookie",
     new JWTstrategy(jwtCookies_options, async (jwt_payload, done) => {
-      console.log('jwtCookie_PAYLOAD', jwt_payload);
+      console.log("jwtCookie_PAYLOAD", jwt_payload);
       try {
         const user = await User.findOne({
           where: { email: jwt_payload.sub },
         });
         if (!user) {
           return done(null, false, {
-            message: 'No se encontro el usuario',
+            message: "No se encontro el usuario",
           });
         }
         let user_obj = { ...user.dataValues };
         delete user_obj.password;
-        console.log('RETURN JWT', user_obj);
-        return done(null, user_obj, { message: 'Token Autorizado' });
+        console.log("RETURN JWT", user_obj);
+        return done(null, user_obj, { message: "Token Autorizado" });
       } catch (error) {
-        return done('CATCHING', error);
+        return done("CATCHING", error);
       }
     })
   );
@@ -149,19 +159,19 @@ module.exports = function (passport) {
   };
   //*estrategia para login con JWT
   passport.use(
-    'jwt', 
+    "jwt",
     new JWTstrategy(jwt_options, async (jwt_payload, done) => {
       try {
         const user = await User.findOne({
           where: { email: jwt_payload.user.email },
         });
         if (!user) {
-          return done(null, false, { message: 'No se encontro el usuario' });
+          return done(null, false, { message: "No se encontro el usuario" });
         }
         let user_obj = { ...user.dataValues };
         delete user_obj.password;
-        console.log('RETURN JWT', user_obj);
-        return done(null, user_obj, { message: 'Token Autorizado' });
+        console.log("RETURN JWT", user_obj);
+        return done(null, user_obj, { message: "Token Autorizado" });
       } catch (error) {
         return done(error);
       }
@@ -181,100 +191,52 @@ module.exports = function (passport) {
   };
   //*Refresh strategy
   passport.use(
-    'jwt-refresh', 
+    "jwt-refresh",
     new JWTstrategy(jwtRefresh_options, async (jwt_payload, done) => {
       try {
-        return done(null, jwt_payload.user, { message: 'Token Autorizado' });
+        return done(null, jwt_payload.user, { message: "Token Autorizado" });
       } catch (error) {
-        console.error('CATCHING REFRESH');
+        console.error("CATCHING REFRESH");
         return done(error);
       }
     })
   );
-  
-  /*passport.use(
-    'github',  
-    new GitHubStrategy(
-      {
-        clientID: GITHUB_CLIENT_ID,
-        clientSecret: GITHUB_CLIENT_SECRET,
-        callbackURL: BASE_URL + 'auth/github/callback',
-        passReqToCallback: true,
-        scope: ['user:email'],
-      },
-      async (req, accessToken, refreshToken, profile, done) => {
-        try {
-          const email = profile.emails[0].value;
-          let user = await User.findOne({ where: { email } }); //buscamos el email que devuelve github
-          // si no hay user entonces creamos uno con datos `default`
-          // si encontramos un user, entonces solamente devolvemos ese user
-          if (!user) {
-            const { _json: extra, displayName } = profile;
-            const [firstName, lastName] = displayName.split(/(?<=^\S+)\s/);
-            const birthdate = new Date('01-01-1000');
-            const password = String(Date.now() + Math.random()).substring(0, 7);
-            const cellphone = 123456789;
-            const user_data = {
-              firstName,
-              lastName: lastName || firstName,
-              email,
-              birthdate,
-              password,
-              cellphone,
-              isAdmin: false,
-            };
-            const new_user = await User.create(user_data);
-            if (!new_user)
-              return done(null, false, {
-                message: 'no se pudo crear el usuario',
-              });
-            user = new_user;
-          }
-          let user_obj = { ...user.dataValues, accessToken };
-          delete user_obj.password;
-          return done(null, user_obj);
-        } catch (error) {
-          return done('CATCHING', error);
-        }
-      }
-    )
-  );*/
 
-/*  passport.use(
-    'google',  
+  passport.use(
+    "google",
     new GoogleStrategy(
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: BASE_URL + 'auth/google/callback',
+        callbackURL: BASE_URL + "auth/google/callback",
         passReqToCallback: true,
         // scope: ['email'],
       },
       async (req, accessToken, refreshToken, profile, done) => {
         try {
           const email = profile.emails[0].value;
-          let user = await User.findOne({ where: { email } }); //buscamos el email que devuelve github
+          let user = await User.findOne({ where: { email } }); //buscamos el email que devuelve google
           // si no hay user entonces creamos uno con datos `default`
           // si encontramos un user, entonces solamente devolvemos ese user
           if (!user) {
             const { _json: extra, displayName } = profile;
             const [firstName, lastName] = displayName.split(/(?<=^\S+)\s/);
-            const birthdate = new Date('01-01-1500');
             const password = String(Date.now() + Math.random()).substring(0, 7);
-            const cellphone = 987654321;
+            const birthdate = new Date("01-01-1500");
+            const cellphone = 115100;
             const user_data = {
               firstName,
               lastName: lastName || firstName,
               email,
               birthdate,
               password,
-              cellphone,
-              isAdmin: false,
+              cellphone
             };
             const new_user = await User.create(user_data);
+            console.log("newUser", new_user);
             if (!new_user)
               return done(null, false, {
-                message: 'no se pudo crear el usuario',
+                message: "No se pudo crear el usuario",
               });
             user = new_user;
           }
@@ -282,10 +244,61 @@ module.exports = function (passport) {
           delete user_obj.password;
           return done(null, user_obj);
         } catch (error) {
-          return done('CATCHING', error);
+          return done("CATCHING", error);
         }
       }
     )
-  );*/
+  );
 };
+
+passport.use(
+  "facebook",
+  new FacebookStrategy(
+    {
+      clientID: FACEBOOK_ID,
+      clientSecret: FACEBOOK_SECRET,
+      callbackURL: BASE_URL + "auth/facebook/callback",
+      profileFields: ['id', 'emails', 'displayName', 'photos'],
+      passReqToCallback: true,
+    },
+    async (req, accessToken, refreshToken, profile, done) => {
+      try {
+        console.log('profile', profile)
+        let { displayName, emails } = profile;
+        const email = emails[0].value;
+        console.log('email', email)
+        let user = await User.findOne({ where: { email } }); //buscamos el email que devuelve google
+        // si no hay user entonces creamos uno con datos `default`
+        // si encontramos un user, entonces solamente devolvemos ese user
+        if (!user) {
+          const [firstName, lastName] = displayName.split(/(?<=^\S+)\s/);
+          const password = String(Date.now() + Math.random()).substring(0, 7);
+          const birthdate = new Date("01-01-1500");
+          const cellphone = 115100;
+          const user_data = {
+            firstName,
+            lastName,
+            email,
+            birthdate,
+            password,
+            cellphone
+          };
+          console.log("user_data", user_data);
+          const new_user = await User.create(user_data);
+          console.log("newUser", new_user);
+          if (!new_user)
+            return done(null, false, {
+              message: "No se pudo crear el usuario",
+            });
+          user = new_user;
+        }
+        let user_obj = { ...user.dataValues, accessToken };
+        delete user_obj.password;
+        return done(null, user_obj);
+      } catch (error) {
+        return done("CATCHING FACEBOOK", error);
+      }
+    }
+  )
+);
 
