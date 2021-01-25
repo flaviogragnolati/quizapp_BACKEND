@@ -51,7 +51,6 @@
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.4.0",
-    "sequelize-auto-migrations": "github:scimonster/sequelize-auto-migrations#a063aa6535a3f580623581bf866cef2d609531ba",
-    "sequelize-auto-migrations-v2": "^1.1.0"
+    "sequelize-mig": "^2.6.0"
   }
 }
