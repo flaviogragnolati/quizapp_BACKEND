@@ -130,20 +130,32 @@ server.post(
         password,
       } = req.user;
 
-      return res.status(200).send(
-        jwt.sign(
-          {
-            id,
-            firstName,
-            lastName,
-            email,
-            birthdate,
-            cellphone,
-            password,
-          },
-          SECRET_KEY
-        )
+      var token = jwt.sign(
+        {
+          id,
+          firstName,
+          lastName,
+          email,
+          birthdate,
+          cellphone,
+        },
+        SECRET_KEY
       );
+      return res.redirect(`${FRONT_URL}?jwt=${token}`)
+      // return res.status(200).send(
+      //   jwt.sign(
+      //     {
+      //       id,
+      //       firstName,
+      //       lastName,
+      //       email,
+      //       birthdate,
+      //       cellphone,
+      //       password,
+      //     },
+      //     SECRET_KEY
+      //   )
+      // );
     } catch (error) {
       console.error(`CATCH REGISTER`, error);
       return error;
