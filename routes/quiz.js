@@ -31,6 +31,12 @@ server.post('/', async (req, res) => {
 
     try {
         const newQuiz = await Quiz.create({ quantity, name, description, modifiedBy, createdBy  });
+
+        await Role.create({
+            QuizId: newQuiz.id,
+            UserId: createdBy,
+            name: "Teacher"
+        });
         
         if(students) {  // Array con id de los user a agregar como student
             students.forEach(async (s) => {
@@ -54,13 +60,23 @@ server.post('/', async (req, res) => {
 
 server.put('/:id', async (req, res) => {
     let { id } = req.params;
-    let { quantity, name, description, modifiedBy, students } = req.body;
+    let { quantity, name, description, modifiedBy, students, teachers } = req.body;
 
     if ( !id ) return res.status(400).send("Debe indicar el id del quiz que desea modificar");   
 //    if (!quizToModify) return res.status(400).send("No existe el quiz que desea modificar");
     try {
         const quizToModify = await Quiz.findByPk(id);
         const quizEdited = await quizToModify.update({ quantity, name, description, modifiedBy }); // Habría que ver si se puede poner el "modifiedBy" de manera automática
+
+        if(teachers) {  // Array con id de los user a agregar como student
+            teachers.forEach(async (t) => {
+                await Role.create({
+                    QuizId: newQuiz.id,
+                    UserId: t,
+                    name: "Teacher"
+                })
+            })
+        };
 
         if(students) {  // Array con id de los user a agregar como student
             students.forEach(async (s) => {
