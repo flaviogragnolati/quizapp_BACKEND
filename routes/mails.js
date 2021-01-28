@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 let smtpTransport = require("nodemailer-smtp-transport");
 const handlebars = require("handlebars");
 const fs = require("fs");
-//const { User, School } = require("../models/index");
+const { User, School } = require("../models/index");
 const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
 
@@ -60,21 +60,21 @@ sendMailRouter.post("/", async (req, res) => {
       break;
 
     case "resetPassword":
-      let linkToSend =
+      let linkResetPassword =
         BASE_URL + "auth/resetpassword?token=" + user.resetPasswordToken;
       var replacements = {
         name: user.firstName,
-        link: linkToSend,
+        link: linkResetPassword,
       };
       subject = "Recuperación de contraseña";
       break;
 
     case "createSchool":
-      let linkToCreateSchool = FRONT_URL + "rutaParaEditarElPassword"; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
+      let linkCreateSchool = FRONT_URL + "rutaParaEditarElPassword"; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
       // Ingrese a la web con el código ${school.password}. Debe ingresar un nuevo password para habilitar la cuenta
       var replacements = {
         school: school.name,
-        link: linkToCreateSchool,
+        link: linkCreateSchool,
       };
       subject = "Inscripción de organización";
       break;

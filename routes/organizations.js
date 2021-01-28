@@ -73,14 +73,14 @@ server.post("/", (req, res, next) => {
 
 server.put('/:id', async (req, res) => {
   let { id } = req.params;
-  let { name, email, description, city, country, logo } = req.body;
+  let { name, email, description, city, country, logo, address, password } = req.body;
 
   if(!id) return res.status(400).send('Es necesario indicar la escuela a actualizar/modificar')
 
   const schoolToEdit = await School.findByPk(id);
 
   const schoolEdited = await schoolToEdit.update({
-    name, email, description, city, country, logo
+    name, email, description, city, country, logo, address, password
   });
 
   return res.status(200).send(schoolEdited);

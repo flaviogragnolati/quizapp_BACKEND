@@ -1,5 +1,5 @@
 const server = require("express").Router();
-const { Quiz } = require('../models/index');
+const { Quiz, Role } = require('../models/index');
 
 // Borrar una QUIZ by ID - DELETE a /quiz/:id
 
@@ -27,10 +27,22 @@ server.delete("/:id", async (req, res) => {
 // Crear un QUIZ - POST a /quiz
 
 server.post('/', async (req, res) => {
-    let { quantity, name, description, modifiedBy, createdBy } = req.body;
+    let { quantity, name, description, modifiedBy, createdBy, students } = req.body;
+
     try {
         const newQuiz = await Quiz.create({ quantity, name, description, modifiedBy, createdBy  });
-    return res.status(200).send(newQuiz);
+        
+        if(students) {  // Array con id de los user a agregar como student
+            students.forEach(async (s) => {
+                await Role.create({
+                    QuizId: newQuiz.id,
+                    UserId: s,
+                    name: "Student"
+                })
+            })
+        };
+
+        return res.status(200).send(newQuiz);
     }
     catch(error) {
         console.error(error);
@@ -42,12 +54,24 @@ server.post('/', async (req, res) => {
 
 server.put('/:id', async (req, res) => {
     let { id } = req.params;
-    let { quantity, name, description, modifiedBy } = req.body;
+    let { quantity, name, description, modifiedBy, students } = req.body;
+
     if ( !id ) return res.status(400).send("Debe indicar el id del quiz que desea modificar");   
 //    if (!quizToModify) return res.status(400).send("No existe el quiz que desea modificar");
     try {
         const quizToModify = await Quiz.findByPk(id);
         const quizEdited = await quizToModify.update({ quantity, name, description, modifiedBy }); // Habría que ver si se puede poner el "modifiedBy" de manera automática
+
+        if(students) {  // Array con id de los user a agregar como student
+            students.forEach(async (s) => {
+                await Role.create({
+                    QuizId: id,
+                    UserId: s,
+                    name: "Student"
+                })
+            })
+        };
+
         return res.status(200).send(quizEdited);
     } 
     catch(error) {
@@ -71,6 +95,6 @@ server.get('/:id', async (req, res) => {
         console.error(error);
         return res.status(500).send({ message: 'Error al buscar el quiz' })
     })
-})
+});
 
 module.exports = server;
