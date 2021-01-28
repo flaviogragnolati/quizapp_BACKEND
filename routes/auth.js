@@ -10,11 +10,13 @@ const { SECRET_KEY, FRONT_URL } = process.env;
 
 server.get("/me", async (req, res, next) => {
   try {
-    if (req.user) {
-      const { id } = req.user;
+    if (req.params) {
+      const { id } = req.params;
       const result = await User.findOne(id);
-      res.json(result);
-    } else res.sendStatus(401);
+      return res.json(result);
+    } else {
+      return res.sendStatus(401);
+    }
   } catch (error) {
     next(error);
   }
@@ -43,7 +45,7 @@ server.get(
         SECRET_KEY
       );
      
-      return res.redirect(`${FRONT_URL}?jwt=${token}`)
+      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH FACEBOOK`, error);
     }
@@ -83,7 +85,7 @@ server.get(
         SECRET_KEY
       );
      
-      return res.redirect(`${FRONT_URL}?jwt=${token}`)   //redireciona al front y pasa por params el token
+      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)   //redireciona al front y pasa por params el token
       } catch (error) {
       console.error(`CATCH GOOGLE`, error);
     }
@@ -141,7 +143,7 @@ server.post(
         },
         SECRET_KEY
       );
-      return res.redirect(`${FRONT_URL}?jwt=${token}`)
+      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
       // return res.status(200).send(
       //   jwt.sign(
       //     {
@@ -197,7 +199,7 @@ server.post(
           SECRET_KEY
         )
         
-        return res.redirect(`${FRONT_URL}?jwt=${token}`)
+        return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
