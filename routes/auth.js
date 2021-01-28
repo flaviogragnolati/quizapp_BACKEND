@@ -206,6 +206,51 @@ server.post(
   }
 );
 
+//Ruta para Loguearse una ORGANIZACIÓN - POST a /auth/login/org
+
+server.post(
+  "/login/org",
+  passport.authenticate("local-login-org", {
+    failWithError: false,
+    session: false,
+  }),
+  async (req, res) => {
+    try {
+      const {
+        id,
+        name,
+        email,
+        description,
+        country,
+        city,
+        address,
+        logo,
+        password
+      } = req.school;
+
+     
+       var token = jwt.sign(
+          {
+            id,
+            name,
+            email,
+            description,
+            country,
+            city,
+            address,
+            logo,
+            password
+          },
+          SECRET_KEY
+        )
+        
+        return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+    } catch (error) {
+      console.error(`CATCH LOGIN`, error);
+    }
+  }
+);
+
 // Ruta para promover a un USER - PUT a /auth/promote/:id
 /*
 FALTA RELACIONARLO CON EL QUIZ

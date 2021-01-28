@@ -4,7 +4,7 @@ const JWTstrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
-const { User } = require("../models/index");
+const { User, School } = require("../models/index");
 //const makeJWT = require("../utils");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -116,6 +116,43 @@ module.exports = function (passport) {
     )
   );
 
+  passport.use(
+    "local-login-org",
+    new LocalStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+        session: false,
+      },
+      async (email, password, done) => {
+        try {
+          const school = await School.findOne({ where: { email } });
+         
+          if (!school) {
+           
+            return done(null, false, { message: "No se encontro la organización" });
+          }
+         
+          const validate = await bcrypt.compare(password, school.password, (err, isMatch) => {
+            if (err || !isMatch) {
+              return done(null, false, { message: 'Contraseña Incorrecta' });
+             }
+             return done(null, school);
+          });
+          // if (!validate) {
+          //   return done(null, false, { message: "Contraseña incorrecta" });
+          // }
+          let school_obj = { ...school.dataValues };
+          delete school_obj.password;
+         
+          return done(null, school_obj, { message: "Login correcto" });
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
+
   const cookieExtractor = (req) => {
     let token = null;
     if (req.signedCookies && req.signedCookies.refreshToken)
@@ -172,6 +209,28 @@ module.exports = function (passport) {
         delete user_obj.password;
         console.log("RETURN JWT", user_obj);
         return done(null, user_obj, { message: "Token Autorizado" });
+      } catch (error) {
+        return done(error);
+      }
+    })
+  );
+
+  // Estrategia para schools
+
+  passport.use(
+    "jwt-school",
+    new JWTstrategy(jwt_options, async (jwt_payload, done) => {
+      try {
+        const school = await School.findOne({
+          where: { email: jwt_payload.school.email },
+        });
+        if (!school) {
+          return done(null, false, { message: "No se encontro la organización" });
+        }
+        let school_obj = { ...school.dataValues };
+        delete school_obj.password;
+        console.log("RETURN JWT", school_obj);
+        return done(null, school_obj, { message: "Token Autorizado" });
       } catch (error) {
         return done(error);
       }
