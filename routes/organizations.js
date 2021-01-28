@@ -40,7 +40,7 @@ server.get("/", (req, res, next) => {
 // RUTA para AGREGAR/CREAR School - post a /org
 
 server.post("/", (req, res, next) => {
-  let { name, email, description, city, country, logo } = req.body;
+  let { name, email, description, city, country, logo, code } = req.body;
   School.findOrCreate({
     where: {
       email,
@@ -52,6 +52,8 @@ server.post("/", (req, res, next) => {
         city,
         country,
         logo,
+        address,
+        password: code,
     },
   })
     .then((school) => {

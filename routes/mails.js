@@ -16,6 +16,7 @@ sendMailRouter.post("/", async (req, res) => {
   let { user, type, quiz } = req.body;
 
   let htmlTemplate = type;
+  const link = BASE_URL
 
   var readHTMLFile = (path, callback) => {
     fs.readFile(path, { encoding: "utf-8" }, (err, html) => {
@@ -59,12 +60,21 @@ sendMailRouter.post("/", async (req, res) => {
       break;
 
     case "resetPassword":
-      const link = BASE_URL + "auth/resetpassword?token=" + user.resetPasswordToken;
+      link  + "auth/resetpassword?token=" + user.resetPasswordToken;
       var replacements = {
         name: user.firstName,
         link
         };
       subject = "Recuperación de contraseña";
+    break;
+    
+      case "createOrg":
+        link  + "auth/resetpassword?token=" + user.resetPasswordToken;
+        var replacements = {
+          name: user.firstName,
+          link
+          };
+        subject = "Recuperación de contraseña";
     break;
   }
 

@@ -8,6 +8,7 @@ const questionsRouter = require('./questions.js');
 const answersRouter = require('./answers.js');
 const quizRouter = require('./quiz.js');
 const mailRouter = require('./mails.js');
+const subjectRouter = require('./subject.js');
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/questions', questionsRouter);
 router.use('/answers', answersRouter);
 router.use('/quiz', quizRouter);
 router.use('/mails', mailRouter);
+router.use('/subject', subjectRouter);
 
 module.exports = router;
