@@ -1,5 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -9,21 +11,60 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsToMany(models.School, {through: 'School-User'});
+      User.hasMany(models.Review);
+      User.belongsToMany(models.Quiz, {through: models.Role});
     }
   }
   User.init(
     {
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
-      email: DataTypes.STRING,
-      birthdate: DataTypes.DATE,
-      cellphone: DataTypes.BIGINT,
-      password: DataTypes.STRING,
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
+      },
+      birthdate: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate: {
+          isDate: true,
+        },
+      },
+      cellphone: {
+        type: DataTypes.BIGINT,
+        validate: {
+          isNumeric: true,
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        set(value) {
+          if (value) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(value, salt);
+            this.setDataValue('password', hash);
+          }
+        },
+      },
     },
     {
+      timestamps: true,
+      //paranoid: true,
       sequelize,
       modelName: 'User',
-    }
-  );
-  return User;
-};
+    } );
+    return User;
+  };
+    

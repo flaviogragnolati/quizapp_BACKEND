@@ -3,6 +3,10 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const routes = require('./routes/index');
+const passport = require('passport');
+
+require('./config/passport')(passport); //pasamos la configuracion al obj global de passport
 
 const server = express();
 
@@ -25,6 +29,11 @@ server.use((req, res, next) => {
 });
 server.use(cors({ origin: true, credentials: true }));
 
+//server.use(express.session({ secret: 'barto', maxAge: null }))
+server.use(passport.initialize()); //*Inicializamos el passport
+//server.use(passport.session()); // Sesión persistente
+
+server.use('/', routes);
 // Error catching endware.
 server.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
