@@ -6,9 +6,9 @@ const { SECRET_KEY, FRONT_URL } = process.env;
 
 //Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
 
-// Ruta PROFILE - GET a /auth/me
+// Ruta PROFILE - GET a /auth/me/:id
 
-server.get("/me", async (req, res, next) => {
+server.get("/me/:id", async (req, res, next) => {
   try {
     if (req.params) {
       const { id } = req.params;
