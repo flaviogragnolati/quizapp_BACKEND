@@ -6,9 +6,9 @@ const { SECRET_KEY, FRONT_URL } = process.env;
 
 //Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
 
-// Ruta PROFILE - GET a /auth/me
+// Ruta PROFILE - GET a /auth/me/:id
 
-server.get("/me", async (req, res, next) => {
+server.get("/me/:id", async (req, res, next) => {
   try {
     if (req.params) {
       const { id } = req.params;
@@ -44,8 +44,13 @@ server.get(
         },
         SECRET_KEY
       );
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
      
-      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH FACEBOOK`, error);
     }
@@ -84,8 +89,13 @@ server.get(
         },
         SECRET_KEY
       );
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
      
-      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)   //redireciona al front y pasa por params el token
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)   //redireciona al front y pasa por params el token
       } catch (error) {
       console.error(`CATCH GOOGLE`, error);
     }
@@ -129,7 +139,6 @@ server.post(
         email,
         birthdate,
         cellphone,
-        password,
       } = req.user;
 
       var token = jwt.sign(
@@ -143,7 +152,13 @@ server.post(
         },
         SECRET_KEY
       );
-      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+
       // return res.status(200).send(
       //   jwt.sign(
       //     {
@@ -182,7 +197,6 @@ server.post(
         email,
         birthdate,
         cellphone,
-        password,
       } = req.user;
 
      
@@ -194,12 +208,64 @@ server.post(
             email,
             birthdate,
             cellphone,
-            password,
           },
           SECRET_KEY
         )
+
+        return res.status(200).send({
+          user: req.user,
+          token
+        });
         
-        return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+        //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+    } catch (error) {
+      console.error(`CATCH LOGIN`, error);
+    }
+  }
+);
+
+//Ruta para Loguearse una ORGANIZACIÓN - POST a /auth/login/org
+
+server.post(
+  "/login/org",
+  passport.authenticate("local-login-org", {
+    failWithError: false,
+    session: false,
+  }),
+  async (req, res) => {
+    try {
+      const {
+        id,
+        name,
+        email,
+        description,
+        country,
+        city,
+        address,
+        logo
+      } = req.school;
+
+     
+       var token = jwt.sign(
+          {
+            id,
+            name,
+            email,
+            description,
+            country,
+            city,
+            address,
+            logo
+          },
+          SECRET_KEY
+        )
+
+        return res.status(200).send({
+          user: req.user,
+          token
+        });
+        
+        //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
