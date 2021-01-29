@@ -44,8 +44,13 @@ server.get(
         },
         SECRET_KEY
       );
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
      
-      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH FACEBOOK`, error);
     }
@@ -84,8 +89,13 @@ server.get(
         },
         SECRET_KEY
       );
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
      
-      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)   //redireciona al front y pasa por params el token
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)   //redireciona al front y pasa por params el token
       } catch (error) {
       console.error(`CATCH GOOGLE`, error);
     }
@@ -142,7 +152,13 @@ server.post(
         },
         SECRET_KEY
       );
-      return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+
       // return res.status(200).send(
       //   jwt.sign(
       //     {
@@ -195,8 +211,13 @@ server.post(
           },
           SECRET_KEY
         )
+
+        return res.status(200).send({
+          user: req.user,
+          token
+        });
         
-        return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+        //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
@@ -238,8 +259,13 @@ server.post(
           },
           SECRET_KEY
         )
+
+        return res.status(200).send({
+          user: req.user,
+          token
+        });
         
-        return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+        //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
