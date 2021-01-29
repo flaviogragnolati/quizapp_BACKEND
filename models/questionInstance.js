@@ -17,7 +17,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   QuestionInstance.init(
     {
-
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      }
     },
     {
       sequelize,

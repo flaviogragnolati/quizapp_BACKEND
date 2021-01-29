@@ -1,5 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   class School extends Model {
     /**
@@ -40,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      log: {
+      logo: {
         type: DataTypes.TEXT,
         validate: {
           isURL: true,
@@ -51,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'School',
+      // timestamps: false,
     }
   );
   return School;

@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       //paranoid: true,
       sequelize,
       modelName: 'User',
-    }  
-  );
-  return User;
-};
+    } );
+    return User;
+  };
+    

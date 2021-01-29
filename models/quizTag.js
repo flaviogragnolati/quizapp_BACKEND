@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       QuizTag.belongsToMany(models.Quiz, {through: 'Quiz-QTag'});
-      QuizTag.belongsTo(models.Subject);
+      // QuizTag.belongsTo(models.Subject);
     }
   }
   QuizTag.init(

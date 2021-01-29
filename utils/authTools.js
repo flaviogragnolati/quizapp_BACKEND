@@ -1,15 +1,30 @@
 const { session } = require('passport');
 const passport = require('passport');
-const { User } = require('../BACKEND/db.js');
+const { School, Role } = require('../models/index');
 
-const checkAdmin = async (req, res, next) => {
-  const { id, isAdmin } = req.user;
+const checkSuperAdmin = async (req, res, next) => {
+  const { isSuperAdmin } = req.school;
  
-  if (isAdmin) {
+  if (isSuperAdmin) {
     return next();
   } else {
     return res.status(401).send({ message: 'No posee el nivel de acceso' });
   }
 };
 
-exports.checkAdmin = checkAdmin;
+// Para terminar en la semana 3
+
+const isStudent = async (req, res, next) => {
+  const { id } = req.user;
+
+  if (role !== "student") {
+    return next();
+  } else {
+    return res.status(401).send({ message: 'No posee el nivel de acceso' });
+  }
+};
+
+module.exports = {
+  checkSuperAdmin,
+  isStudent
+};

@@ -1,175 +1,372 @@
-const server = require('express').Router();
-const { User } = require('../models/index');
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const { makeJWT, cookieMaker, refreshTime } = require('../utils/index');
+const server = require("express").Router();
+const { User, Session } = require("../models/index");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const { SECRET_KEY, FRONT_URL } = process.env;
 
-//import { FRONT_URL } from './config/environments/index'
+//Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
 
-// Ruta ME
-server.get('/me', async (req, res, next) => {
+// Ruta PROFILE - GET a /auth/me/:id
+
+server.get("/me/:id", async (req, res, next) => {
   try {
-    if (req.user) {
-      const { id } = req.user;
+    if (req.params) {
+      const { id } = req.params;
       const result = await User.findOne(id);
-      res.json(result);
-    } else res.sendStatus(401);
+      return res.json(result);
+    } else {
+      return res.sendStatus(401);
+    }
   } catch (error) {
     next(error);
   }
 });
 
-// Ruta para desloguearse (Habría que probarla a ver si anda)
+// Inicio de sesión con FACEBOOK
 
-server.get('/logout', (req, res) => {
-  req.logout();
-  res.clearCookie('refreshToken');
-  res.status(200).send('Cerrar sesión');
-});
+server.get("/facebook", passport.authenticate("facebook"));
 
-
-//Ruta para Registrarse
-server.post('/register', 
-  passport.authenticate('register-local', { session: false }),
+server.get(
+  "/facebook/callback",
+  passport.authenticate("facebook"),
   async (req, res) => {
     try {
-      const user = req.user;
-      
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer');
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
-      return res.send({
-        message: 'Registro exitoso',
-        //token,
-        user,
+      console.log("entre a facebook", req);
+      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
+      var token = jwt.sign(
+        {
+          id,
+          firstName,
+          lastName,
+          email,
+          birthdate,
+          cellphone,
+        },
+        SECRET_KEY
+      );
+
+      return res.status(200).send({
+        user: req.user,
+        token
       });
+     
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
-      console.error(`CATCH REGISTER`, error);
+      console.error(`CATCH FACEBOOK`, error);
     }
   }
 );
 
-//Ruta para Loguearse
-server.post('/login', 
-  passport.authenticate('local-login', {
+// Inicio de sesión con GOOGLE
+
+server.get(
+  "/google",
+
+  passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ],
+  }),
+  (req, res) => {}
+);
+
+server.get(
+  "/google/callback",
+  passport.authenticate("google"),
+  async (req, res) => {
+    try {
+      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
+
+     var token = jwt.sign(
+        {
+          id,
+          firstName,
+          lastName,
+          email,
+          birthdate,
+          cellphone,
+        },
+        SECRET_KEY
+      );
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
+     
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)   //redireciona al front y pasa por params el token
+      } catch (error) {
+      console.error(`CATCH GOOGLE`, error);
+    }
+  }
+);
+
+//*ruta para probar la validacion con el JWT
+server.get(
+  "/test",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    console.log("INGRESO A RUTA PROTEGIDA", req.body);
+    return res.send("prueba de ruta protegia");
+    // return res.send(req.user);
+  }
+);
+
+// Ruta para DESLOGUEARSE - GET a /auth/logout
+
+server.get("/logout", async (req, res) => {  // Esto es con sesiones, cambiarlo si usamos solo token
+  //let { id } = req.user ?
+  const sessionOff = await Session.findOne({
+    where: { userId: id }
+  });
+  await sessionOff.destroy();
+
+  res.status(200).send("Se ha cerrado la sesión");
+});
+
+// Ruta para Registrarse / crear un usuario - POST a /auth/register
+
+server.post(
+  "/register",
+  passport.authenticate("register-local", { session: false }),
+  async (req, res) => {
+    try {
+      const {
+        id,
+        firstName,
+        lastName,
+        email,
+        birthdate,
+        cellphone,
+      } = req.user;
+
+      var token = jwt.sign(
+        {
+          id,
+          firstName,
+          lastName,
+          email,
+          birthdate,
+          cellphone,
+        },
+        SECRET_KEY
+      );
+
+      return res.status(200).send({
+        user: req.user,
+        token
+      });
+      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+
+      // return res.status(200).send(
+      //   jwt.sign(
+      //     {
+      //       id,
+      //       firstName,
+      //       lastName,
+      //       email,
+      //       birthdate,
+      //       cellphone,
+      //       password,
+      //     },
+      //     SECRET_KEY
+      //   )
+      // );
+    } catch (error) {
+      console.error(`CATCH REGISTER`, error);
+      return error;
+    }
+  }
+);
+
+//Ruta para Loguearse - POST a /auth/login
+
+server.post(
+  "/login",
+  passport.authenticate("local-login", {
     failWithError: false,
     session: false,
   }),
   async (req, res) => {
     try {
-      const user = req.user;
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
-      return res.send({
-        message: 'Login exitoso',
-        //token,
-        user,
-      });
+      const {
+        id,
+        firstName,
+        lastName,
+        email,
+        birthdate,
+        cellphone,
+      } = req.user;
+
+     
+       var token = jwt.sign(
+          {
+            id,
+            firstName,
+            lastName,
+            email,
+            birthdate,
+            cellphone,
+          },
+          SECRET_KEY
+        )
+
+        return res.status(200).send({
+          user: req.user,
+          token
+        });
+        
+        //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
   }
 );
 
-server.get('/refresh', 
-  passport.authenticate('jwt-refresh', { session: false }),
+//Ruta para Loguearse una ORGANIZACIÓN - POST a /auth/login/org
+
+server.post(
+  "/login/org",
+  passport.authenticate("local-login-org", {
+    failWithError: false,
+    session: false,
+  }),
   async (req, res) => {
-    const user = req.user;
-    /*const newToken = makeJWT(req.user, refreshTime, 'Bearer');
-    const refresh_token = makeJWT(req.user);
-    cookieMaker('refreshToken', refresh_token, res);*/
-    return res.send({
-      message: 'Refresh exitoso',
-      //newToken,
-      user,
+    try {
+      const {
+        id,
+        name,
+        email,
+        description,
+        country,
+        city,
+        address,
+        logo
+      } = req.school;
+
+     
+       var token = jwt.sign(
+          {
+            id,
+            name,
+            email,
+            description,
+            country,
+            city,
+            address,
+            logo
+          },
+          SECRET_KEY
+        )
+
+        return res.status(200).send({
+          user: req.user,
+          token
+        });
+        
+        //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
+    } catch (error) {
+      console.error(`CATCH LOGIN`, error);
+    }
+  }
+);
+
+// Ruta para promover a un USER - PUT a /auth/promote/:id
+/*
+FALTA RELACIONARLO CON EL QUIZ
+
+server.put("/promote/:id", async (req, res) => {
+  let { id } = req.params;
+  let { role } = req.body;
+
+  if (!id)
+    return res.status(400).send("Es necesario indicar el usuario a promover");
+
+  const userToEdit = User.findByPk(id);
+
+  const newRole = Role.findOne({
+    where: { name: role },
+  });
+
+  const userEdited = await userToEdit.update(
+    {
+      idRole: newRole.id,
+    }
+  );
+
+  res.status(200).json(userEdited);
+});*/
+
+// Rutas para RESETEAR la contraseña
+
+// Primero se crea un token provisorio con caducidad de 5 minutos y se envía a través de un email
+server.put("/resetpassword/:id", async (req, res) => {
+  let { id } = req.params;
+
+  if(!id) return res.status(400).send('No se recibió ID del usuario que desea restaurar su contraseña');
+
+  try {
+    const randomToken = () => {
+      return Math.random().toString(36).substr(2);
+    };
+    const token = () => {
+      return randomToken() + randomToken(); // Para hacer el token más largo
+    };
+
+    const expiresTime = () => {
+      var date = new Date();
+      var minutes = date.getMinutes();
+      date.setMinutes(minutes + 5);
+      return date;
+  }
+    
+    const userUpdated = await User.update(
+      {
+        resetPasswordToken: token(),
+        resetPasswordExpires: expiresTime(),
+      },
+      { where: { id } }
+      );
+
+    return res.status(200).send(userUpdated);
+  } catch(error) {
+    console.error('CATCH PUT RESET PASSWORD', error)
+  }
+});
+
+// Cuando el user ingresa al link se hace un GET a /auth/resetpassword/?token=
+server.get('/resetpassword', async (req, res) => {
+  let { token } = req.query;
+  
+  try {
+    const user = await User.findOne({
+      where: { resetPasswordToken: token }
     });
+    // Si el momento en el que intenta ingresar al link es mayor al de expiración del token se redirecciona a página que indica invalidez del mismo, sino se mostrará el formulario de cambio de contraseña.
+    const now = new Date();
+/*     now > user.resetPasswordExpires ? res.redirect(FRONT_URL + 'invalidresetpasswordtoken/') : res.redirect(FRONT_URL + 'resetpassword/'); */
+  now > user.resetPasswordExpires ? res.send('token inválido') : res.send('Ahora puede cambiar su contraseña'); // Para prueba, cuando el front tenga la ruta hay que redireccionarlo ahí (como está arriba)
+  } catch(error) {
+    console.error('CATCH GET RESET PASSWORD', error)
   }
-);
+});
 
-//*ruta para probar la validacion con el JWT
-server.get('/test', 
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    console.log('INGRESO A RUTA PROTEGIDA', req.body);
-    return res.send('prueba de ruta protegia');
-    // return res.send(req.user);
-  }
-);
+// Actualizar la contraseña
 
-// // Hacer admin a un user (promote User)
-
-// server.put('/:id', 
-// (req, res) => {
-//   let { id } = req.params;
-//   if (!id) return res.status(400).send('El usuario no existe');
-
-//   User.findByPk(id)
-//     .then(User.update({ isAdmin: true }, { where: { id } }))
-//     .then(() => {
-//       return res.status(200).send('Se ha ascendido el usuario a Admin');
-//     });
-// });
-
-//Reiniciar la contraseña (Modificarla para usarla desde un admin)
-
-server.put('/pass/:id', 
- (req, res) => {
+server.put("/pass/:id", (req, res) => {
   let { id } = req.params;
   let { password } = req.body;
 
-  if (!id) return res.status(400).send('El usuario no existe');
+  if (!id) return res.status(400).send("El usuario no existe");
 
   User.findByPk(id)
     .then(User.update({ password }, { where: { id } }))
     .then(() => {
       return res
         .status(200)
-        .send('Se ha modificado la contraseña correctamente');
+        .send("Se ha modificado la contraseña correctamente");
     });
 });
-
-server.get('/github', 
-  passport.authenticate('github', { scope: ['user:email'] }),
-  (req, res) => {}
-);
-
-server.get('/github/callback', 
-   passport.authenticate('github'),
-  async (req, res) => {
-    try {
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
-      return res.redirect('https://web-comm.vercel.app/catalogue');
-    } catch (error) {
-      console.error(`CATCH GIT`, error);
-    }
-  }
-);
-
-server.get('/google', 
-  passport.authenticate('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email',
-    ],
-  }),
-  (req, res) => {}
-);
-
-server.get('/google/callback', 
-  passport.authenticate('google'),
-  async (req, res) => {
-    try {
-      /*const token = makeJWT(req.user, refreshTime, 'Bearer'); // guardar los tiempos de refresh en variable y aplicarselo a ambas
-      const refresh_token = makeJWT(req.user);
-      cookieMaker('refreshToken', refresh_token, res);*/
-      return res.redirect(FRONT_URL);
-    } catch (error) {
-      console.error(`CATCH GOOGLE`, error);
-    }
-  }
-);
 
 module.exports = server;
