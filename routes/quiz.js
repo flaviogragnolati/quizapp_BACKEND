@@ -94,7 +94,6 @@ server.post(
       description,
       modifiedBy,
       createdBy,
-      students,
     } = req.body;
 
     try {
@@ -111,17 +110,6 @@ server.post(
         UserId: createdBy,
         name: "Teacher",
       });
-
-      if (students) {
-        // Array con id de los user a agregar como student
-        students.forEach(async (s) => {
-          await Role.create({
-            QuizId: newQuiz.id,
-            UserId: s,
-            name: "Student",
-          });
-        });
-      }
 
       return res.status(200).send(newQuiz);
     } catch (error) {
@@ -146,7 +134,7 @@ server.put(
       name,
       description,
       modifiedBy,
-      students,
+      //students,
       teachers,
     } = req.body;
 
@@ -175,7 +163,7 @@ server.put(
         });
       }
 
-      if (students) {
+/*       if (students) {
         // Array con id de los user a agregar como student
         students.forEach(async (s) => {
           await Role.create({
@@ -184,7 +172,7 @@ server.put(
             name: "Student",
           });
         });
-      }
+      } */
 
       return res.status(200).send(quizEdited);
     } catch (error) {

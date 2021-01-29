@@ -129,7 +129,6 @@ server.post(
         email,
         birthdate,
         cellphone,
-        password,
       } = req.user;
 
       var token = jwt.sign(
@@ -182,7 +181,6 @@ server.post(
         email,
         birthdate,
         cellphone,
-        password,
       } = req.user;
 
      
@@ -194,7 +192,6 @@ server.post(
             email,
             birthdate,
             cellphone,
-            password,
           },
           SECRET_KEY
         )
@@ -224,8 +221,7 @@ server.post(
         country,
         city,
         address,
-        logo,
-        password
+        logo
       } = req.school;
 
      
@@ -238,8 +234,7 @@ server.post(
             country,
             city,
             address,
-            logo,
-            password
+            logo
           },
           SECRET_KEY
         )
