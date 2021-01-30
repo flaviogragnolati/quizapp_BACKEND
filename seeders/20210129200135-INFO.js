@@ -16,15 +16,20 @@ module.exports = {
       // User.bulkCreate(users, { returning: true, validate: true, individualHooks: true }), //En teoría, debería funcionar así
       queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }), //Así está bien
       queryInterface.bulkInsert('Schools', schools , { returning: true, hooks: true, validate: true }), // Así está bien.
-      queryInterface.bulkInsert('Subjects', subjects , { returning: true, hooks: true, validate: true }), //Hay que agregar el SchoolId
-      // Subject.bulkCreate(subjects, { hooks: true, include: School })
-      // .then(sub => {
-      //   // console.log("que es sub", sub)
-      //   sub.map((x) => {
-      //     x.setSchool(schools[1]) //setSchool o como sea
-      //     // console.log("que tengo acá?", x, schools[1])
-      //   })
-      // }),
+      // queryInterface.bulkInsert('Subjects', subjects , { returning: true, hooks: true, validate: true }), //Hay que agregar el SchoolId
+      Subject.bulkCreate(subjects, { hooks: true, include: School })
+      .then(sub => {
+         sub.map((instance, i) => {
+            School.findByPk(subjects[i].SchoolId)
+            .then(schoolFounded => {
+              instance.setSchool(schoolFounded) //setSchool o como sea
+            }) 
+          // console.log("que tengo acá?", x, schools[1])
+        })
+     
+      })   .catch((err) => {
+        console.log(err);
+      }),
      
       queryInterface.bulkInsert('Questions', questions , { returning: true, hooks: true, validate: true }),
       queryInterface.bulkInsert('Answers', answers , { returning: true, hooks: true, validate: true }),
