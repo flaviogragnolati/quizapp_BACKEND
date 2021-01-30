@@ -37,16 +37,13 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
-const makeJWT = (user, expiresIn, prefix) => {
+const makeJWT = (user) => {
   /**
    * func para crear un jw token
    * recibe user y devuelve un token con la info del user
    */
   const { id } = user;
 
-  const options = {
-    expiresIn: expiresIn || refreshTime,
-  };
   const payload = {
     id,
     user,
@@ -56,18 +53,8 @@ const makeJWT = (user, expiresIn, prefix) => {
   };
 
   const signedToken = jwt.sign(payload, SECRET_KEY, options);
-
-  if (typeof prefix !== 'undefined') {
-    return {
-      token: prefix + ' ' + signedToken,
-      expires: options.expiresIn,
-    };
-  } else {
-    return {
-      token: signedToken,
-      expires: options.expiresIn,
-    };
-  }
+  const BearerToken = `Bearer ${signedToken}`;
+  return BearerToken;
 };
 
 const cookieMaker = (name, token, res) => {
