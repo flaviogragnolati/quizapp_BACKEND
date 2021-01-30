@@ -1,0 +1,136 @@
+const answers = [{
+    text: "Verdadero",
+    correct: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Falso",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "1492",
+    correct: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "1502",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "1496",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "1488",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Primera Cruzada",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Guerras napoleónicas",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "La guerra de los 100 años",
+    correct: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "La guerra de los 30 años",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Cuzco",
+    correct: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Quito",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Machu Pichu",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Lima",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Siglo XVI",
+    correct: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Siglo XVII",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Siglo XV",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Siglo XIV",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Filipo II de Macedonia",
+    correct: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Ptolomeo I",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Leonidas",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+{
+    text: "Flipo I de Grecia",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+},
+
+
+]
+module.exports = answers;

@@ -14,6 +14,7 @@ const rolesRouter = require('./roles.js');
 const router = Router();
 
 //Rutas
+router.get('/', function (req, res) { res.send('Bienvenido a ApiQuizzes'); });
 router.use('/users', usersRouter);
 router.use('/auth', authRouter);
 router.use('/org', orgRouter);
