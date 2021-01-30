@@ -1,16 +1,4 @@
 const answers = [{
-    text: "Verdadero",
-    correct: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    },
-{
-    text: "Falso",
-    correct: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-},
-{
     text: "1492",
     correct: true,
     createdAt: new Date(),

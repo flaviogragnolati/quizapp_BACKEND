@@ -11,15 +11,15 @@ const {User, Subject, School, Answer, Question, Quiz, Review } = require("../mod
 ('use strict');
 
 module.exports = {
-  up(queryInterface, Sequelize) {
-    return Promise.all([
+  up: async (queryInterface, Sequelize) => {
+     return ([
       // User.bulkCreate(users, { returning: true, validate: true, individualHooks: true }), //En teoría, debería funcionar así
       //Cargamos Usuarios
-      queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }), //Así está bien
+      await queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }), //Así está bien
       //Cargamos Organizaciones
-      queryInterface.bulkInsert('Schools', schools , { returning: true, hooks: true, validate: true }), // Así está bien.
+      await queryInterface.bulkInsert('Schools', schools , { returning: true, hooks: true, validate: true }), // Así está bien.
       //Cargamos Subjects (materias)
-      Subject.bulkCreate(subjects, { hooks: true, include: School })
+      await Subject.bulkCreate(subjects, { hooks: true, include: School })
       .then(sub => {
          sub.map((instance, i) => {
             School.findByPk(subjects[i].SchoolId)
@@ -27,13 +27,13 @@ module.exports = {
               instance.setSchool(schoolFounded) 
             }) 
         })
-     
-      })   .catch((err) => {
+       })  
+       .catch((err) => {
         console.log(err);
-      }),
+      })
+      ,
       //Cargamos Quizzes
-      // queryInterface.bulkInsert('Quizzes', quizzes , { returning: true, hooks: true, validate: true }), //Falta agregarle la School
-      Quiz.bulkCreate(quizzes, { hooks: true, include: School })
+      await Quiz.bulkCreate(quizzes, { hooks: true, include: School }) //Agregar el subject
       .then(q => {
         q.map((instance, i) => {
           School.findByPk(quizzes[i].SchoolId)
@@ -43,34 +43,34 @@ module.exports = {
         })
       }).catch((err) => {
         console.log(err);
-      }),
+      }) ,
       //Cargamos Preguntas
-      Question.bulkCreate(questions, { hooks: true, include: Quiz })
+     await  Question.bulkCreate(questions, { hooks: true, include: Quiz })
       .then(q => {
-        q.map((instance, i) => {
+         q.map((instance, i) => {
           Quiz.findByPk(questions[i].QuizId)
           .then(quizF => {
             instance.setQuiz(quizF)
           })
         })
-      }).catch((err) => {
+      })     .catch((err) => {
         console.log(err);
-      }),
+      }) ,
      //Cargamos Respuestas
-     Answer.bulkCreate(answers, { hooks: true, include: Question })
+     await Answer.bulkCreate(answers, { hooks: true, include: Question })
       .then(ans => {
+        
         ans.map((instance, i) => {
           Question.findByPk(answers[i].QuestionId)
           .then(questionF => {
             instance.setQuestion(questionF)
           })
         })
-      }).catch((err) => {
+      }) .catch((err) => {
         console.log(err);
-      }),
+      }) ,
       //Cargamos Reviews
-      // queryInterface.bulkInsert('Reviews', reviews , { returning: true, hooks: true, validate: true }),
-      Review.bulkCreate(reviews, { hooks: true, include: {Quiz, User} })
+      await Review.bulkCreate(reviews, { hooks: true, include: [Quiz, User] })
       .then(rev => {
         rev.map((instance, i) => {
           User.findByPk(reviews[i].UserId)
@@ -82,12 +82,12 @@ module.exports = {
             instance.setQuiz(quizF)
           })
         })
-      }).catch((err) => {
+      })      .catch((err) => {
         console.log(err);
-      }),
+      })      ,
       // queryInterface.bulkInsert('Quiz-QTag', quizQtag , { returning: true, hooks: true, validate: true }),
       
-    ])
+     ])
   },
 
   down: async (queryInterface, Sequelize) => {
