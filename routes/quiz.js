@@ -37,37 +37,38 @@ server.delete(
 
 // Traer todos los quizzes - GET a /quiz
 // La School, la subject, tags, reviews
-//En vez de cantidad de estudiantes poner el promedio de la review?
+// En vez de cantidad de estudiantes poner el promedio de la review?
 server.get("/", async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
-  
  try {
    const schools = await School.findAll();
    
    const subjects = await Subject.findAll();
 
-   const quizzes = await Quiz.findAll();
+   const quizzes = await Quiz.findAll({ include: { model: QuizTag, attributes: { include: ['id'] }}});  // Ver de traer solo los id
     
    const quizTags = await QuizTag.findAll();
    
    const reviews = await Review.findAll();
 
   let response = {
-    schools,
-    subjects,
-    quizzes,
-    quizTags,
-    reviews,
+    schools: {},
+    subjects: {},
+    quizzes: {
+      byId: quizzes,
+    },
+    quizTags: {},
+    reviews: {},
   };
 
-  for(let prop in response) {
-    response[prop].byId = [prop];
-    response[prop].allIds = [prop].map(p => {
-      return p.id
-    })
-  };
+  // /*for(let prop in response) {  // NECESITO DECLARAR EL OBJETO VACÍO
+  //   response[prop].byId = [prop];
+  //   response[prop].allIds = [prop].map(p => {
+  //     return p.id
+  //   })
+  // };*/
 
-  /*response.schools.byId = schools;
+  response.schools.byId = schools;
   response.schools.allIds = schools.map(s => {
     return s.id;
   });
@@ -77,7 +78,9 @@ server.get("/", async (req, res) => {
     return sj.id;
   });
 
-  response.quizzes.byId = quizzes;
+/*   response.quizzes.byId = quizzes.map(qz => {
+    
+  }); */
   response.quizzes.allIds = quizzes.map(q => {
     return q.id;
   });
@@ -90,7 +93,7 @@ server.get("/", async (req, res) => {
   response.reviews.byId = reviews;
   response.reviews.allIds = reviews.map(r => {
     return r.id;
-  });*/
+  });
   
   return res.status(200).send(response);
   
@@ -105,7 +108,7 @@ server.get("/", async (req, res) => {
 // Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
 server.get("/:id", async (req, res) => {
   let { id } = req.params;
-  
+  console.log("ID",id)
   if (!id)
     return res.status(400).send("Debe indicar el id del quiz que desea buscar");
 
@@ -113,41 +116,56 @@ server.get("/:id", async (req, res) => {
       const quiz = await Quiz.findOne({
         where: { id }
       });
-     
+     console.log(`encontré el quiz ${quiz.id}`)
+
       const schools = await School.findOne({
         where: { id: quiz.SchoolId }
       });
+      console.log(`encontré schools ${schools}`)
       
       const subject = await Subject.findOne({
         where: { id: quiz.subjectId }
       });
-    
+      console.log(`encontré subject ${subject}`)
+      
       const quizTags = await QuizTag.findAll({
         where: { QuizId: quiz.id }
       });
       
+      console.log(`encontré quizTags ${quizTags}`)
+
       const reviews = await Review.findAll({
         where: { QuizId: quiz.id }
       });
 
+      console.log(`encontré reviews ${reviews}`)
+      
       const teachers = await Role.findAll({
         where: {
           QuizId: id,
           name: "Teacher",
         }
       });
-
-/*       teachers = []
-
-      const usersTeachers = await Userver.findAll({
-        where: { id }
-      }) */
+      
+      console.log(`encontré teachers ${teachers}`)
 
       const questions = await Question.findAll({
         where: {
           QuizId: id,
          }
       })
+
+      console.log(`encontré questions ${questions}`)
+
+      const answers = await Answer.findAll({
+        where: {
+          QuestionId: question
+        }
+      })
+      answers[prop].allIds = [prop].map(a => {
+            return a.id
+          })
+           console.log(answers)
    
      let response = {
        schools: {},
@@ -226,8 +244,8 @@ server.get("/:QuizId/Teachers", async (req, res) => {
 
 server.post(
   "/",
-  passport.authenticate("jwt-school", { session: false }),
-  checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
+  //passport.authenticate("jwt-school", { session: false }),
+  //checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
     let {
       quantity,
@@ -235,8 +253,9 @@ server.post(
       description,
       modifiedBy,
       createdBy,
+      SubjectId,
+      SchoolId,
     } = req.body;
-
     try {
       const newQuiz = await Quiz.create({
         quantity,
@@ -244,6 +263,8 @@ server.post(
         description,
         modifiedBy,
         createdBy,
+        SubjectId,
+        SchoolId,
       });
 
       await Role.create({
@@ -277,6 +298,8 @@ server.put(
       modifiedBy,
       //students,
       teachers,
+      SubjectId,
+      SchoolId,
     } = req.body;
 
     if (!id)
@@ -291,12 +314,14 @@ server.put(
         name,
         description,
         modifiedBy,
+        SubjectId,
+        SchoolId,
       }); // Habría que ver si se puede poner el "modifiedBy" de manera automática
 
       if (teachers) {
         // Array con id de los user a agregar como student
         teachers.forEach(async (t) => {
-          await Role.create({
+          await Role.create({ //Cuando haya data, revisar si agrega por segunda vez un teacher
             QuizId: newQuiz.id,
             UserId: t,
             name: "Teacher",

@@ -68,10 +68,10 @@ server.get("/quizzes/", async (req, res) => {
 // Crear una SUBJECT - POST a /subject
 
 server.post("/", async (req, res) => {
-  let { name, description, subjectId } = req.body;
+  let { name, description, schoolId } = req.body;
 
   try {
-    const newSubject = await Subject.create({ name, description, subjectId });
+    const newSubject = await Subject.create({ name, description, schoolId });
 
     return res.status(200).send(newSubject);
   } catch (error) {
