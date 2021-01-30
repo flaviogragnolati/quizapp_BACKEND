@@ -5,6 +5,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
+    QuizId: 1,
    },
   {
     title: 'Question 2',
@@ -13,6 +14,7 @@ const questions = [{
     modifiedBy: 2,
     createdAt: new Date(),
     updatedAt: new Date(),
+    QuizId: 1,
    },
   {
     title: 'Question 3',
@@ -21,6 +23,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
+    QuizId: 1,
   },
   {
     title: 'Question 4',
@@ -29,6 +32,7 @@ const questions = [{
     modifiedBy: 2,
     createdAt: new Date(),
     updatedAt: new Date(),
+    QuizId: 1,
   },
   {
     title: 'Question 5',
@@ -37,6 +41,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
+    QuizId: 1,
   }
 ]
 
