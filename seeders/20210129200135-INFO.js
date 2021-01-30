@@ -5,6 +5,7 @@ const questions = require('../data/questions');
 const answers = require ('../data/answers');
 const quizzes = require('../data/quizzes');
 const reviews = require('../data/reviews');
+const User = require("../models/index");
 
 
 'use strict';
@@ -12,7 +13,8 @@ const reviews = require('../data/reviews');
 module.exports = {
   up (queryInterface, Sequelize) {
     return Promise.all([
-      queryInterface.bulkInsert('Users', users , { returning: true, hooks: true, validate: true }),
+      // User.bulkCreate(users, { returning: true, validate: true, individualHooks: true }), //En teoría, debería funcionar así
+      queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }),
       queryInterface.bulkInsert('Schools', schools , { returning: true, hooks: true, validate: true }),
       queryInterface.bulkInsert('Subjects', subjects , { returning: true, hooks: true, validate: true }),
       queryInterface.bulkInsert('Questions', questions , { returning: true, hooks: true, validate: true }),
