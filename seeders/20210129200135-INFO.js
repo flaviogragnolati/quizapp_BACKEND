@@ -1,17 +1,16 @@
-const users = require ('../data/users'); 
-const schools = require ('../data/schools'); 
+const users = require('../data/users');
+const schools = require('../data/schools');
 const subjects = require('../data/subjets');
 const questions = require('../data/questions');
-const answers = require ('../data/answers');
+const answers = require('../data/answers');
 const quizzes = require('../data/quizzes');
 const reviews = require('../data/reviews');
 const User = require("../models/index");
 
-
-'use strict';
+('use strict');
 
 module.exports = {
-  up (queryInterface, Sequelize) {
+  up(queryInterface, Sequelize) {
     return Promise.all([
       // User.bulkCreate(users, { returning: true, validate: true, individualHooks: true }), //En teoría, debería funcionar así
       queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }),
@@ -24,19 +23,15 @@ module.exports = {
     ])
   },
 
-
-
   down: async (queryInterface, Sequelize) => {
-    
-      return Promise.all([
-        queryInterface.bulkDelete('Users', null , {  }),
-        queryInterface.bulkDelete('Schools', null , {  }),
-        queryInterface.bulkDelete('Subjects', null , {  }),
-        queryInterface.bulkDelete('Questions', null , {  }),
-        queryInterface.bulkDelete('Answers', null , {  }),
-        queryInterface.bulkDelete('Quizzes', null , {  }),
-        queryInterface.bulkDelete('Reviews', null , {  }),
-      ])
-   
-  }
+    return Promise.all([
+      queryInterface.bulkDelete('Users', null, {}),
+      queryInterface.bulkDelete('Schools', null, {}),
+      queryInterface.bulkDelete('Subjects', null, {}),
+      queryInterface.bulkDelete('Questions', null, {}),
+      queryInterface.bulkDelete('Answers', null, {}),
+      queryInterface.bulkDelete('Quizzes', null, {}),
+      queryInterface.bulkDelete('Reviews', null, {}),
+    ]);
+  },
 };
