@@ -30,8 +30,7 @@ module.exports = {
        })  
        .catch((err) => {
         console.log(err);
-      })
-      ,
+      }),
       //Cargamos Quizzes
       await Quiz.bulkCreate(quizzes, { hooks: true, include: School }) //Agregar el subject
       .then(q => {
@@ -43,7 +42,7 @@ module.exports = {
         })
       }).catch((err) => {
         console.log(err);
-      }) ,
+      }),
       //Cargamos Preguntas
      await  Question.bulkCreate(questions, { hooks: true, include: Quiz })
       .then(q => {
@@ -55,7 +54,7 @@ module.exports = {
         })
       })     .catch((err) => {
         console.log(err);
-      }) ,
+      }),
      //Cargamos Respuestas
      await Answer.bulkCreate(answers, { hooks: true, include: Question })
       .then(ans => {
@@ -68,7 +67,7 @@ module.exports = {
         })
       }) .catch((err) => {
         console.log(err);
-      }) ,
+      }),
       //Cargamos Reviews
       await Review.bulkCreate(reviews, { hooks: true, include: [Quiz, User] })
       .then(rev => {
@@ -82,9 +81,9 @@ module.exports = {
             instance.setQuiz(quizF)
           })
         })
-      })      .catch((err) => {
+      }).catch((err) => {
         console.log(err);
-      })      ,
+      }),
       // queryInterface.bulkInsert('Quiz-QTag', quizQtag , { returning: true, hooks: true, validate: true }),
       
      ])
