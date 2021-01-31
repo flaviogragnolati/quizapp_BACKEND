@@ -6,19 +6,18 @@ const answers = require('../data/answers');
 const quizzes = require('../data/quizzes');
 const reviews = require('../data/reviews');
 const quizQtag = require('../data/quizQtag');
-const tags = require('../data/tags')
+const tags = require('../data/tags');
 const {User, Subject, School, Answer, Question, Quiz, Review, QuizTag } = require("../models/index");
 
 ('use strict');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-     return ([
-       //Cargamos Usuarios
-       // await queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }), //Así está bien
-      await User.bulkCreate(users, { hooks: true }), //En teoría, debería funcionar así
+    return ([
+     //Cargamos Usuarios
+      await User.bulkCreate(users, { hooks: true }), 
       //Cargamos Organizaciones
-      await queryInterface.bulkInsert('Schools', schools , { returning: true, hooks: true, validate: true }), // Así está bien.
+      await School.bulkCreate(schools , { hooks: true }), 
       //Cargamos Subjects (materias)
       await Subject.bulkCreate(subjects, { hooks: true, include: School })
       .then(sub => {
@@ -102,32 +101,19 @@ module.exports = {
       }).catch((err) => {
         console.log(err);
       }),
-      //Cargamos Tags. Revisar porque jode algo, y ya estoy cansado.
-      //Hay que darle un QuizTag al quiz, y/o un Quiz al QuizTag. Esta no sería necesaria
-      // await QuizTag.bulkCreate(tags, { hooks: true, include: Quiz })
-      // .then(t => {
-      //   t.map((instance, i) => {
-      //     Quiz.findByPk(tags[i].QuizId)
-      //     .then(qF => {
-      //       instance.setQuiz(qF)
-      //     })
-      //   })
-      // }) .catch((err) => {
-      //   console.log(err);
-      // }),
      ])
     },
 
   down: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.bulkDelete('Users', null, {}),
-      queryInterface.bulkDelete('Schools', null, {}),
-      queryInterface.bulkDelete('Subjects', null, {}),
-      queryInterface.bulkDelete('Questions', null, {}),
-      queryInterface.bulkDelete('Answers', null, {}),
-      queryInterface.bulkDelete('Quizzes', null, {}),
-      queryInterface.bulkDelete('Reviews', null, {}),
-      queryInterface.bulkDelete('Quiz-QTag', null, {}),
+      queryInterface.bulkDelete('Users', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Schools', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Subjects', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Questions', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Answers', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Quizzes', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Reviews', null, {truncate: true, cascade: true, restartIdentity: true}),
+      queryInterface.bulkDelete('Quiz-QTag', null, {truncate: true, cascade: true, restartIdentity: true}),
     ]);
   },
 };
