@@ -8,6 +8,6 @@ const quizzes = [{
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
-  SubjectId: 1,
+  SubjectId: 4,
 }]
 module.exports = quizzes;
