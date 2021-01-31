@@ -39,25 +39,30 @@ server.get('/', (req, res, next) => {
 
 //RUTA para listar todos los QUIZZES de una SCHOOL - get a /org/:id/quizzes
 server.get("/:id/quizzes", async (req, res) => {
-  console.log("ENTRÉ")
  let {id} = req.params;
 
  if (!id) return res.status(400).send("La Organización no existe")
 
  try {
     
-   const quizzes = await Quiz.findAll({where: {SchoolId: id}});  // Ver de traer solo los id
+   const quizzes = await Quiz.findAll({
+     where: {
+       SchoolId: id
+      },
+      include: {
+        model: Subject,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'SchoolId']
+        }
+      }
+    });  // Ver de traer solo los id
       
-   const subjects = await Subject.findAll({where: {SchoolId: id}});
-
-    
+/*    const subjects = await Subject.findAll({where: {SchoolId: id}});
 
   let response = {
     quizzes: {},
     subjects: {},
      };
-
-
 
   response.subjects.byId = subjects;
   response.subjects.allIds = subjects.map(sj => {
@@ -67,9 +72,9 @@ server.get("/:id/quizzes", async (req, res) => {
   response.quizzes.byId = quizzes; 
   response.quizzes.allIds = quizzes.map(q => {
     return q.id;
-  });
+  }); */
   
-  return res.status(200).send(response);
+  return res.status(200).send(quizzes);
   
   } catch(error) {
     console.error(error);
