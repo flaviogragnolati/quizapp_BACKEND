@@ -1,21 +1,21 @@
-const server = require('express').Router();
-const { School } = require('../models/index');
+const server = require("express").Router();
+const { School, Quiz, Subject } = require("../models/index");
 
 // RUTA para BORRAR School - delete a /org/:id
 
 server.delete(
-  '/:id',
+  "/:id",
   // passport.authenticate('jwt', { session: false }),
   // checkAdmin,
   async (req, res) => {
     let { id } = req.params;
 
-    if (!id) return res.status(400).send('No se recibió ID');
+    if (!id) return res.status(400).send("No se recibió ID");
 
     const schoolToDestroy = await School.findByPk(id);
 
     if (!schoolToDestroy)
-      return res.status(400).send('No existe la school a eliminar');
+      return res.status(400).send("No existe la school a eliminar");
 
     const school = { ...schoolToDestroy.dataValues };
     const payload = {
@@ -29,7 +29,7 @@ server.delete(
 
 // RUTA para LISTAR TODAS las School - get a /org
 
-server.get('/', (req, res, next) => {
+server.get("/", (req, res, next) => {
   School.findAll()
     .then((school) => {
       return res.status(200).send(school);
@@ -37,9 +37,60 @@ server.get('/', (req, res, next) => {
     .catch(next);
 });
 
+//RUTA para listar todos los QUIZZES de una SCHOOL - get a /org/:id/quizzes
+server.get("/:id/quizzes", async (req, res) => {
+  let { id } = req.params;
+
+  if (!id) return res.status(400).send("La Organización no existe");
+
+  try {
+    const quizzes = await Quiz.findAll({
+      where: {
+        SchoolId: id,
+      },
+      include: {
+        model: Subject,
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "SchoolId"],
+        },
+      },
+    }); // Ver de traer solo los id
+
+    let response = {
+      quizzes: {},
+    };
+
+    response.quizzes.byId = quizzes;
+    response.quizzes.allIds = quizzes.map((q) => {
+      return q.id;
+    });
+    /*    const subjects = await Subject.findAll({where: {SchoolId: id}});
+
+  let response = {
+    quizzes: {},
+    subjects: {},
+     };
+
+  response.subjects.byId = subjects;
+  response.subjects.allIds = subjects.map(sj => {
+    return sj.id;
+  });
+
+  response.quizzes.byId = quizzes; 
+  response.quizzes.allIds = quizzes.map(q => {
+    return q.id;
+  }); */
+
+    return res.status(200).send(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Error al buscar los quizzes" });
+  }
+});
+
 // RUTA para AGREGAR/CREAR School - post a /org
 
-server.post('/', (req, res, next) => {
+server.post("/", (req, res, next) => {
   let {
     name,
     email,
@@ -69,9 +120,9 @@ server.post('/', (req, res, next) => {
     .then((school) => {
       const [instance, wasCreated] = school;
       if (!wasCreated) {
-        return res.status(200).send('La organización ya está registrada');
+        return res.status(200).send("La organización ya está registrada");
       } else {
-        return res.status(200).send('La organización ha sido creada');
+        return res.status(200).send("La organización ha sido creada");
       }
     })
     .catch((err) => {
@@ -81,7 +132,7 @@ server.post('/', (req, res, next) => {
 
 // RUTA para EDITAR School - PUT a /org/:id
 
-server.put('/:id', async (req, res) => {
+server.put("/:id", async (req, res) => {
   let { id } = req.params;
   let {
     name,
@@ -97,7 +148,7 @@ server.put('/:id', async (req, res) => {
   if (!id)
     return res
       .status(400)
-      .send('Es necesario indicar la escuela a actualizar/modificar');
+      .send("Es necesario indicar la escuela a actualizar/modificar");
 
   const schoolToEdit = await School.findByPk(id);
 
