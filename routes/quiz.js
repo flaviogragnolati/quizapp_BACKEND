@@ -63,22 +63,36 @@ server.get("/", async (req, res) => {
    
    const reviews = await Review.findAll();
 
-  let response = {
-    schools: {},
+   let data = [{name: 'schools', data: schools}, {name: 'subjects', data: subjects}, {name: 'quizzes', data: quizzes}, {name: 'quizTags', data: quizTags}, {name: 'reviews', data: reviews}];
+
+   let response = {};
+
+   for(let i = 0; i < data.length; i++) {
+     let newProp = data[i].name;
+     console.log(newProp)
+    response[newProp] = {};
+    response[newProp].byId = data[i].data;
+    response[newProp].allIds = data[i].data.map(p => {
+     return p.id
+    })
+   }
+
+ /* let response = {
+     schools: {},
     subjects: {},
     quizzes: {},
     quizTags: {},
-    reviews: {},
-  };
+    reviews: {}, 
+  };*/
 
   /*for(let prop in response) {  // NECESITO DECLARAR EL OBJETO VACÍO
-     response[prop].byId = await [prop].findAll();
+     response[prop].byId = [prop]
      response[prop].allIds = [prop].map(p => {
       return p.id
      })
    };*/
 
-  response.schools.byId = schools;
+  /*response.schools.byId = schools;
   response.schools.allIds = schools.map(s => {
     return s.id;
   });
@@ -101,7 +115,7 @@ server.get("/", async (req, res) => {
   response.reviews.byId = reviews;
   response.reviews.allIds = reviews.map(r => {
     return r.id;
-  });
+  });*/
   
   return res.status(200).send(response);
   
