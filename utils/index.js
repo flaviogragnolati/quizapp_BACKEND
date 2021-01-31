@@ -52,6 +52,8 @@ const makeJWT = (user) => {
     audience: 'localhost:3000',
   };
 
+  const options = {}; //por si necesitamos pasarle opciones adicionales al token, por ahora...nada
+
   const signedToken = jwt.sign(payload, SECRET_KEY, options);
   const BearerToken = `Bearer ${signedToken}`;
   return BearerToken;
