@@ -14,9 +14,9 @@ const {User, Subject, School, Answer, Question, Quiz, Review, QuizTag } = requir
 module.exports = {
   up: async (queryInterface, Sequelize) => {
      return ([
-      // User.bulkCreate(users, { returning: true, validate: true, individualHooks: true }), //En teoría, debería funcionar así
-      //Cargamos Usuarios
-      await queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }), //Así está bien
+       //Cargamos Usuarios
+       // await queryInterface.bulkInsert('Users', users , { returning: true, validate: true, individualHooks: true }), //Así está bien
+      await User.bulkCreate(users, { hooks: true }), //En teoría, debería funcionar así
       //Cargamos Organizaciones
       await queryInterface.bulkInsert('Schools', schools , { returning: true, hooks: true, validate: true }), // Así está bien.
       //Cargamos Subjects (materias)
@@ -116,7 +116,7 @@ module.exports = {
       //   console.log(err);
       // }),
      ])
-  },
+    },
 
   down: async (queryInterface, Sequelize) => {
     return Promise.all([
