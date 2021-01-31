@@ -1,7 +1,19 @@
 const passport = require("passport");
 const server = require("express").Router();
-const { Quiz, Role, User, Subject, Review, Question, Answer, School, QuizTag } = require("../models/index");
+const {
+  Quiz,
+  Role,
+  User,
+  Subject,
+  Review,
+  Question,
+  Answer,
+  School,
+  QuizTag,
+} = require("../models/index");
 const { checkSuperAdmin } = require("../utils/authTools.js");
+
+const { normalize, schema } = require("normalizr");
 
 // Borrar una QUIZ by ID - DELETE a /quiz/:id
 
@@ -10,7 +22,7 @@ const { checkSuperAdmin } = require("../utils/authTools.js");
 server.delete(
   "/:id",
   passport.authenticate("jwt-school", { session: false }),
-  checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
+  checkSuperAdmin, // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
     let { id } = req.params;
 
@@ -54,19 +66,17 @@ server.get("/", async (req, res) => {
   let response = {
     schools: {},
     subjects: {},
-    quizzes: {
-      byId: quizzes,
-    },
+    quizzes: {},
     quizTags: {},
     reviews: {},
   };
 
-  // /*for(let prop in response) {  // NECESITO DECLARAR EL OBJETO VACÍO
-  //   response[prop].byId = [prop];
-  //   response[prop].allIds = [prop].map(p => {
-  //     return p.id
-  //   })
-  // };*/
+  /*for(let prop in response) {  // NECESITO DECLARAR EL OBJETO VACÍO
+     response[prop].byId = await [prop].findAll();
+     response[prop].allIds = [prop].map(p => {
+      return p.id
+     })
+   };*/
 
   response.schools.byId = schools;
   response.schools.allIds = schools.map(s => {
@@ -78,9 +88,7 @@ server.get("/", async (req, res) => {
     return sj.id;
   });
 
-/*   response.quizzes.byId = quizzes.map(qz => {
-    
-  }); */
+  response.quizzes.byId = quizzes
   response.quizzes.allIds = quizzes.map(q => {
     return q.id;
   });
@@ -103,113 +111,110 @@ server.get("/", async (req, res) => {
   }
 });
 
-
 // Traer un quiz - GET a /quiz/:id
 // Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
 server.get("/:id", async (req, res) => {
   let { id } = req.params;
-  console.log("ID",id)
+  console.log("ID", id);
   if (!id)
     return res.status(400).send("Debe indicar el id del quiz que desea buscar");
 
-    try {
-      const quiz = await Quiz.findOne({
-        where: { id }
-      });
-     console.log(`encontré el quiz ${quiz.id}`)
+  try {
+    const quiz = await Quiz.findOne({
+      where: { id },
+    });
+    console.log(`encontré el quiz ${quiz.id}`);
 
-      const schools = await School.findOne({
-        where: { id: quiz.SchoolId }
-      });
-      console.log(`encontré schools ${schools}`)
-      
-      const subject = await Subject.findOne({
-        where: { id: quiz.subjectId }
-      });
-      console.log(`encontré subject ${subject}`)
-      
-      const quizTags = await QuizTag.findAll({
-        where: { QuizId: quiz.id }
-      });
-      
-      console.log(`encontré quizTags ${quizTags}`)
+    const schools = await School.findOne({
+      where: { id: quiz.SchoolId },
+    });
+    console.log(`encontré schools ${schools}`);
 
-      const reviews = await Review.findAll({
-        where: { QuizId: quiz.id }
-      });
+    const subject = await Subject.findOne({
+      where: { id: quiz.subjectId },
+    });
+    console.log(`encontré subject ${subject}`);
 
-      console.log(`encontré reviews ${reviews}`)
-      
-      const teachers = await Role.findAll({
-        where: {
-          QuizId: id,
-          name: "Teacher",
-        }
-      });
-      
-      console.log(`encontré teachers ${teachers}`)
+    const quizTags = await QuizTag.findAll({
+      where: { QuizId: quiz.id },
+    });
 
-      const questions = await Question.findAll({
-        where: {
-          QuizId: id,
-         }
-      })
+    console.log(`encontré quizTags ${quizTags}`);
 
-      console.log(`encontré questions ${questions}`)
+    const reviews = await Review.findAll({
+      where: { QuizId: quiz.id },
+    });
 
-      const answers = await Answer.findAll({
-        where: {
-          QuestionId: question
-        }
-      })
-      answers[prop].allIds = [prop].map(a => {
-            return a.id
-          })
-           console.log(answers)
-   
-     let response = {
-       schools: {},
-       subjects: {},
-       quiz: {},
-       quizTags: {},
-       reviews: {},
-       teachers: {},
-     };
+    console.log(`encontré reviews ${reviews}`);
 
-     response.quiz = quiz;
-   
-     response.schools.byId = schools;
-     response.schools.allIds = schools.map(s => {
-       return s.id;
-     });
-   
-     response.subjects.byId = subjects;
-     response.subjects.allIds = subjects.map(sj => {
-       return sj.id;
-     });
-   
-     response.quizTags.byId = quizTags;
-     response.quizTags.allIds = quizTags.map(qt => {
-       return qt.id;
-     })
-   
-     response.reviews.byId = reviews;
-     response.reviews.allIds = reviews.map(r => {
-       return r.id;
-     });
+    const teachers = await Role.findAll({
+      where: {
+        QuizId: id,
+        name: "Teacher",
+      },
+    });
 
-     response.teachers.byId = teachers;
-     response.teachers.allIds = teachers.map(t => {
-       return t.id;
-     });
-     
-     return res.status(200).send(response);
-     
-     } catch(error) {
-       console.error(error);
-       return res.status(500).send({ message: "Error al buscar el quiz" });
-     }
+    console.log(`encontré teachers ${teachers}`);
 
+    const questions = await Question.findAll({
+      where: {
+        QuizId: id,
+      },
+    });
+
+    console.log(`encontré questions ${questions}`);
+
+    const answers = await Answer.findAll({
+      where: {
+        QuestionId: question,
+      },
+    });
+    answers[prop].allIds = [prop].map((a) => {
+      return a.id;
+    });
+    console.log(answers);
+
+    let response = {
+      schools: {},
+      subjects: {},
+      quiz: {},
+      quizTags: {},
+      reviews: {},
+      teachers: {},
+    };
+
+    response.quiz = quiz;
+
+    response.schools.byId = schools;
+    response.schools.allIds = schools.map((s) => {
+      return s.id;
+    });
+
+    response.subjects.byId = subjects;
+    response.subjects.allIds = subjects.map((sj) => {
+      return sj.id;
+    });
+
+    response.quizTags.byId = quizTags;
+    response.quizTags.allIds = quizTags.map((qt) => {
+      return qt.id;
+    });
+
+    response.reviews.byId = reviews;
+    response.reviews.allIds = reviews.map((r) => {
+      return r.id;
+    });
+
+    response.teachers.byId = teachers;
+    response.teachers.allIds = teachers.map((t) => {
+      return t.id;
+    });
+
+    return res.status(200).send(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Error al buscar el quiz" });
+  }
 });
 
 // Traer todos los teachers de un QUIZ - GET a /quiz/:QuizId/teachers
@@ -288,7 +293,7 @@ server.post(
 server.put(
   "/:id",
   passport.authenticate("jwt-school", { session: false }),
-  checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
+  checkSuperAdmin, // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
     let { id } = req.params;
     let {
@@ -321,7 +326,8 @@ server.put(
       if (teachers) {
         // Array con id de los user a agregar como student
         teachers.forEach(async (t) => {
-          await Role.create({ //Cuando haya data, revisar si agrega por segunda vez un teacher
+          await Role.create({
+            //Cuando haya data, revisar si agrega por segunda vez un teacher
             QuizId: newQuiz.id,
             UserId: t,
             name: "Teacher",
@@ -329,7 +335,7 @@ server.put(
         });
       }
 
-/*       if (students) {
+      /*       if (students) {
         // Array con id de los user a agregar como student
         students.forEach(async (s) => {
           await Role.create({
