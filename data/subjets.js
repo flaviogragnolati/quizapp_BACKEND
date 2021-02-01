@@ -33,6 +33,13 @@ const subjects = [{
     updatedAt: new Date(),
     SchoolId: 5,
 },
+{
+    name: "Anatomía" ,
+    description: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    SchoolId: 1,
+},
 
 ]
 

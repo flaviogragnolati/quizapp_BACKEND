@@ -32,4 +32,4 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   return Answer;
-};
+};0

@@ -269,7 +269,7 @@ server.post(
       quantity,
       name,
       description,
-      modifiedBy,
+      //modifiedBy,
       createdBy,
       SubjectId,
       SchoolId,
