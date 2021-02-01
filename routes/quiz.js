@@ -58,8 +58,8 @@ server.get("/", async (req, res) => {
     const subjects = await Subject.findAll();
 
     const quizzes = await Quiz.findAll({
-      include: { model: QuizTag, attributes: { include: ["id"] } },
-    }); // Ver de traer solo los id
+      include: { model: QuizTag },
+    });
 
     const quizTags = await QuizTag.findAll();
 
@@ -89,10 +89,9 @@ server.get("/", async (req, res) => {
             });
             delete object.dataValues[property];
           }
-          object.dataValues.ids = ids;
+          object.dataValues.ids = ids;    // Darle el nombre de la propiedad
         }
       });
-
 
       response[newProp].allIds = allData[i].data.map((p) => {
         return p.id;
