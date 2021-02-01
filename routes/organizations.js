@@ -37,6 +37,32 @@ server.get("/", (req, res, next) => {
     .catch(next);
 });
 
+// RUTA para listar todas las SUBJECTS de una SCHOOL - GET a /org/:id/subjects
+
+server.get("/:id/subjects", async (req, res) => {
+  let { id } = req.params;
+  if (!id) return res.status(400).send("La Organización no existe");
+  try {
+    const subjects = await Subject.findAll({
+      where: {
+        SchoolId: id,
+      },
+      include: {
+        model: Subject,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+    });
+    let resp = {subjects: {},};
+    resp.subjects.byId = subjects;
+    resp.subjects.allIds = subjects.map((s) => {return s.id});
+  } catch(error){
+    console.error(error);
+    return res.status(500).send("Error en la búsqueda de los subjects")
+  }
+});
+
 //RUTA para listar todos los QUIZZES de una SCHOOL - get a /org/:id/quizzes
 server.get("/:id/quizzes", async (req, res) => {
   let { id } = req.params;
