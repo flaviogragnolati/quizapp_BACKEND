@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface.addColumn(
       'Quizzes',
       'logo',
-      {
+       {
        type: Sequelize.TEXT,
        validate: {
          isURL: true,

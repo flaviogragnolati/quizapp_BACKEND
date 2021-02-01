@@ -68,7 +68,7 @@ server.get("/", async (req, res) => {
     let allData = [
       { name: "schools", data: schools },
       { name: "subjects", data: subjects },
-      { name: "quizzes", data: quizzes },
+      { name: "quizzes", data: quizzes, include: 'QuizTags' },
       { name: "quizTags", data: quizTags },
       { name: "reviews", data: reviews },
     ];
@@ -80,29 +80,31 @@ server.get("/", async (req, res) => {
       response[newProp] = {};
       response[newProp].byId = allData[i].data;
 
-      var ids = [];
-      response[newProp].byId.forEach((object) => {
-        for (let property in object.dataValues) {
-          if (Array.isArray(object[property])) {
-            object[property].forEach((p) => {
-              ids.push(p.dataValues.id);
-            });
-            delete object.dataValues[property];
-            /*var newProperty = property;
-            Object.defineProperty(object.dataValues, newProperty + 'Ids', {
-              enumerable: true,
-              get: function () {
-                return ids;
-              },
-              set: function (newArray) {
-                ids = newArray;
-              },
-            }); */
-            //object.dataValues[newProperty] = ids;
-            object.dataValues.ids = ids;    // Darle el nombre de la propiedad de forma dinámica
+      if(allData[i].include !== undefined) {
+        var ids = [];
+
+        response[newProp].byId.forEach((object) => {
+
+              object[property].forEach((p) => {
+                ids.push(p.dataValues.id);
+              });
+              delete object.dataValues[property];
+              /*var newProperty = property;
+              Object.defineProperty(object.dataValues, newProperty + 'Ids', {
+                enumerable: true,
+                get: function () {
+                  return ids;
+                },
+                set: function (newArray) {
+                  ids = newArray;
+                },
+              }); */
+              //object.dataValues[newProperty] = ids;
+              object.dataValues.ids = ids;    // Darle el nombre de la propiedad de forma dinámica
+            }
           }
-        }
-      });
+        });
+      }
 
       response[newProp].allIds = allData[i].data.map((p) => {
         return p.id;

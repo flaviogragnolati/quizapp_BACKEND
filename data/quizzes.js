@@ -3,12 +3,12 @@ const quizzes = [{
   quantity: 5,
   name: "Quiz de Historia",   // Hay A&Q
   description: "Simple quiz sobre Historia",
-  logo: 'https://i.ibb.co/rkkp0c8/cuento-piratas-1051-554.jpg',
   modifiedBy: 1,
   createdBy: 1,
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
+  logo: 'https://i.ibb.co/rkkp0c8/cuento-piratas-1051-554.jpg',
   SubjectId: 4,
 },
 {
@@ -18,11 +18,11 @@ const quizzes = [{
   description: "Simple quiz sobre Química",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 2,
+  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
 },
 {
   // 3
@@ -31,11 +31,11 @@ const quizzes = [{
   description: "Simple quiz sobre Informática",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
 },
 {
   // 4
@@ -44,11 +44,11 @@ const quizzes = [{
   description: "Simple quiz sobre CSS",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/JHLrnBR/Css-and-HTML-programming-languages-Computer-programming-coding-IT-Female-programmer-cartoon-characte.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/JHLrnBR/Css-and-HTML-programming-languages-Computer-programming-coding-IT-Female-programmer-cartoon-characte.jpg',
 },
 {
   // 5
@@ -57,11 +57,11 @@ const quizzes = [{
   description: "Simple quiz sobre Matemáticas",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
 },
 {
   // 6
@@ -70,11 +70,11 @@ const quizzes = [{
   description: "Simple quiz sobre HTML",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
 },
 {
   // 7
@@ -83,11 +83,11 @@ const quizzes = [{
   description: "Simple quiz sobre JavaScript",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
 },
 {
   // 8
@@ -96,22 +96,22 @@ const quizzes = [{
   description: "Simple quiz sobre Anatomía",
   modifiedBy: 1,
   createdBy: 1,
-  logo: 'https://i.ibb.co/9nXykYH/conjunto-iconos-anatomia-98292-1553.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 2,
   SubjectId: 6,
+  logo: 'https://i.ibb.co/9nXykYH/conjunto-iconos-anatomia-98292-1553.jpg',
 },
 {
   // 9
   quantity: 5,
   name: "Quiz de Historia",   
   description: "Simple quiz sobre Historia",
-  logo: 'https://i.ibb.co/rkkp0c8/cuento-piratas-1051-554.jpg',
   modifiedBy: 1,
   createdBy: 1,
   createdAt: new Date(),
   updatedAt: new Date(),
+  logo: 'https://i.ibb.co/rkkp0c8/cuento-piratas-1051-554.jpg',
   SchoolId: 1,
   SubjectId: 4,
 },
@@ -122,11 +122,11 @@ const quizzes = [{
   description: "Simple quiz sobre Química",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 2,
+  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
 },
 {
   // 11
@@ -135,11 +135,11 @@ const quizzes = [{
   description: "Simple quiz sobre Informática",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
 },
 {
   // 12
@@ -148,11 +148,11 @@ const quizzes = [{
   description: "Simple quiz sobre CSS",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/JHLrnBR/Css-and-HTML-programming-languages-Computer-programming-coding-IT-Female-programmer-cartoon-characte.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/JHLrnBR/Css-and-HTML-programming-languages-Computer-programming-coding-IT-Female-programmer-cartoon-characte.jpg',
 },
 {
   // 13
@@ -161,11 +161,11 @@ const quizzes = [{
   description: "Simple quiz sobre Matemáticas",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
 },
 {
   // 14
@@ -174,11 +174,11 @@ const quizzes = [{
   description: "Simple quiz sobre HTML",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
 },
 {
   // 15
@@ -187,11 +187,11 @@ const quizzes = [{
   description: "Simple quiz sobre JavaScript",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
 },
 {
   // 16
@@ -200,11 +200,11 @@ const quizzes = [{
   description: "Simple quiz sobre Anatomía",
   modifiedBy: 1,
   createdBy: 1,
-  logo: 'https://i.ibb.co/9nXykYH/conjunto-iconos-anatomia-98292-1553.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 2,
   SubjectId: 6,
+  logo: 'https://i.ibb.co/9nXykYH/conjunto-iconos-anatomia-98292-1553.jpg',
 },
 {
   // 17
@@ -213,11 +213,11 @@ const quizzes = [{
   description: "Simple quiz sobre Matemáticas",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
 },
 {
   // 18
@@ -226,11 +226,11 @@ const quizzes = [{
   description: "Simple quiz sobre HTML",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
 },
 {
   // 19
@@ -239,11 +239,11 @@ const quizzes = [{
   description: "Simple quiz sobre JavaScript",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
 },
 {
   // 20
@@ -252,11 +252,11 @@ const quizzes = [{
   description: "Simple quiz sobre Química",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 2,
+  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
 },
 {
   // 21
@@ -265,11 +265,11 @@ const quizzes = [{
   description: "Simple quiz sobre Informática",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
 },
 {
   // 22
@@ -278,11 +278,11 @@ const quizzes = [{
   description: "Simple quiz sobre CSS",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/JHLrnBR/Css-and-HTML-programming-languages-Computer-programming-coding-IT-Female-programmer-cartoon-characte.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/JHLrnBR/Css-and-HTML-programming-languages-Computer-programming-coding-IT-Female-programmer-cartoon-characte.jpg',
 },
 {
   // 23
@@ -291,11 +291,11 @@ const quizzes = [{
   description: "Simple quiz sobre Matemáticas",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
 },
 {
   // 24
@@ -304,11 +304,11 @@ const quizzes = [{
   description: "Simple quiz sobre HTML",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
 },
 {
   // 25
@@ -317,11 +317,11 @@ const quizzes = [{
   description: "Simple quiz sobre JavaScript",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
 },
 {
   // 26
@@ -330,11 +330,11 @@ const quizzes = [{
   description: "Simple quiz sobre Anatomía",
   modifiedBy: 1,
   createdBy: 1,
-  logo: 'https://i.ibb.co/9nXykYH/conjunto-iconos-anatomia-98292-1553.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 2,
   SubjectId: 6,
+  logo: 'https://i.ibb.co/9nXykYH/conjunto-iconos-anatomia-98292-1553.jpg',
 },
 {
   // 27
@@ -343,11 +343,11 @@ const quizzes = [{
   description: "Simple quiz sobre Matemáticas",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/g3wPJ83/ORFF360.jpg',
 },
 {
   // 28
@@ -356,11 +356,11 @@ const quizzes = [{
   description: "Simple quiz sobre HTML",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/cr8f3C9/OJ91BD0.jpg',
 },
 {
   // 29
@@ -369,11 +369,11 @@ const quizzes = [{
   description: "Simple quiz sobre JavaScript",
   modifiedBy: 2,
   createdBy: 2,
-  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
   createdAt: new Date(),
   updatedAt: new Date(),
   SchoolId: 4,
   SubjectId: 1,
+  logo: 'https://i.ibb.co/7Yn1Kmn/Programmers-using-Java-Script-programming-language-on-computer-tiny-people-Java-Script-language-Java.jpg',
 },
 
 ]
