@@ -19,6 +19,17 @@ const quizzes = [{
   updatedAt: new Date(),
   SchoolId: 1,
   SubjectId: 2,
+},
+{
+  quantity: 5,
+  name: "Quiz de Informática",
+  description: "Simple quiz sobre Informática",
+  modifiedBy: 2,
+  createdBy: 2,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  SchoolId: 4,
+  SubjectId: 1,
 }]
 
 module.exports = quizzes;
