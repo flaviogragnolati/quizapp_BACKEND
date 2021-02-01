@@ -209,7 +209,6 @@ module.exports = function (passport) {
     'jwt',
     new JWTstrategy(jwt_options, async (jwt_payload, done) => {
       try {
-        console.log('RESTORING AND GETTING USER', jwt_payload);
         // if (user.role === 'school') {
         //   //Tenemos que guardar el `rol` del usuario en algun lugar???
         //   const school = await School.findOne({
@@ -220,13 +219,12 @@ module.exports = function (passport) {
         const user = await User.findOne({
           where: { email: jwt_payload.user.email },
         });
-        console.log('USER', user);
+        console.log('USER JWT', user);
         if (!user) {
           return done(null, false, { message: 'No se encontro el usuario' });
         }
         let user_obj = { ...user.dataValues };
         delete user_obj.password;
-        console.log('RETURN JWT', user_obj);
         return done(null, user_obj, { message: 'Token Autorizado' });
       } catch (error) {
         return done(error);

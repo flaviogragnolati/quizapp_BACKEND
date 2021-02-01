@@ -3,8 +3,12 @@ const { User, Session } = require('../models/index');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { SECRET_KEY, FRONT_URL } = process.env;
-
+const { makeJWT } = require('../utils');
 //Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
+//los que hacen boludeces venden mucho humo, pero dsps se les queman los papeles en la vida real,
+//jugando el el arenero de henry podes hacer todo de mentiritas, pero cuando es solo eso...mentiritas....
+//en el `real world` muchos de los vende humo siguen con esa practica y se comen los mocos xD
+//encontremos un equilibrio entre cosas `bien` y cosas `humo`,  jajajja
 
 // Ruta PROFILE - GET a /auth/me/:id
 
@@ -139,12 +143,11 @@ server.get(
   '/restore',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log('restored correctly');
-    const user = req.user;
+    console.log('restored correctly', req.user);
     // const newToken = makeJWT(user, refreshTime, 'Bearer');
     return res.send({
       // newToken,
-      user,
+      user: req.user,
     });
   }
 );
