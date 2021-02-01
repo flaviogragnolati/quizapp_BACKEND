@@ -82,34 +82,31 @@ server.get("/", async (req, res) => {
 
       if(allData[i].include !== undefined) {
         var ids = [];
-
         response[newProp].byId.forEach((object) => {
-
+          object[property].forEach((p) => {
+            ids.push(p.dataValues.id);
+          });
+        })
+        
+      /*   response[newProp].byId.forEach((object) => {
+          for (let property in object.dataValues) {
+            if (Array.isArray(object[property])) {
               object[property].forEach((p) => {
                 ids.push(p.dataValues.id);
               });
               delete object.dataValues[property];
-              /*var newProperty = property;
-              Object.defineProperty(object.dataValues, newProperty + 'Ids', {
-                enumerable: true,
-                get: function () {
-                  return ids;
-                },
-                set: function (newArray) {
-                  ids = newArray;
-                },
-              }); */
-              //object.dataValues[newProperty] = ids;
-              object.dataValues.ids = ids;    // Darle el nombre de la propiedad de forma dinámica
-            }
-          }
-        });
+      
+              object.dataValues.ids = ids;  */   // Darle el nombre de la propiedad de forma dinámica
+           // }
+          //}
+        //});
       }
+    }
 
       response[newProp].allIds = allData[i].data.map((p) => {
         return p.id;
       });
-    }
+    //}
 
     return res.status(200).send(response);
   } catch (error) {
