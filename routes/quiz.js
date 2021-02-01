@@ -129,39 +129,35 @@ server.get("/", async (req, res) => {
   }
 });
 
-// Traer un quiz - GET a /quiz/:id
-// Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
-server.get("/:id", async (req, res) => {
-  let { id } = req.params;
-  console.log("ID", id);
-  if (!id)
-    return res.status(400).send("Debe indicar el id del quiz que desea buscar");
+//Traer info de un QUIZ - GET a /quiz/info/:id
 
-  try {
+server.get('/info/:id', async (req, res) => {
+  let { id } = req.params;
+   if (!id)
+    return res.status(400).send('Debe indicar el id del quiz que desea buscar');
+
+  try{
     const quiz = await Quiz.findOne({
       where: { id },
     });
-    console.log(`encontré el quiz ${quiz.id}`);
-
-    const schools = await School.findOne({
+   
+    const school = await School.findOne({
       where: { id: quiz.SchoolId },
     });
-    console.log(`encontré schools ${schools}`);
-
+  
     const subject = await Subject.findOne({
-      where: { id: quiz.subjectId },
+      where: { id: quiz.SubjectId },
     });
-    console.log(`encontré subject ${subject}`);
+  
+    // const quizTags = await QuizTag.findAll({
+    //   where: { QuizId: quiz.id },
+    // });
 
-    const quizTags = await QuizTag.findAll({
-      where: { QuizId: quiz.id },
-    });
-    console.log(`encontré quizTags ${quizTags}`);
+    // console.log(`encontré quizTags ${quizTags}`);
 
     const reviews = await Review.findAll({
       where: { QuizId: quiz.id },
     });
-    console.log(`encontré reviews ${reviews}`);
 
     const teachers = await Role.findAll({
       where: {
@@ -169,76 +165,27 @@ server.get("/:id", async (req, res) => {
         name: "Teacher",
       },
     });
-    console.log(`encontré teachers ${teachers}`);
 
-    const questions = await Question.findAll({
-      where: {
-        QuizId: id,
-      },
-    });
-    console.log(`encontré questions ${questions}`);
-
-    const answers = await Answer.findAll({
-      where: {
-        QuestionId: question,
-      },
-    });
-    answers[prop].allIds = [prop].map((a) => {
-      return a.id;
-    });
-    console.log(answers);
-
-    ////
-
-    let allData = [
-      { name: "schools", data: schools },
-      { name: "subjects", data: subject },
-      { name: "quiz", data: quiz },
-      { name: "quizTags", data: quizTags },
-      { name: "reviews", data: reviews },
-      { name: "teachers", data: teachers },
-    ];
-
-    let response = {};
-
-    for (let i = 0; i < allData.length; i++) {
-      let newProp = allData[i].name;
-      response[newProp] = {};
-      response[newProp].byId = allData[i].data;
-      response[newProp].allIds = allData[i].data.map((p) => {
-        return p.id;
-      });
-    }
-
-    return res.status(200).send(response);
-
-    ///
-
-    /*   let response = {
-      schools: {},
-      subjects: {},
+    let response = {
+      school: {},
       quiz: {},
+      subject: {},
       quizTags: {},
       reviews: {},
       teachers: {},
-    };
+      };
 
     response.quiz = quiz;
 
-    response.schools.byId = schools;
-    response.schools.allIds = schools.map((s) => {
-      return s.id;
-    });
+    response.school = school;
+ 
+    response.subject.byId = subject;
 
-    response.subjects.byId = subjects;
-    response.subjects.allIds = subjects.map((sj) => {
-      return sj.id;
-    });
 
-    response.quizTags.byId = quizTags;
-    response.quizTags.allIds = quizTags.map((qt) => {
-      return qt.id;
-    });
+    // response.quizTags.byId = quizTags;
+    // response.quizTags.allIds = quizTags.map((qt) => {
+    //   return qt.id;
+    // });
 
     response.reviews.byId = reviews;
     response.reviews.allIds = reviews.map((r) => {
@@ -250,7 +197,46 @@ server.get("/:id", async (req, res) => {
       return t.id;
     });
 
-    return res.status(200).send(response); */
+ 
+    return res.status(200).send(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: 'Error al buscar el quiz' });
+  }
+});
+
+// Traer Questions & Answers de un quiz - GET a /quiz/:id
+// Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
+server.get('/:id', async (req, res) => {
+  let { id } = req.params;
+  console.log('ID', id);
+  if (!id)
+    return res.status(400).send('Debe indicar el id del quiz que desea buscar');
+
+  try{
+    const quiz = await Quiz.findOne({
+      where: { id },
+    });
+    
+    const questions = await Question.findAll({
+      where: {
+        QuizId: id,
+      }, include: {
+        model: Answer
+      }
+    });
+
+     let response = {
+       questions: {},
+    };
+
+   
+    response.questions.byId = questions;
+    response.questions.allIds = questions.map((q) => {
+      return q.id;
+    });
+
+    return res.status(200).send(response);
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: "Error al buscar el quiz" });
