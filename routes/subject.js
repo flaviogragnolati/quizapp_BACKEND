@@ -26,15 +26,15 @@ server.delete("/:id", async (req, res) => {
 });
 
 
-// Traer todos los SUBJECT - GET a /subject/
+// Traer un SUBJECT by ID - GET a /subject/:id
 
 server.get("/:id", async (req, res) => {
-    let { subjectId } = req.params;
+    let { id } = req.params;
   
-    if (!subjectId) return res.status(400).send("No se encuentra el SUBJECT indicado");
+    if (!id) return res.status(400).send("No se encuentra el SUBJECT indicado");
   
     Subject.findAll({
-      where: { subjectId },
+      where: { id },
     })
       .then((subjects) => {
         return res.status(200).send(subjects);
