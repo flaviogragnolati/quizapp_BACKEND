@@ -87,10 +87,9 @@ server.get("/", async (req, res) => {
             object[property].forEach((p) => {
               ids.push(p.dataValues.id);
             });
-            console.log("ids", ids);
-            var newProperty = property;
-            //delete object.dataValues[property];
-/*             Object.defineProperty(object.dataValues, newProperty + 'Ids', {
+            delete object.dataValues[property];
+            /*var newProperty = property;
+            Object.defineProperty(object.dataValues, newProperty + 'Ids', {
               enumerable: true,
               get: function () {
                 return ids;
@@ -99,20 +98,8 @@ server.get("/", async (req, res) => {
                 ids = newArray;
               },
             }); */
-
-/* Object.defineProperty(obj, newProperty, {
-  value: [{
-      value: 42,
-      writable: false
-    },
-    {
-      value: 55,
-      writable: false
-    }
-  ]
-}); */
             //object.dataValues[newProperty] = ids;
-            //object.dataValues.ids = ids;    // Darle el nombre de la propiedad de forma dinámica
+            object.dataValues.ids = ids;    // Darle el nombre de la propiedad de forma dinámica
           }
         }
       });
