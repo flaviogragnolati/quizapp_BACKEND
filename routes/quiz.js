@@ -52,32 +52,39 @@ server.delete(
 // En vez de cantidad de estudiantes poner el promedio de la review?
 server.get("/", async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
- try {
-   const schools = await School.findAll();
-   
-   const subjects = await Subject.findAll();
+  try {
+    const schools = await School.findAll();
 
-   const quizzes = await Quiz.findAll({ include: { model: QuizTag, attributes: { include: ['id'] }}});  // Ver de traer solo los id
-    
-   const quizTags = await QuizTag.findAll();
-   
-   const reviews = await Review.findAll();
+    const subjects = await Subject.findAll();
 
-   let data = [{name: 'schools', data: schools}, {name: 'subjects', data: subjects}, {name: 'quizzes', data: quizzes}, {name: 'quizTags', data: quizTags}, {name: 'reviews', data: reviews}];
+    const quizzes = await Quiz.findAll({
+      include: { model: QuizTag, attributes: { include: ["id"] } },
+    }); // Ver de traer solo los id
 
-   let response = {};
+    const quizTags = await QuizTag.findAll();
 
-   for(let i = 0; i < data.length; i++) {
-     let newProp = data[i].name;
-     console.log(newProp)
-    response[newProp] = {};
-    response[newProp].byId = data[i].data;
-    response[newProp].allIds = data[i].data.map(p => {
-     return p.id
-    })
-   }
+    const reviews = await Review.findAll();
 
- /* let response = {
+    let data = [
+      { name: "schools", data: schools },
+      { name: "subjects", data: subjects },
+      { name: "quizzes", data: quizzes },
+      { name: "quizTags", data: quizTags },
+      { name: "reviews", data: reviews },
+    ];
+
+    let response = {};
+
+    for (let i = 0; i < data.length; i++) {
+      let newProp = data[i].name;
+      response[newProp] = {};
+      response[newProp].byId = data[i].data;
+      response[newProp].allIds = data[i].data.map((p) => {
+        return p.id;
+      });
+    }
+
+    /* let response = {
      schools: {},
     subjects: {},
     quizzes: {},
@@ -85,14 +92,14 @@ server.get("/", async (req, res) => {
     reviews: {}, 
   };*/
 
-  /*for(let prop in response) {  // NECESITO DECLARAR EL OBJETO VACÍO
+    /*for(let prop in response) {  // NECESITO DECLARAR EL OBJETO VACÍO
      response[prop].byId = [prop]
      response[prop].allIds = [prop].map(p => {
       return p.id
      })
    };*/
 
-  /*response.schools.byId = schools;
+    /*response.schools.byId = schools;
   response.schools.allIds = schools.map(s => {
     return s.id;
   });
@@ -116,10 +123,9 @@ server.get("/", async (req, res) => {
   response.reviews.allIds = reviews.map(r => {
     return r.id;
   });*/
-  
-  return res.status(200).send(response);
-  
-  } catch(error) {
+
+    return res.status(200).send(response);
+  } catch (error) {
     console.error(error);
     return res.status(500).send({ message: "Error al buscar los quizzes" });
   }
