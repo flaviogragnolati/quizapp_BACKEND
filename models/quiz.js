@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+// const { Role } = require('../models/index');
 
 module.exports = (sequelize, DataTypes) => {
   class Quiz extends Model {
