@@ -47,6 +47,13 @@ module.exports = (sequelize, DataTypes) => {
           isNumeric: true,
         },
       },
+      photo: {
+        type: DataTypes.TEXT,
+        validate: {
+          isURL: true,
+        },
+        allowNull: false,
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -6,7 +6,6 @@ const passport = require("passport");
 //Las protecciones en las rutas las dejo comentadas
 
 // Borrar un USER by ID - DELETE a /users/:id
-
 server.delete(
   "/:id",
   // passport.authenticate('jwt', { session: false }),
@@ -28,7 +27,6 @@ server.delete(
 );
 
 // Listar todos los USERS - GET a /users
-
 server.get(
   "/",
   // passport.authenticate('jwt', { session: false }),
