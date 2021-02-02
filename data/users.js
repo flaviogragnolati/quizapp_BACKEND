@@ -14,7 +14,7 @@ const users = [
     firstName: 'Ulises',
     lastName: "D'Elia",
     cellphone: 43567,
-    email: 'ulises.d8@gmail.com',
+    email: 'tano.travian@gmail.com',
     birthdate: '2000-10-02',
     password: 'qwerty',
     createdAt: new Date(),

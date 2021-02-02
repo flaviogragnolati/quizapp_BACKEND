@@ -1,8 +1,8 @@
 const server = require("express").Router();
-const { Quiz, Role } = require("../models/index");
+const { Quiz, Role, User } = require("../models/index");
 const { checkAdmin } = require("../utils/authTools.js");
 const passport = require("passport");
-
+const sendMail = require("./mails");
 
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
 server.get(
@@ -35,6 +35,47 @@ server.get(
         })
          
         })
+
+
+  server.post("/", 
+  async (req, res, next) => {
+    let { teacherId, quizzId } = req.body;
+    if (! teacherId || !quizzId ) return res.status(400).send("Se necesita indicar el Id del usuario del Quiz para modificar un rol");
+    try {
+      console.log (teacherId, quizzId)
+    
+      const userEdited = await Role.create(
+            
+        {  name: 'Teacher', UserId: teacherId,
+        QuizId: quizzId},
+          
+        );
+
+        const userPromoted = await User.findByBk(teacherId);
+        const quizTeacher = await Quiz.findByBk(quizzId);
+
+        let payload = {
+          user: {
+            firstName: userPromoted.firstName
+          },
+          quiz: {
+            name: quizTeacher.name
+          },
+          type: 'promote',
+        };
+
+        sendMail(payload); 
+
+        console.log (userEdited)
+        return res.status(200).send(userEdited);
+    }
+    catch(error){
+      return res.status(400).send("No se ha asignado teacher al quiz")
+    }
+
+
+  }
+  )
  
 
   module.exports = server;

@@ -9,11 +9,9 @@ const { User, School } = require("../models/index");
 const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
 
-sendMailRouter.post("/", async (req, res) => {
+const sendMail = ({ user, type, quiz, school }) => {
   let text;
   let subject;
-
-  let { user, type, quiz, school } = req.body;
 
   let htmlTemplate = type;
 
@@ -102,6 +100,8 @@ sendMailRouter.post("/", async (req, res) => {
       });
     }
   );
-});
+};
 
-module.exports = sendMailRouter;
+module.exports = sendMail;
+
+//module.exports = sendMailRouter;

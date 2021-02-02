@@ -4,12 +4,12 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { SECRET_KEY, FRONT_URL } = process.env;
 const { makeJWT } = require('../utils');
+const sendMail = require('./mails');
 //Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
 //los que hacen boludeces venden mucho humo, pero dsps se les queman los papeles en la vida real,
 //jugando el el arenero de henry podes hacer todo de mentiritas, pero cuando es solo eso...mentiritas....
 //en el `real world` muchos de los vende humo siguen con esa practica y se comen los mocos xD
 //encontremos un equilibrio entre cosas `bien` y cosas `humo`,  jajajja
-
 // Ruta PROFILE - GET a /auth/me/:id
 
 server.get('/me/:id', async (req, res, next) => {
@@ -153,45 +153,30 @@ server.get(
 );
 
 // Ruta para Registrarse / crear un usuario - POST a /auth/register
+
 server.post(
   '/register',
   passport.authenticate('register-local', { session: false }),
   async (req, res) => {
     try {
       const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
-
-      // var token = jwt.sign(
-      //   {
-      //     id,
-      //     firstName,
-      //     lastName,
-      //     email,
-      //     birthdate,
-      //     cellphone,
-      //   },
-      //   SECRET_KEY
-      // );
+      
       let token = makeJWT(req.user);
+
+      if(token) {
+        let payload = {
+          user: {
+            firstName
+          },
+          type: 'welcome',
+        }
+        sendMail(payload);
+      };
+
       return res.status(200).send({
         user: req.user,
         token,
       });
-      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
-
-      // return res.status(200).send(
-      //   jwt.sign(
-      //     {
-      //       id,
-      //       firstName,
-      //       lastName,
-      //       email,
-      //       birthdate,
-      //       cellphone,
-      //       password,
-      //     },
-      //     SECRET_KEY
-      //   )
-      // );
     } catch (error) {
       console.error(`CATCH REGISTER`, error);
       return error;
@@ -209,26 +194,13 @@ server.post(
   }),
   async (req, res) => {
     try {
-      // const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
 
-      // var token = jwt.sign(
-      //   {
-      //     id,
-      //     firstName,
-      //     lastName,
-      //     email,
-      //     birthdate,
-      //     cellphone,
-      //   },
-      //   SECRET_KEY
-      // );
       let token = makeJWT(req.user);
       return res.status(200).send({
         user: req.user,
         token,
       });
 
-      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
@@ -275,7 +247,6 @@ server.post(
         token,
       });
 
-      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
@@ -311,6 +282,7 @@ server.put("/promote/:id", async (req, res) => {
 // Rutas para RESETEAR la contraseña
 
 // Primero se crea un token provisorio con caducidad de 5 minutos y se envía a través de un email
+
 server.put('/resetpassword/:id', async (req, res) => {
   let { id } = req.params;
 
@@ -334,13 +306,27 @@ server.put('/resetpassword/:id', async (req, res) => {
       return date;
     };
 
-    const userUpdated = await User.update(
+    let resetPasswordToken = token();
+
+    const userToUpdate = await User.findByPk(id);
+
+    const userUpdated = await userToUpdate.update(
       {
-        resetPasswordToken: token(),
+        resetPasswordToken,
         resetPasswordExpires: expiresTime(),
-      },
-      { where: { id } }
+      }
     );
+
+    if(userUpdated) {
+      let payload = {
+        user: {
+          firstName: userToUpdate.firstName,
+          resetPasswordToken
+        },
+        type: 'resetPassword',
+      }
+      sendMail(payload);
+    }
 
     return res.status(200).send(userUpdated);
   } catch (error) {
