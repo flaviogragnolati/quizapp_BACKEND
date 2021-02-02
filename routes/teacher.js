@@ -51,7 +51,6 @@ server.post("/", async (req, res, next) => {
       UserId: teacherId,
       QuizId: quizzId,
     });
-    console.log(userEdited);
     
     const userPromoted = await User.findByPk(teacherId);
     const quizTeacher = await Quiz.findByPk(quizzId);
@@ -59,9 +58,12 @@ server.post("/", async (req, res, next) => {
     let payload = {
       user: {
         firstName: userPromoted.firstName,
+        email: userPromoted.email,
       },
       quiz: {
         name: quizTeacher.name,
+        logo: quizTeacher.logo,
+        description: quizTeacher.description
       },
       type: "promote",
     };
