@@ -1,5 +1,6 @@
 const server = require("express").Router();
-const { School, Quiz, Subject } = require("../models/index");
+const { School, Quiz, Subject, SchoolCode } = require("../models/index");
+const { makeid } = require("../utils/index")
 
 // RUTA para BORRAR School - delete a /org/:id
 
@@ -86,23 +87,7 @@ server.get("/:id/quizzes", async (req, res) => {
     response.quizzes.allIds = quizzes.map((q) => {
       return q.id;
     });
-    /*    const subjects = await Subject.findAll({where: {SchoolId: id}});
-
-  let response = {
-    quizzes: {},
-    subjects: {},
-     };
-
-  response.subjects.byId = subjects;
-  response.subjects.allIds = subjects.map(sj => {
-    return sj.id;
-  });
-
-  response.quizzes.byId = quizzes; 
-  response.quizzes.allIds = quizzes.map(q => {
-    return q.id;
-  }); */
-
+   
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
@@ -112,45 +97,63 @@ server.get("/:id/quizzes", async (req, res) => {
 
 // RUTA para AGREGAR/CREAR School - post a /org
 
-server.post("/", (req, res, next) => {
-  let {
-    name,
-    email,
-    description,
-    city,
-    country,
-    logo,
-    code,
-    address,
-    password,
-  } = req.body;
-  School.findOrCreate({
-    where: {
-      email,
-    },
-    defaults: {
-      name,
-      description,
-      email,
-      city,
-      country,
-      logo,
-      address,
-      password: code,
-    },
-  })
-    .then((school) => {
-      const [instance, wasCreated] = school;
-      if (!wasCreated) {
-        return res.status(200).send("La organización ya está registrada");
-      } else {
-        return res.status(200).send("La organización ha sido creada");
+server.post("/", async (req, res, next) => {
+  let { email } = req.body;
+ try {
+
+   const schoolCodeGen = await SchoolCode.findOrCreate({
+      where: {
+        email
+      }, defaults:{
+        email,
+        code: makeid(6),
       }
     })
-    .catch((err) => {
-      return console.log(err);
-    });
-});
+    return res.status(200).send();
+ } catch {
+   return res.status(400).send("El código no ha sido generado")
+ }
+})
+
+// server.post("/", (req, res, next) => {
+//   let {
+//     name,
+//     email,
+//     description,
+//     city,
+//     country,
+//     logo,
+//     code,
+//     address,
+//     password,
+//   } = req.body;
+//   School.findOrCreate({
+//     where: {
+//       email,
+//     },
+//     defaults: {
+//       name,
+//       description,
+//       email,
+//       city,
+//       country,
+//       logo,
+//       address,
+//       password: code,
+//     },
+//   })
+//     .then((school) => {
+//       const [instance, wasCreated] = school;
+//       if (!wasCreated) {
+//         return res.status(200).send("La organización ya está registrada");
+//       } else {
+//         return res.status(200).send("La organización ha sido creada");
+//       }
+//     })
+//     .catch((err) => {
+//       return console.log(err);
+//     });
+// });
 
 // RUTA para EDITAR School - PUT a /org/:id
 
