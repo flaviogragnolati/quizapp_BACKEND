@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.belongsToMany(models.School, {through: 'School-User'});
+      User.belongsToMany(models.School, { through: 'School-User' });
       User.hasMany(models.Review);
-      User.belongsToMany(models.Quiz, {through: models.Role});
+      User.belongsToMany(models.Quiz, { through: models.Role });
     }
   }
   User.init(
@@ -47,6 +47,14 @@ module.exports = (sequelize, DataTypes) => {
           isNumeric: true,
         },
       },
+      photo: {
+        type: DataTypes.TEXT,
+        validate: {
+          isURL: true,
+        },
+        allowNull: true,
+        defaultValue: "https://lh5.googleusercontent.com/-NVHdsx0r0Xk/TYyS1Qen3JI/AAAAAAAAAGU/AMvdDulXehs/s1600/zarpas.png"
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -64,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
       // paranoid: true,
       sequelize,
       modelName: 'User',
-    } );
-    return User;
-  };
-    
+    }
+  );
+  return User;
+};

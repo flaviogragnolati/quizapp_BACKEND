@@ -3,14 +3,14 @@ const subjects = [{
     description: "Full Stack Developer",
     createdAt: new Date(),
     updatedAt: new Date(),
-    SchoolId: 1,
+    SchoolId: 4,
 },
 {
     name: "Matemática" ,
     description: "",
     createdAt: new Date(),
     updatedAt: new Date(),
-    SchoolId: 2,
+    SchoolId: 4,
 },
 {
     name: "Química" ,
@@ -32,6 +32,13 @@ const subjects = [{
     createdAt: new Date(),
     updatedAt: new Date(),
     SchoolId: 5,
+},
+{
+    name: "Anatomía" ,
+    description: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    SchoolId: 1,
 },
 
 ]

@@ -6,7 +6,6 @@ const passport = require("passport");
 //Las protecciones en las rutas las dejo comentadas
 
 // Borrar un USER by ID - DELETE a /users/:id
-
 server.delete(
   "/:id",
   // passport.authenticate('jwt', { session: false }),
@@ -27,8 +26,23 @@ server.delete(
   }
 );
 
-// Listar todos los USERS - GET a /users
+//Traer la info de un USER en particular - GET a /users/:id
+server.get('/:id', async (req, res, next) => {
+  try {
+    if (req.params) {
+      const { id } = req.params;
+      const result = await User.findByPk(id);
+      return res.json(result);
+    } else {
+      return res.sendStatus(401);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
+
+// Listar todos los USERS - GET a /users
 server.get(
   "/",
   // passport.authenticate('jwt', { session: false }),
@@ -41,6 +55,25 @@ server.get(
       .catch(next);
   }
 );
+
+// Devuelve USER por email - GET a /users/email
+
+server.get('/email', async (req, res) => {
+  let { email } = req.body;
+
+  if(!email) return res.status(400).send('¿Cuál es el email a buscar?');
+
+  try {
+    const userByEmail = await User.findOne({
+      where: { email }
+    });
+  
+    return res.status(200).send(userByEmail);
+  } catch(error) {
+    console.error(error);
+    return res.send(500).send('CATCH /users/email');
+  }
+});
 
 // Editar un USER by ID - PUT a /users/:id
 

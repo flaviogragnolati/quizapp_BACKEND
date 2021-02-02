@@ -296,17 +296,6 @@
                     "allowNull": false,
                     "field": "updatedAt",
                     "seqType": "Sequelize.DATE"
-                },
-                "SubjectId": {
-                    "allowNull": true,
-                    "references": {
-                        "model": "Subjects",
-                        "key": "id"
-                    },
-                    "onDelete": "SET NULL",
-                    "onUpdate": "CASCADE",
-                    "field": "SubjectId",
-                    "seqType": "Sequelize.INTEGER"
                 }
             },
             "indexes": []
@@ -616,8 +605,8 @@
             },
             "indexes": []
         },
-        "Quiz-QTag": {
-            "tableName": "Quiz-QTag",
+        "Quiz_QTag": {
+            "tableName": "Quiz_QTag",
             "schema": {
                 "createdAt": {
                     "allowNull": false,
