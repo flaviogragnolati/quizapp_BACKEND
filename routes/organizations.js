@@ -110,8 +110,8 @@ server.post("/", async (req, res, next) => {
       }
     })
     return res.status(200).send();
- } catch {
-   return res.status(400).send("El código no ha sido generado")
+ } catch(error) {
+   return res.status(400).send("El código no ha sido generado", error)
  }
 })
 
