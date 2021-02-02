@@ -471,13 +471,12 @@ server.put(
   }
 );
 
+// Ruta para activar/desactivar QUIZZES - PUT a /quiz/activate/:id
+
 server.put("/activate/:id", async (req, res) => {
   let { id } = req.params;
-
   try {
     const quizToActivate = await Quiz.findByPk(id);
-
-    console.log(quizToActivate.dataValues)
 
     quizToActivate.update({
       active: !quizToActivate.active,

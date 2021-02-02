@@ -153,6 +153,7 @@ server.get(
 );
 
 // Ruta para Registrarse / crear un usuario - POST a /auth/register
+
 server.post(
   '/register',
   passport.authenticate('register-local', { session: false }),
@@ -274,8 +275,6 @@ server.post(
         user: req.user,
         token,
       });
-
-      //return res.redirect(`${FRONT_URL}?jwt=${token}&id=${id}`)
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
@@ -311,6 +310,7 @@ server.put("/promote/:id", async (req, res) => {
 // Rutas para RESETEAR la contraseña
 
 // Primero se crea un token provisorio con caducidad de 5 minutos y se envía a través de un email
+
 server.put('/resetpassword/:id', async (req, res) => {
   let { id } = req.params;
 
@@ -349,6 +349,7 @@ server.put('/resetpassword/:id', async (req, res) => {
 });
 
 // Cuando el user ingresa al link se hace un GET a /auth/resetpassword/?token=
+
 server.get('/resetpassword', async (req, res) => {
   let { token } = req.query;
 

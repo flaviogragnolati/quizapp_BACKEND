@@ -68,10 +68,10 @@ server.get("/quizzes/", async (req, res) => {
 // Crear una SUBJECT - POST a /subject
 
 server.post("/", async (req, res) => {
-  let { name, description, schoolId } = req.body;
+  let { name, description, SchoolId } = req.body;
 
   try {
-    const newSubject = await Subject.create({ name, description, schoolId });
+    const newSubject = await Subject.create({ name, description, SchoolId });
 
     return res.status(200).send(newSubject);
   } catch (error) {
@@ -83,7 +83,7 @@ server.post("/", async (req, res) => {
 // Editar una SUBJECT - PUT a /subject/:id
 
 server.put("/:id", async (req, res) => {
-  let { subjectId } = req.params;
+  let { SubjectId } = req.params;
   let { name, description } = req.body;
 
   if (!id)
