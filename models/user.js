@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.belongsToMany(models.School, {through: 'School-User'});
+      User.belongsToMany(models.School, { through: 'School-User' });
       User.hasMany(models.Review);
-      User.belongsToMany(models.Quiz, {through: models.Role});
+      User.belongsToMany(models.Quiz, { through: models.Role });
     }
   }
   User.init(
@@ -71,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
       // paranoid: true,
       sequelize,
       modelName: 'User',
-    } );
-    return User;
-  };
-    
+    }
+  );
+  return User;
+};

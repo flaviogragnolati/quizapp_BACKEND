@@ -18,34 +18,41 @@ const {
   Review,
   QuizTag,
   Role,
+  Quiz_QTag,
 } = require('../models/index');
 
 ('use strict');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       //Cargamos Usuarios
-      await User.bulkCreate(users, { hooks: true }),
+      await queryInterface.bulkInsert('Users', users, { hooks: true }),
       //Cargamos Organizaciones
-      await School.bulkCreate(schools, { hooks: true }),
+      await queryInterface.bulkInsert('Schools', schools, { hooks: true }),
       //Cargamos Subjects (materias)
-      await Subject.bulkCreate(subjects, { hooks: true }),
+      await queryInterface.bulkInsert('Subjects', subjects, { hooks: true }),
       //Cargamos Quizzes
-      await Quiz.bulkCreate(quizzes, { hooks: true}),
+      await queryInterface.bulkInsert('Quizzes', quizzes, { hooks: true }),
       //Cargamos los TAGS
-      await QuizTag.bulkCreate(tags, { hooks: true }),
+      await queryInterface.bulkInsert('QuizTags', tags, { hooks: true }),
       //Cargamos Preguntas
-      await Question.bulkCreate(questions, { hooks: true }),
+      await queryInterface.bulkInsert('Questions', questions, { hooks: true }),
       //Cargamos Respuestas
-      await Answer.bulkCreate(answers, { hooks: true}),
+      await queryInterface.bulkInsert('Answers', answers, { hooks: true }),
       //Cargamos Reviews
-      await Review.bulkCreate(reviews, { hooks: true}),
-      //  Cargamos los ROLES 
-      await Role.bulkCreate(roles, { hooks: true })
-   
-
-    ];
+      await queryInterface.bulkInsert('Reviews', reviews, { hooks: true }),
+      // Cargamos los ROLES
+      await queryInterface.bulkInsert('Roles', roles, { hooks: true }),
+      //Cargamos la tabla intermadia de Quiz-Tags
+      await queryInterface.bulkInsert('Quiz_QTag', quizQtag, { hooks: true }),
+      /**
+       * !en las migraciones/seeds es preferible no hacer referencia al modelo directamente
+       * !queremos utilizar la `queryInerface` que nos provee de los metodos adecuados y preparados
+       * !para ejecutar la migration/seed
+       * !es un metodo mas robusto y nos puede evitar algunos dolores de cabeza...
+       */
+    ]);
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -85,7 +92,7 @@ module.exports = {
         cascade: true,
         restartIdentity: true,
       }),
-      queryInterface.bulkDelete('Quiz-QTag', null, {
+      queryInterface.bulkDelete('Quiz_QTag', null, {
         truncate: true,
         cascade: true,
         restartIdentity: true,

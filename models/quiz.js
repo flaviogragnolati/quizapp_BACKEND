@@ -1,5 +1,5 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
 // const { Role } = require('../models/index');
 
 module.exports = (sequelize, DataTypes) => {
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Quiz.hasMany(models.QuizAttempt);
       Quiz.hasMany(models.Question);
-      Quiz.belongsToMany(models.QuizTag, { through: "Quiz-QTag" });
+      Quiz.belongsToMany(models.QuizTag, { through: 'Quiz_QTag' });
       Quiz.belongsTo(models.Subject);
       Quiz.belongsTo(models.School);
       Quiz.hasMany(models.Review);
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Quiz",
+      modelName: 'Quiz',
     }
   );
   return Quiz;
