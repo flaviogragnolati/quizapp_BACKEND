@@ -53,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           isURL: true,
         },
         allowNull: true,
+        defaultValue: "https://lh5.googleusercontent.com/-NVHdsx0r0Xk/TYyS1Qen3JI/AAAAAAAAAGU/AMvdDulXehs/s1600/zarpas.png"
       },
       password: {
         type: DataTypes.STRING,
