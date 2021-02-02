@@ -69,8 +69,20 @@ const cookieMaker = (name, token, res) => {
   return res.cookie(name, token, cookieOptions);
 };
 
+const makeid = (length)=> {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+
 exports.extractDigitsFromString = extractDigitsFromString;
 exports.capitalize = capitalize;
 exports.makeJWT = makeJWT;
 exports.cookieMaker = cookieMaker;
+exports.makeid = makeid;
 exports.refreshTime = refreshTime;
