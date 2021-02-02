@@ -11,9 +11,10 @@ const {
   School,
   QuizTag,
 } = require("../models/index");
+const quiz = require("../models/quiz");
 const { checkSuperAdmin } = require("../utils/authTools.js");
 
-// const { normalize, schema } = require("normalizr");
+const { normalize, schema } = require("normalizr");
 
 // Borrar una QUIZ by ID - DELETE a /quiz/:id
 
@@ -53,62 +54,85 @@ server.delete(
 server.get("/", async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
   try {
+    /*  const quizzes = await Quiz.findAll({
+      //where: { active: true },
+      include: { model: QuizTag, attributes: { exclude: ["createdAt", "updatedAt"] } }, raw: true, nest: true, /* limit: 10,
+    });
+
     const schools = await School.findAll();
 
     const subjects = await Subject.findAll();
-
-    const quizzes = await Quiz.findAll({
-      include: { model: QuizTag },
-    });
 
     const quizTags = await QuizTag.findAll();
 
     const reviews = await Review.findAll();
 
+    console.log('quizzes', quizzes);
+
     let allData = [
       { name: "schools", data: schools },
       { name: "subjects", data: subjects },
-      { name: "quizzes", data: quizzes, include: 'QuizTags' },
+      { name: "quizzes", data: quizzes, include: "QuizTags" },
       { name: "quizTags", data: quizTags },
       { name: "reviews", data: reviews },
     ];
 
     let response = {};
+    var ids = [];
 
     for (let i = 0; i < allData.length; i++) {
-      let newProp = allData[i].name;
+      var newProp = allData[i].name;
       response[newProp] = {};
       response[newProp].byId = allData[i].data;
 
-      if(allData[i].include !== undefined) {
-        var ids = [];
         response[newProp].byId.forEach((object) => {
-          object[property].forEach((p) => {
-            ids.push(p.dataValues.id);
-          });
-        })
-        
-      /*   response[newProp].byId.forEach((object) => {
           for (let property in object.dataValues) {
             if (Array.isArray(object[property])) {
               object[property].forEach((p) => {
                 ids.push(p.dataValues.id);
               });
-              delete object.dataValues[property];
-      
-              object.dataValues.ids = ids;  */   // Darle el nombre de la propiedad de forma dinámica
-           // }
-          //}
-        //});
-      }
-    }
+              //delete object.dataValues[property];
+              let objectClone = { ...object.dataValues };
+              objectClone[String(property)] = ids;
+              //console.log('OBJECT CLONE', objectClone)
 
-      response[newProp].allIds = allData[i].data.map((p) => {
-        return p.id;
-      });
-    //}
+               ids.map((id) => {
+                Object.defineProperty(object.dataValues, [property], { value: id, enumerable: true })
+              })
 
-    return res.status(200).send(response);
+              //object.dataValues.ids = ids; // Darle el nombre de la propiedad de forma dinámica
+            }
+          }
+        });
+      } */
+
+    /*       let data = {
+        "id": 1,
+        "title": "Titulo de QUIZ",
+        "content": "Some really short blog content.",
+        "created_at": "2016-01-10T23:07:43.248Z",
+        "updated_at": "2016-01-10T23:07:43.248Z",
+        "Subject": {
+            "id": 81,
+            "name": "Matematicas"
+        }
+    } */
+
+    let data = await Quiz.findByPk(1, {
+      include: { model: Subject, attributes: { exclude: ["createdAt", "updatedAt"] } }, raw: true,
+      nest: true,
+    });
+
+    const QuizSchema = new schema.Entity("quizzes", { idAttribute: "id" });
+    const SubjectsSchema = new schema.Entity("Subjects", { idAttribute: "id" });
+
+    QuizSchema.define({
+      Subject: SubjectsSchema,
+    });
+
+    const normalizedData = normalize(data, QuizSchema);
+
+    return res.status(200).send(normalizedData);
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: "Error al buscar los quizzes" });
@@ -117,24 +141,24 @@ server.get("/", async (req, res) => {
 
 //Traer info de un QUIZ - GET a /quiz/info/:id
 
-server.get('/info/:id', async (req, res) => {
+server.get("/info/:id", async (req, res) => {
   let { id } = req.params;
-   if (!id)
-    return res.status(400).send('Debe indicar el id del quiz que desea buscar');
+  if (!id)
+    return res.status(400).send("Debe indicar el id del quiz que desea buscar");
 
-  try{
+  try {
     const quiz = await Quiz.findOne({
       where: { id },
     });
-   
+
     const school = await School.findOne({
       where: { id: quiz.SchoolId },
     });
-  
+
     const subject = await Subject.findOne({
       where: { id: quiz.SubjectId },
     });
-  
+
     // const quizTags = await QuizTag.findAll({
     //   where: { QuizId: quiz.id },
     // });
@@ -159,14 +183,13 @@ server.get('/info/:id', async (req, res) => {
       quizTags: {},
       reviews: {},
       teachers: {},
-      };
+    };
 
     response.quiz = quiz;
 
     response.school = school;
- 
-    response.subject.byId = subject;
 
+    response.subject.byId = subject;
 
     // response.quizTags.byId = quizTags;
     // response.quizTags.allIds = quizTags.map((qt) => {
@@ -183,40 +206,39 @@ server.get('/info/:id', async (req, res) => {
       return t.id;
     });
 
- 
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: 'Error al buscar el quiz' });
+    return res.status(500).send({ message: "Error al buscar el quiz" });
   }
 });
 
 // Traer Questions & Answers de un quiz - GET a /quiz/:id
 // Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
-server.get('/:id', async (req, res) => {
+server.get("/:id", async (req, res) => {
   let { id } = req.params;
-  console.log('ID', id);
+  console.log("ID", id);
   if (!id)
-    return res.status(400).send('Debe indicar el id del quiz que desea buscar');
+    return res.status(400).send("Debe indicar el id del quiz que desea buscar");
 
-  try{
+  try {
     const quiz = await Quiz.findOne({
       where: { id },
     });
-    
+
     const questions = await Question.findAll({
       where: {
         QuizId: id,
-      }, include: {
-        model: Answer
-      }
+      },
+      include: {
+        model: Answer,
+      },
     });
 
-     let response = {
-       questions: {},
+    let response = {
+      questions: {},
     };
 
-   
     response.questions.byId = questions;
     response.questions.allIds = questions.map((q) => {
       return q.id;
@@ -297,6 +319,30 @@ server.post(
     }
   }
 );
+
+// Agregar TAG a QUIZ - POST a /quiz/:id/tags
+
+server.post("/:id/tags", async (req, res) => {
+  let { id } = req.params;
+  let { tags } = req.body;
+
+  if (!id) return res.status(400).send("Indique el ID del QUIZ");
+
+  try {
+    const quizToEdit = await Quiz.findByPk(id);
+
+    console.log(quizToEdit instanceof Quiz);
+
+    tags.forEach((t) => {
+      quizToEdit.setQuizTags(t);
+    });
+
+    return res.status(200).send("Tags agregadas con éxito");
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send("CATCH post TAGS");
+  }
+});
 
 // Editar un QUIZ - PUT a /quiz/:id
 

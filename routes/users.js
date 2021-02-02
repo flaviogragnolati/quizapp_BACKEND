@@ -42,6 +42,25 @@ server.get(
   }
 );
 
+// Devuelve USER por email - GET a /users/email
+
+server.get('/email', async (req, res) => {
+  let { email } = req.body;
+
+  if(!email) return res.status(400).send('¿Cuál es el email a buscar?');
+
+  try {
+    const userByEmail = await User.findOne({
+      where: { email }
+    });
+  
+    return res.status(200).send(userByEmail);
+  } catch(error) {
+    console.error(error);
+    return res.send(500).send('CATCH /users/email');
+  }
+});
+
 // Editar un USER by ID - PUT a /users/:id
 
 server.put(
