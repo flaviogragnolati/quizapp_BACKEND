@@ -92,7 +92,7 @@ const sendMail = ({ user, type, quiz, school }) => {
 
       let mail = {
         from: process.env.THE_EMAIL,
-        to: 'damsta1995@gmail.com', //user.email,
+        to: user.email,
         subject,
         html: htmlToSend,
       };
