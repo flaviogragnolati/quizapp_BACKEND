@@ -12,7 +12,7 @@ server.get(
     async (req, res, next) => {
       let { id } = req.params;
       let idQ = [];
-      let teachersList = [];
+      var teachersList = [];
      //Buscar todos los QUIZZES de la SCHOOL:
     var allQuizzes = await Quiz.findAll(
           {where: {
@@ -21,18 +21,19 @@ server.get(
      allQuizzes.map(q => {
                 idQ.push(q.id)
             })
-          var a = (idQ.map(e => {
-                   Role.findAll({ //con un include, tomar solo el id
-                    where: {
-                        name: "Teacher",
-                        QuizId: e
-                    }
-                })
-            })
-            )
-            teachersList.push(a.id)
-            // console.log(teachersList)
-            return res.status(200).send(teachersList);
+       idQ.map(e => {
+          Role.findAll({ //con un include, tomar solo el id
+            where: {
+              name: "Teacher",
+              QuizId: e
+            }
+          }).then((tf) => {
+            
+            return res.status(200).send(tf);
+          })
+          
+        })
+         
         })
  
 
