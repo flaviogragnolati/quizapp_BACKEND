@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isURL: true,
         },
-        allowNull: false,
+        allowNull: true,
       },
       password: {
         type: DataTypes.STRING,

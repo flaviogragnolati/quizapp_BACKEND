@@ -52,6 +52,7 @@
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.4.0",
-    "sequelize-mig": "^2.6.0"
+    "sequelize-mig": "^2.6.0",
+    "yarn": "^1.22.10"
   }
 }
