@@ -119,7 +119,7 @@ server.get('/', async (req, res) => {
     } */
 
     let data = await Quiz.findAll({
-      where: { active: true },
+      //where: { active: true },
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'SubjectId', 'SchoolId'],
       },
