@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       quantity: {
         type: DataTypes.INTEGER, // se hace un contador automático?
-        // allowNull: false,
+        allowNull: true,
       },
       name: {
         type: DataTypes.STRING,
@@ -40,14 +40,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       createdBy: {
         type: DataTypes.INTEGER, // id del user que lo creó
-        allowNull: false,
+        allowNull: true,
       },
       logo: {
         type: DataTypes.TEXT,
         validate: {
           isURL: true,
         },
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

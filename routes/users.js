@@ -26,6 +26,22 @@ server.delete(
   }
 );
 
+//Traer la info de un USER en particular - GET a /users/:id
+server.get('/:id', async (req, res, next) => {
+  try {
+    if (req.params) {
+      const { id } = req.params;
+      const result = await User.findByPk(id);
+      return res.json(result);
+    } else {
+      return res.sendStatus(401);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 // Listar todos los USERS - GET a /users
 server.get(
   "/",

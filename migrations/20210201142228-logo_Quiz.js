@@ -10,7 +10,7 @@ module.exports = {
        validate: {
          isURL: true,
        },
-       allowNull: false,
+       allowNull: true,
       }
     );
   },
