@@ -42,21 +42,16 @@ server.get("/", (req, res, next) => {
 server.get("/:id/subjects", async (req, res) => {
   let { id } = req.params;
   if (!id) return res.status(400).send("La Organización no existe");
+
   try {
     const subjects = await Subject.findAll({
       where: {
         SchoolId: id,
-      },
-      include: {
-        model: Subject,
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-      },
-    });
-    let resp = {subjects: {},};
-    resp.subjects.byId = subjects;
-    resp.subjects.allIds = subjects.map((s) => {return s.id});
+      }
+    }, { raw:true });
+
+    return res.status(200).send(subjects)
+
   } catch(error){
     console.error(error);
     return res.status(500).send("Error en la búsqueda de los subjects")
@@ -64,6 +59,7 @@ server.get("/:id/subjects", async (req, res) => {
 });
 
 //RUTA para listar todos los QUIZZES de una SCHOOL - get a /org/:id/quizzes
+
 server.get("/:id/quizzes", async (req, res) => {
   let { id } = req.params;
 
