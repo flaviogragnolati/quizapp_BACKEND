@@ -355,7 +355,6 @@ server.post(
   //checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
     let {
-      // quantity,
       name,
       description,
       SubjectId,
@@ -365,7 +364,7 @@ server.post(
 
     try {
       const newQuiz = await Quiz.create({
-        // quantity,
+        quantity,
         name,
         description,
         SubjectId,
