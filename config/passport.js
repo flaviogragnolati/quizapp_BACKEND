@@ -92,24 +92,33 @@ module.exports = function (passport) {
       async (email, password, done) => {
         try {
           const user = await User.findOne({ where: { email } });
-
           if (!user) {
             return done(null, false, { message: 'No se encontro el usuario' });
           }
 
-          const validate = await bcrypt.compare(
-            password,
-            user.password,
-            (err, isMatch) => {
-              if (err || !isMatch) {
-                return done(null, false, { message: 'Contraseña Incorrecta' });
-              }
-              return done(null, user);
-            }
-          );
-          // if (!validate) {
-          //   return done(null, false, { message: "Contraseña incorrecta" });
-          // }
+          // console.log('USER', user.password);
+          // const asyncValidate = async (db_password, user_password) => {
+          //   return new Promise((resolve, reject) => {
+          //     bcrypt.compare(db_password, user_password, (err, isMatch) => {
+          //       if (err || !isMatch) {
+          //         // return done(null, false, {
+          //         //   message: 'Contraseña Incorrecta',
+          //         // });
+          //         return reject(err);
+          //       }
+          //       return resolve(isMatch);
+          //       // return done(null, user);
+          //     });
+          //   });
+          // };
+          // // console.log('pas', password, user.password);
+          // const validate = await asyncValidate(password, user.password);
+
+          const match = await bcrypt.compare(password, user.password);
+
+          if (!match) {
+            return done(null, false, { message: 'Contraseña incorrecta' });
+          }
           let user_obj = { ...user.dataValues };
           delete user_obj.password;
 

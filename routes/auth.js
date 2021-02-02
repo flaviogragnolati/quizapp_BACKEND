@@ -209,7 +209,7 @@ server.post(
   }),
   async (req, res) => {
     try {
-      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
+      // const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
 
       // var token = jwt.sign(
       //   {

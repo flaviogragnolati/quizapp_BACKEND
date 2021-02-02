@@ -27,7 +27,8 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
       //Cargamos Usuarios
-      await queryInterface.bulkInsert('Users', users, { hooks: true }),
+      // await queryInterface.bulkInsert('Users', users, { hooks: true }),
+      await User.bulkCreate(users, { hooks: true }),
       //Cargamos Organizaciones
       await queryInterface.bulkInsert('Schools', schools, { hooks: true }),
       //Cargamos Subjects (materias)
