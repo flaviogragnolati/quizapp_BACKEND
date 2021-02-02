@@ -119,16 +119,19 @@ server.get('/', async (req, res) => {
     } */
 
     let data = await Quiz.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'SubjectId', 'SchoolId'],
+      },
       include: [
         {
           model: Subject,
           attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
         { model: School, attributes: { exclude: ['createdAt', 'updatedAt'] } },
-        // {
-        //   model: Review,
-        //   attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
-        // },
+        {
+          model: Review,
+          attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
+        },
         {
           model: QuizTag,
           attributes: { exclude: ['createdAt', 'updatedAt'] },
@@ -145,17 +148,54 @@ server.get('/', async (req, res) => {
     //   raw: true,
     //   nest: true,
     // });
-    console.log('DATa', data);
-    const QuizSchema = new schema.Entity('quizzes');
+    console.log('DATa', data.slice(0, 5));
+    // data.map((d) => {
+    //   console.log('ID', d.id);
+    //   console.log(d.Reviews);
+    // });
     const UserSchema = new schema.Entity('users');
     const SubjectsSchema = new schema.Entity('subjects');
     const SchoolSchema = new schema.Entity('schools');
-    const QuizTagSchema = new schema.Entity('quizTags');
+    const TagSchema = new schema.Entity('tags');
+    const QuizTagSchema = new schema.Entity(
+      'quizTags',
+      {},
+      {
+        // processStrategy: (entity) => omit(entity, 'name'),
+      }
+    );
+    const ReviewSchema = new schema.Entity('reviews', {}, {});
+    const QuizSchema = new schema.Entity(
+      'quizzes',
+      {
+        Subject: SubjectsSchema,
+        School: SchoolSchema,
+        QuizTags: QuizTagSchema,
+        Reviews: ReviewSchema,
+      },
+      {
+        mergeStrategy: (entityA, entityB) => ({
+          ...entityA,
+          ...entityB,
+          QuizTags: [
+            ...new Set(
+              [entityA.QuizTags].concat(entityB.QuizTags).flat(10 ^ 1000)
+            ),
+          ], //!solucionar ULTRA CAVERNICOLA... HAY QUE BUSCAR LA FORMA DE MERGEAR LOS OBJETOS SIN SER TAN NINJA.....
+          Reviews: [
+            ...new Set(
+              [entityA.Reviews].concat(entityB.Reviews).flat(10 ^ 1000)
+            ),
+          ], //!solucionar ULTRA CAVERNICOLA... HAY QUE BUSCAR LA FORMA DE MERGEAR LOS OBJETOS SIN SER TAN NINJA.....
+        }),
+      }
+    );
 
-    QuizSchema.define({
-      Subject: SubjectsSchema,
-      School: SchoolSchema,
-    });
+    // QuizSchema.define({
+    //   Subject: SubjectsSchema,
+    //   School: SchoolSchema,
+    //   // QuizTags: QuizTagSchema,
+    // });
 
     const normalizedData = normalize(data, [QuizSchema]);
 
