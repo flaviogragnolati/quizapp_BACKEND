@@ -8,7 +8,7 @@ const users = [
     password: 'qwerty',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepng.es%2Fpng-yt7bes%2F&psig=AOvVaw3cnrlrRL4CYPtl9zB-Jhjr&ust=1612311084402000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDS__z0ye4CFQAAAAAdAAAAABAE",
+    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
   },
   {
     firstName: 'Ulises',
@@ -19,7 +19,7 @@ const users = [
     password: 'qwerty',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://images.vexels.com/media/users/3/140748/isolated/preview/5b078a59390bb4666df98b49f1cdedd0-avatar-de-perfil-masculino-by-vexels.png",
+    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
   },
   {
     firstName: 'John',
@@ -30,7 +30,7 @@ const users = [
     password: 'qwerty',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepng.es%2Fpng-yt7bes%2F&psig=AOvVaw3cnrlrRL4CYPtl9zB-Jhjr&ust=1612311084402000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDS__z0ye4CFQAAAAAdAAAAABAE",
+    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
   },
   {
     firstName: 'John',
@@ -41,7 +41,7 @@ const users = [
     password: 'qwerty',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepng.es%2Fpng-yt7bes%2F&psig=AOvVaw3cnrlrRL4CYPtl9zB-Jhjr&ust=1612311084402000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDS__z0ye4CFQAAAAAdAAAAABAE",
+    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
   },
   {
     firstName: 'John',
@@ -52,7 +52,7 @@ const users = [
     password: 'qwerty',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepng.es%2Fpng-yt7bes%2F&psig=AOvVaw3cnrlrRL4CYPtl9zB-Jhjr&ust=1612311084402000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDS__z0ye4CFQAAAAAdAAAAABAE",
+    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
   },
   {
     firstName: 'Test',
@@ -63,7 +63,7 @@ const users = [
     password: '123',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepng.es%2Fpng-yt7bes%2F&psig=AOvVaw3cnrlrRL4CYPtl9zB-Jhjr&ust=1612311084402000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDS__z0ye4CFQAAAAAdAAAAABAE",
+    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
   },
 ];
 
