@@ -84,21 +84,23 @@ module.exports = function (passport) {
         passwordField: 'password',
         passReqToCallback: true,
       },
-       async (req, email, password, done) => {
-         console.log("ENTRÉ", email, password)
+       async (req,/*  email, password ,*/ done) => {
+         console.log("ENTRÉ", req.body.email, req.body.password)
         try {
           const {
             name, 
-            email, 
+            email,
+            password,
             country, 
             city, 
             description, 
             code
           } = req.body;
+
         var school_code = await SchoolCode.findOne({
             where: {
-              mail: school_code.email,
-              code: school_code.code
+              email,
+              code
             } 
           })
           console.log("SCHOOL CODE", school_code)
@@ -112,7 +114,7 @@ module.exports = function (passport) {
             country, 
             city, 
             description, 
-            password: code
+            password
           };
           console.log('school_data', school_data);
           const school = await School.create(school_data);
