@@ -105,41 +105,41 @@ const quizzes = [{
 {
   // 9
   quantity: 5,
-  name: "Quiz de Historia",   
-  description: "Simple quiz sobre Historia",
+  name: "Quiz de La Liga Española de fútbol", // Hay A&Q
+  description: "Simple quiz sobre La Liga",
   modifiedBy: 1,
   createdBy: 1,
   createdAt: new Date(),
   updatedAt: new Date(),
-  logo: 'https://i.ibb.co/rkkp0c8/cuento-piratas-1051-554.jpg',
-  SchoolId: 1,
-  SubjectId: 4,
+  logo: 'https://e00-marca.uecdn.es/assets/multimedia/imagenes/2019/09/22/15691844156647.jpg',
+  SchoolId: 3,
+  SubjectId: 7,
 },
 {
   // 10
   quantity: 5,
-  name: "Quiz de Química",
-  description: "Simple quiz sobre Química",
+  name: "Quiz de Mundiales de fútbol", // Hay A&Q
+  description: "Simple quiz sobre Mundiales",
   modifiedBy: 2,
   createdBy: 2,
   createdAt: new Date(),
   updatedAt: new Date(),
-  SchoolId: 1,
-  SubjectId: 2,
-  logo: 'https://i.ibb.co/WpFfddM/1085095.jpg',
+  SchoolId: 3,
+  SubjectId: 7,
+  logo: 'https://img.fifa.com/image/upload/t_s3/v1598884130/wmfiqewv29ocq7jo9baz.jpg',
 },
 {
   // 11
   quantity: 5,
-  name: "Quiz de Informática",  
-  description: "Simple quiz sobre Informática",
+  name: "Quiz de Disney", // Hay A&Q
+  description: "Simple quiz sobre Disney",
   modifiedBy: 2,
   createdBy: 2,
   createdAt: new Date(),
   updatedAt: new Date(),
-  SchoolId: 4,
-  SubjectId: 1,
-  logo: 'https://i.ibb.co/GCV3cq9/kkkk.png',
+  SchoolId: 3,
+  SubjectId: 8,
+  logo: 'https://yt3.ggpht.com/ytc/AAUvwnhHYZztm_R3VjyZOEwcA-PTR-8TFXTXJ33ljKBuLA=s900-c-k-c0x00ffffff-no-rj',
 },
 {
   // 12

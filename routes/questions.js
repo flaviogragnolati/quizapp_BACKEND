@@ -26,13 +26,13 @@ server.delete("/:id", async (req, res) => {
 
 // Traer todas las QUESTION de un QUIZ - GET a /questions/:id
 
-server.get("/", async (req, res) => {
-  let { QuizId } = req.body;
+server.get("/:id", async (req, res) => {
+  let { id } = req.params;
 
-  if (!QuizId) return res.status(400).send("No se encuentra el QUIZ indicado");
+  if (!id) return res.status(400).send("No se encuentra el QUIZ indicado");
 
   Question.findAll({
-    where: { QuizId },
+    where: { QuizId: id },
   })
     .then((questions) => {
       return res.status(200).send(questions);
