@@ -355,6 +355,7 @@ server.post(
   async (req, res) => {
     try {
       const { name, email, country, city, description, code, logo } = req.user;
+      console.log('email', email)
       
       let token = makeJWT(req.user);
 
@@ -372,7 +373,6 @@ server.post(
         user: req.user,
         token,
       });
-   
 }
 catch (error) {
   console.error(`CATCH REGISTER`, error);
