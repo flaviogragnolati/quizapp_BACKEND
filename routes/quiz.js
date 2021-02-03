@@ -215,9 +215,9 @@ server.get('/info/:id', async (req, res) => {
       raw: true,
       nest: true,
     });
-
+    console.log(data[0]);
     let response = {
-      ...data,
+      ...data[0].dataValues,
       teachers,
     };
 
