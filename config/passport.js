@@ -4,7 +4,7 @@ const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const { User, School } = require('../models/index');
+const { User, School, SchoolCode } = require('../models/index');
 //const makeJWT = require("../utils");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -84,21 +84,24 @@ module.exports = function (passport) {
         passwordField: 'password',
         passReqToCallback: true,
       },
-       async (req, email, password, done) => {
-         console.log("ENTRÉ", email, password)
+       async (req, email, password , done) => {
+        //  console.log("ENTRÉ", req.body.email, req.body.password)
         try {
           const {
             name, 
-            email, 
+            email,
+            password,
             country, 
             city, 
             description, 
+            logo,
             code
           } = req.body;
+
         var school_code = await SchoolCode.findOne({
             where: {
-              mail: school_code.email,
-              code: school_code.code
+              email,
+              code
             } 
           })
           console.log("SCHOOL CODE", school_code)
@@ -111,8 +114,9 @@ module.exports = function (passport) {
             email, 
             country, 
             city, 
+            logo,
             description, 
-            password: code
+            password
           };
           console.log('school_data', school_data);
           const school = await School.create(school_data);
@@ -150,24 +154,7 @@ module.exports = function (passport) {
             return done(null, false, { message: 'No se encontro el usuario' });
           }
 
-          // console.log('USER', user.password);
-          // const asyncValidate = async (db_password, user_password) => {
-          //   return new Promise((resolve, reject) => {
-          //     bcrypt.compare(db_password, user_password, (err, isMatch) => {
-          //       if (err || !isMatch) {
-          //         // return done(null, false, {
-          //         //   message: 'Contraseña Incorrecta',
-          //         // });
-          //         return reject(err);
-          //       }
-          //       return resolve(isMatch);
-          //       // return done(null, user);
-          //     });
-          //   });
-          // };
-          // // console.log('pas', password, user.password);
-          // const validate = await asyncValidate(password, user.password);
-
+       
           const match = await bcrypt.compare(password, user.password);
 
           if (!match) {
