@@ -46,10 +46,10 @@ server.get("/:id", async (req, res) => {
 // Crear una QUESTION - POST a /questions
 
 server.post("/", async (req, res) => {
-  let { title, modifiedBy, createdBy, QuizId } = req.body;
+  let { title, modifiedBy, createdBy, QuizId, question } = req.body;
 
   try {
-    const newQuestion = await Question.create({ title, modifiedBy, createdBy, QuizId });
+    const newQuestion = await Question.create({ title, modifiedBy, createdBy, QuizId, question });
 
     return res.status(200).send(newQuestion);
   } catch (error) {

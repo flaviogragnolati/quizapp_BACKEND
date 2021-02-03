@@ -85,18 +85,18 @@ module.exports = function (passport) {
         passReqToCallback: true,
       },
        async (req, email, password , done) => {
-        //  console.log("ENTRÉ", req.body.email, req.body.password)
-        try {
-          const {
-            name, 
-            email,
-            password,
-            country, 
-            city, 
-            description, 
-            logo,
-            code
-          } = req.body;
+         try {
+           const {
+             name, 
+             email,
+             password,
+             country, 
+             city, 
+             description, 
+             logo,
+             code
+            } = req.body;
+            //console.log("ENTRÉ", email, password)
 
         var school_code = await SchoolCode.findOne({
             where: {
@@ -119,10 +119,11 @@ module.exports = function (passport) {
             };
             console.log('school_data', school_data);
             const school = await School.create(school_data);
+            console.log('creada school', school)
             //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
             let school_obj = { ...school.dataValues };
             delete school_obj.password;
-            await school_code.destroy(); // Acá rompe
+            await school_code.destroy();
           // console.log('REGISTER STRATEGY', user_obj);
           return done(null, school_obj);
         } catch (error) {
