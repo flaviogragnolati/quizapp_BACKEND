@@ -205,7 +205,7 @@ const migrationCommands = (transaction) => {
           createdBy: {
             type: Sequelize.INTEGER,
             field: 'createdBy',
-            allowNull: false,
+            allowNull: true,
           },
           createdAt: {
             type: Sequelize.DATE,
