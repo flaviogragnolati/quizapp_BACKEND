@@ -122,7 +122,7 @@ module.exports = function (passport) {
             //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
             let school_obj = { ...school.dataValues };
             delete school_obj.password;
-            await school_code.destroy();
+            await school_code.destroy(); // Acá rompe
           // console.log('REGISTER STRATEGY', user_obj);
           return done(null, school_obj);
         } catch (error) {

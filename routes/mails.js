@@ -8,6 +8,7 @@ const fs = require("fs");
 //const { User, School } = require("../models/index");
 const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
+const { THE_EMAIL, THE_PASSWORD } = process.env
 
 const sendMail = ({ user, type, quiz, school }) => {
   let subject;
@@ -28,8 +29,8 @@ const sendMail = ({ user, type, quiz, school }) => {
     smtpTransport({
       service: "gmail",
       auth: {
-        user: process.env.THE_EMAIL,
-        pass: process.env.THE_PASSWORD,
+        user: THE_EMAIL,
+        pass: THE_PASSWORD,
       },
     })
   );
