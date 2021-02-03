@@ -83,7 +83,7 @@ server.post("/", async (req, res) => {
 // Editar una SUBJECT - PUT a /subject/:id
 
 server.put("/:id", async (req, res) => {
-  let { SubjectId } = req.params;
+  let { id } = req.params;
   let { name, description } = req.body;
 
   if (!id)
@@ -92,10 +92,9 @@ server.put("/:id", async (req, res) => {
       .send("Es necesario indicar el ID de la subject a editar");
 
   try {
-    const subjectToEdit = await Subject.findOne({ where: { id } });
+    const subjectToEdit = await Subject.findByPk(id);
 
     const subjectEdited = await subjectToEdit.update({
-      title,
       name, 
       description,
     });
