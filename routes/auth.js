@@ -1,5 +1,5 @@
 const server = require('express').Router();
-const { User, Session } = require('../models/index');
+const { User, Session, School } = require('../models/index');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { SECRET_KEY, FRONT_URL } = process.env;
@@ -254,30 +254,6 @@ server.post(
 );
 
 // Ruta para promover a un USER - PUT a /auth/promote/:id
-/*
-FALTA RELACIONARLO CON EL QUIZ
-
-server.put("/promote/:id", async (req, res) => {
-  let { id } = req.params;
-  let { role } = req.body;
-
-  if (!id)
-    return res.status(400).send("Es necesario indicar el usuario a promover");
-
-  const userToEdit = User.findByPk(id);
-
-  const newRole = Role.findOne({
-    where: { name: role },
-  });
-
-  const userEdited = await userToEdit.update(
-    {
-      idRole: newRole.id,
-    }
-  );
-
-  res.status(200).json(userEdited);
-});*/
 
 // Rutas para RESETEAR la contraseña
 
@@ -378,42 +354,24 @@ server.post(
   passport.authenticate('registerOrg-local', { session: false }),
   async (req, res) => {
     try {
-      const { name, email, country, city, description, code } = req.user;
+      const { name, email, country, city, description, code, logo } = req.user;
       
       let token = makeJWT(req.user);
 
       if(token) {
         let payload = {
           user: {
-            name
+            name,
+            email
           },
           type: 'welcome',
         }
         sendMail(payload);
       };
-
-  School.create({
-    where: {
-      email,
-    },
-    defaults: {
-      name, 
-      email,
-      country, 
-      city, 
-      description, 
-      code,
-      password: code
-    },
-  })
-    .then((school) => {
-      const [instance, wasCreated] = school;
-      if (!wasCreated) {
-        return res.status(200).send("La organización ya está registrada");
-      } else {
-        return res.status(200).send("La organización ha sido creada");
-      }
-    })
+      return res.status(200).send({
+        user: req.user,
+        token,
+      });
    
 }
 catch (error) {
