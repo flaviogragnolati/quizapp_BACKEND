@@ -322,28 +322,30 @@ server.post(
   //passport.authenticate("jwt-school", { session: false }),
   //checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
-    let { name, description, SubjectId, SchoolId, teachers } = req.body;
-
+    let { name, description, SubjectId, SchoolId } = req.body;
+// console.log(name, description, SubjectId, SchoolId)
     try {
       const newQuiz = await Quiz.create({
-        quantity,
+        quantity: 0,
         name,
         description,
         SubjectId,
         SchoolId,
+        active: false,
+        // teachers
       });
 
-      if (teachers) {
-        // Array con id de los user a agregar como teachers
-        teachers.forEach(async (t) => {
-          await Role.create({
-            //Cuando haya data, revisar si agrega por segunda vez un teacher
-            QuizId: newQuiz.id,
-            UserId: t,
-            name: 'Teacher',
-          });
-        });
-      }
+      // if (teachers) {
+      //   // Array con id de los user a agregar como teachers
+      //   teachers.forEach(async (t) => {
+      //     await Role.create({
+      //       //Cuando haya data, revisar si agrega por segunda vez un teacher
+      //       QuizId: newQuiz.id,
+      //       UserId: t,
+      //       name: 'Teacher',
+      //     });
+      //   });
+      // }
 
       return res.status(200).send(newQuiz);
     } catch (error) {
