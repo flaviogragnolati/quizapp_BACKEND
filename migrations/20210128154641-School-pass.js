@@ -8,7 +8,7 @@ module.exports = {
         'password',
         {
           type: Sequelize.STRING,
-          defaultValue: "1234",
+          //defaultValue: "1234",
           allowNull: false,
           set(value) {
             if (value) {

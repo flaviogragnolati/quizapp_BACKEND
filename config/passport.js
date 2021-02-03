@@ -103,26 +103,26 @@ module.exports = function (passport) {
               email,
               code
             } 
-          })
+          });
           console.log("SCHOOL CODE", school_code)
             // if (mail y code no coinciden){
             //   return done(null, school_obj); // revisar como es cuando es error
             // }
-
-          const school_data = {
-            name, 
-            email, 
-            country, 
-            city, 
-            logo,
-            description, 
-            password
-          };
-          console.log('school_data', school_data);
-          const school = await School.create(school_data);
-          //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
-          let school_obj = { ...school.dataValues };
-          delete school_obj.password;
+            const school_data = {
+              name, 
+              email, 
+              country, 
+              city, 
+              logo,
+              description, 
+              password
+            };
+            console.log('school_data', school_data);
+            const school = await School.create(school_data);
+            //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
+            let school_obj = { ...school.dataValues };
+            delete school_obj.password;
+            await school_code.destroy();
           // console.log('REGISTER STRATEGY', user_obj);
           return done(null, school_obj);
         } catch (error) {
