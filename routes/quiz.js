@@ -322,8 +322,8 @@ server.post(
   //passport.authenticate("jwt-school", { session: false }),
   //checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
-    let { name, description, SubjectId, SchoolId, teachers } = req.body;
-
+    let { name, description, SubjectId, SchoolId } = req.body;
+// console.log(name, description, SubjectId, SchoolId)
     try {
       const newQuiz = await Quiz.create({
         quantity: 0,
