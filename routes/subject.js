@@ -69,7 +69,6 @@ server.get("/quizzes/", async (req, res) => {
 
 server.post("/", async (req, res) => {
   let { name, description, SchoolId } = req.body;
-
   try {
     const newSubject = await Subject.create({ name, description, SchoolId });
 

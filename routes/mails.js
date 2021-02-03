@@ -53,6 +53,12 @@ const sendMail = ({ user, type, quiz, school }) => {
       break;
 
     case "promote":
+      var replacements = {
+        quiz: quiz.name,
+        quizImage: quiz.logo,
+        description: quiz.description,
+        link: `${FRONT_URL} + /${quiz.id}`,
+      };
       subject = `${user.firstName} has sido promovido a Teacher`;
       text = "Te damos la bienvenida al equipo docente de Quizapp!";
       break;
@@ -68,11 +74,11 @@ const sendMail = ({ user, type, quiz, school }) => {
       break;
 
     case "createSchool":
-      let linkCreateSchool = FRONT_URL + "rutaParaEditarElPassword"; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
-      // Ingrese a la web con el código ${school.password}. Debe ingresar un nuevo password para habilitar la cuenta
+      let linkCreateSchool = FRONT_URL; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
       var replacements = {
-        school: school.name,
-        link: linkCreateSchool,
+        email: user.email,
+        code: user.code,
+        link: linkCreateSchool
       };
       subject = "Inscripción de organización";
       break;
@@ -86,7 +92,7 @@ const sendMail = ({ user, type, quiz, school }) => {
 
       let mail = {
         from: process.env.THE_EMAIL,
-        to: 'damsta1995@gmail.com', //user.email,
+        to: user.email,
         subject,
         html: htmlToSend,
       };

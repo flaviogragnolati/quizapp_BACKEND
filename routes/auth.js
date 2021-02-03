@@ -166,7 +166,8 @@ server.post(
       if(token) {
         let payload = {
           user: {
-            firstName
+            firstName,
+            email
           },
           type: 'welcome',
         }
@@ -320,6 +321,7 @@ server.put('/resetpassword/:id', async (req, res) => {
       let payload = {
         user: {
           firstName: userToUpdate.firstName,
+          email: userToUpdate.email,
           resetPasswordToken
         },
         type: 'resetPassword',

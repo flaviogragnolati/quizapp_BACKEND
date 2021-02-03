@@ -60,9 +60,12 @@ server.post("/", async (req, res, next) => {
     let payload = {
       user: {
         firstName: userPromoted.firstName,
+        email: userPromoted.email,
       },
       quiz: {
         name: quizTeacher.name,
+        logo: quizTeacher.logo,
+        description: quizTeacher.description
       },
       type: "promote",
     };
