@@ -9,11 +9,9 @@ const { User, School } = require("../models/index");
 const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
 
-sendMailRouter.post("/", async (req, res) => {
+const sendMail = ({ user, type, quiz, school }) => {
   let text;
   let subject;
-
-  let { user, type, quiz, school } = req.body;
 
   let htmlTemplate = type;
 
@@ -55,6 +53,12 @@ sendMailRouter.post("/", async (req, res) => {
       break;
 
     case "promote":
+      var replacements = {
+        quiz: quiz.name,
+        quizImage: quiz.logo,
+        description: quiz.description,
+        link: `${FRONT_URL} + /${quiz.id}`,
+      };
       subject = `${user.firstName} has sido promovido a Teacher`;
       text = "Te damos la bienvenida al equipo docente de Quizapp!";
       break;
@@ -70,11 +74,11 @@ sendMailRouter.post("/", async (req, res) => {
       break;
 
     case "createSchool":
-      let linkCreateSchool = FRONT_URL + "rutaParaEditarElPassword"; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
-      // Ingrese a la web con el código ${school.password}. Debe ingresar un nuevo password para habilitar la cuenta
+      let linkCreateSchool = FRONT_URL; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
       var replacements = {
-        school: school.name,
-        link: linkCreateSchool,
+        email: user.email,
+        code: user.code,
+        link: linkCreateSchool
       };
       subject = "Inscripción de organización";
       break;
@@ -88,7 +92,7 @@ sendMailRouter.post("/", async (req, res) => {
 
       let mail = {
         from: process.env.THE_EMAIL,
-        to: 'damsta1995@gmail.com', //user.email,
+        to: user.email,
         subject,
         html: htmlToSend,
       };
@@ -102,6 +106,8 @@ sendMailRouter.post("/", async (req, res) => {
       });
     }
   );
-});
+};
 
-module.exports = sendMailRouter;
+module.exports = sendMail;
+
+//module.exports = sendMailRouter;

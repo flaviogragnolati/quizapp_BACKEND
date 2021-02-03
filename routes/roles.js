@@ -1,7 +1,7 @@
 const server = require('express').Router();
 
 // Editar un ROL - PUT a /role/:id //Ver relación con quizId (cómo lo recibimos y buscar en la tabla por QuizId)
-
+//!NO ANDA. Está en TEACHERS
 server.put("/:id"), async(req, res) => {
     let { id } = req.params;
     let { name } = req.body;
