@@ -77,6 +77,60 @@ module.exports = function (passport) {
   );
 
   passport.use(
+    'registerOrg-local',
+    new LocalStrategy(
+      {
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback: true,
+      },
+       async (req, email, password, done) => {
+         console.log("ENTRÉ", email, password)
+        try {
+          const {
+            name, 
+            email, 
+            country, 
+            city, 
+            description, 
+            code
+          } = req.body;
+        var school_code = await SchoolCode.findOne({
+            where: {
+              mail: school_code.email,
+              code: school_code.code
+            } 
+          })
+          console.log("SCHOOL CODE", school_code)
+            // if (mail y code no coinciden){
+            //   return done(null, school_obj); // revisar como es cuando es error
+            // }
+
+          const school_data = {
+            name, 
+            email, 
+            country, 
+            city, 
+            description, 
+            password: code
+          };
+          console.log('school_data', school_data);
+          const school = await School.create(school_data);
+          //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
+          let school_obj = { ...school.dataValues };
+          delete school_obj.password;
+          // console.log('REGISTER STRATEGY', user_obj);
+          return done(null, school_obj);
+        } catch (error) {
+          console.error(error);
+          return done(error);
+        }
+      }
+    )
+  );
+
+
+  passport.use(
     /**
      * Estrategia para hacer login con email//pass
      * comparando contra la info de la db

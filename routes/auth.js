@@ -372,4 +372,53 @@ server.put('/pass/:id', (req, res) => {
     });
 });
 
+
+server.post(
+  "/org/register", 
+  passport.authenticate('registerOrg-local', { session: false }),
+  async (req, res) => {
+    try {
+      const { name, email, country, city, description, code } = req.user;
+      
+      let token = makeJWT(req.user);
+
+      if(token) {
+        let payload = {
+          user: {
+            name
+          },
+          type: 'welcome',
+        }
+        sendMail(payload);
+      };
+
+  School.create({
+    where: {
+      email,
+    },
+    defaults: {
+      name, 
+      email,
+      country, 
+      city, 
+      description, 
+      code,
+      password: code
+    },
+  })
+    .then((school) => {
+      const [instance, wasCreated] = school;
+      if (!wasCreated) {
+        return res.status(200).send("La organización ya está registrada");
+      } else {
+        return res.status(200).send("La organización ha sido creada");
+      }
+    })
+   
+}
+catch (error) {
+  console.error(`CATCH REGISTER`, error);
+  return error;
+}});
+
 module.exports = server;
