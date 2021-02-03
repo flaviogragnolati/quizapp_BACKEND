@@ -51,10 +51,11 @@ server.post("/", async (req, res, next) => {
       UserId: teacherId,
       QuizId: quizzId,
     });
-    console.log(userEdited);
-    
+      
     const userPromoted = await User.findByPk(teacherId);
+   
     const quizTeacher = await Quiz.findByPk(quizzId);
+ 
 
     let payload = {
       user: {
@@ -65,9 +66,7 @@ server.post("/", async (req, res, next) => {
       },
       type: "promote",
     };
-
     sendMail(payload);
-
     return res.status(200).send(userEdited);
   } catch (error) {
     return res.status(400).send("No se ha asignado teacher al quiz");
