@@ -99,7 +99,7 @@ server.get("/:id/quizzes", async (req, res) => {
 // RUTA para AGREGAR/CREAR School - post a /org
 
 server.post("/", async (req, res, next) => {
-  let { email } = req.body;
+  let { name, email } = req.body;
  try {
    const schoolCodeGen = await SchoolCode.findOrCreate({
       where: {
@@ -109,9 +109,10 @@ server.post("/", async (req, res, next) => {
         code: makeid(6),
       }
     });
-
+console.log(name, email)
     let payload = {
       user: {
+        name,
         email,
         code: schoolCodeGen[0].code,
       },
@@ -179,27 +180,43 @@ server.put("/:id", async (req, res) => {
     logo,
     address,
     password,
+    code,
   } = req.body;
 
   if (!id)
     return res
       .status(400)
-      .send("Es necesario indicar la escuela a actualizar/modificar");
+      .send("Es necesario indicar la escuela a actualizar/modificar.");
 
-  const schoolToEdit = await School.findByPk(id);
+      try {
+        const schoolCode = await SchoolCode.findOne({
+          where: { email }
+        });
+      
+        if(schoolCode.code === code) {
+          const schoolToEdit = await School.findByPk(id);
+        
+          const schoolEdited = await schoolToEdit.update({
+            name,
+            email,
+            description,
+            city,
+            country,
+            logo,
+            address,
+            password,
+          });
 
-  const schoolEdited = await schoolToEdit.update({
-    name,
-    email,
-    description,
-    city,
-    country,
-    logo,
-    address,
-    password,
-  });
-
-  return res.status(200).send(schoolEdited);
+          delete schoolCode;
+        
+          return res.status(200).send('La escuela ha sido registrada con éxito.');
+        } else {
+          return res.status(400).send('El código no es correcto.')
+        }
+      } catch(error) {
+        console.error(error);
+        return res.status(500).send('CATCH edit/finalRegister School.');
+      }
 });
 
 module.exports = server;

@@ -329,23 +329,26 @@ server.post(
         quantity: 0,
         name,
         description,
-        SubjectId,
-        SchoolId,
-        active: false,
-        // teachers
+        //createdBy: 1,
       });
 
-      // if (teachers) {
-      //   // Array con id de los user a agregar como teachers
-      //   teachers.forEach(async (t) => {
-      //     await Role.create({
-      //       //Cuando haya data, revisar si agrega por segunda vez un teacher
-      //       QuizId: newQuiz.id,
-      //       UserId: t,
-      //       name: 'Teacher',
-      //     });
-      //   });
-      // }
+      const setTheSubject = await Subject.findByPk(SubjectId);
+      newQuiz.setSubject(setTheSubject);
+
+      const setTheSchool = await School.findByPk(SchoolId);
+      newQuiz.setSchool(setTheSchool);
+
+/*       if (teachers) {
+        // Array con id de los user a agregar como teachers
+        teachers.forEach(async (t) => {
+          await Role.create({
+            //Cuando haya data, revisar si agrega por segunda vez un teacher
+            QuizId: newQuiz.id,
+            UserId: t,
+            name: 'Teacher',
+          });
+        });
+      } */
 
       return res.status(200).send(newQuiz);
     } catch (error) {
