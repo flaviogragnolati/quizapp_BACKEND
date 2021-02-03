@@ -364,7 +364,7 @@ server.post(
             name,
             email
           },
-          type: 'welcome',
+          type: 'welcomeSchool',
         }
         sendMail(payload);
       };

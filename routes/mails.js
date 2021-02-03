@@ -43,6 +43,14 @@ const sendMail = ({ user, type, quiz, school }) => {
       };
       subject = `Bienvenid@, ${user.firstName} a Quizapp`;
       break;
+      
+      case "welcomeSchool":
+      var replacements = {
+        // Espacios que van a ser reemplazados en el HTML Mail
+        link: FRONT_URL,
+      };
+      subject = `Bienvenid@, ${user.name} a Quizapp`;
+      break;
 
     case "accepted":
       var replacements = {
