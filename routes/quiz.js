@@ -326,14 +326,19 @@ server.post(
 
     try {
       const newQuiz = await Quiz.create({
-        quantity,
+        quantity: 0,
         name,
         description,
-        SubjectId,
-        SchoolId,
+        //createdBy: 1,
       });
 
-      if (teachers) {
+      const setTheSubject = await Subject.findByPk(SubjectId);
+      newQuiz.setSubject(setTheSubject);
+
+      const setTheSchool = await School.findByPk(SchoolId);
+      newQuiz.setSchool(setTheSchool);
+
+/*       if (teachers) {
         // Array con id de los user a agregar como teachers
         teachers.forEach(async (t) => {
           await Role.create({
@@ -343,7 +348,7 @@ server.post(
             name: 'Teacher',
           });
         });
-      }
+      } */
 
       return res.status(200).send(newQuiz);
     } catch (error) {

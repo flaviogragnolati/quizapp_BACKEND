@@ -76,6 +76,7 @@ const sendMail = ({ user, type, quiz, school }) => {
     case "createSchool":
       let linkCreateSchool = FRONT_URL; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
       var replacements = {
+        name: user.name,
         email: user.email,
         code: user.code,
         link: linkCreateSchool
