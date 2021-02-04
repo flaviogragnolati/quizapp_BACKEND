@@ -1,17 +1,16 @@
 require("dotenv").config();
-const express = require("express");
-const sendMailRouter = express.Router();
+//const express = require("express");
+//const sendMailRouter = express.Router();
 const nodemailer = require("nodemailer");
 let smtpTransport = require("nodemailer-smtp-transport");
 const handlebars = require("handlebars");
 const fs = require("fs");
-const { User, School } = require("../models/index");
+//const { User, School } = require("../models/index");
 const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
-const { THE_EMAIL, THE_PASSWORD } = process.env
+const { THE_EMAIL, THE_PASSWORD } = process.env;
 
 const sendMail = ({ user, type, quiz, school }) => {
-  let text;
   let subject;
 
   let htmlTemplate = type;
@@ -38,20 +37,20 @@ const sendMail = ({ user, type, quiz, school }) => {
 
   switch (type) {
     case "welcome":
+      console.log('en case welcome', user)
       var replacements = {
         // Espacios que van a ser reemplazados en el HTML Mail
         link: FRONT_URL,
       };
       subject = `Bienvenid@, ${user.firstName} a Quizapp`;
       break;
-      
-      case "welcomeSchool":
+       
+/*       case "schoolWelcome":
       var replacements = {
-        // Espacios que van a ser reemplazados en el HTML Mail
         link: FRONT_URL,
       };
       subject = `Bienvenid@, ${user.name} a Quizapp`;
-      break;
+      break; */
 
     case "accepted":
       var replacements = {
@@ -69,7 +68,6 @@ const sendMail = ({ user, type, quiz, school }) => {
         link: `${FRONT_URL} + /${quiz.id}`,
       };
       subject = `${user.firstName} has sido promovido a Teacher`;
-      text = "Te damos la bienvenida al equipo docente de Quizapp!";
       break;
 
     case "resetPassword":
@@ -83,12 +81,11 @@ const sendMail = ({ user, type, quiz, school }) => {
       break;
 
     case "createSchool":
-      let linkCreateSchool = FRONT_URL; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
       var replacements = {
         name: user.name,
         email: user.email,
         code: user.code,
-        link: linkCreateSchool
+        link: FRONT_URL + 'registerSchool'
       };
       subject = "Inscripción de organización";
       break;

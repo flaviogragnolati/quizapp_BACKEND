@@ -68,9 +68,10 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      timestamps: true,
-      // paranoid: true,
+      paranoid: true,
       sequelize,
+      //paranoid: true,
+      timestamps: true,
       modelName: 'User',
     }
   );

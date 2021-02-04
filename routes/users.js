@@ -1,5 +1,5 @@
 const server = require("express").Router();
-const { User } = require("../models/index");
+const { User, Role } = require("../models/index");
 const { checkAdmin } = require("../utils/authTools.js");
 const passport = require("passport");
 
@@ -58,17 +58,31 @@ server.get(
 
 // Devuelve USER por email - GET a /users/email
 
-server.get('/email', async (req, res) => {
+server.get('/email/:id', async (req, res) => {
+  let { id } = req.params;
   let { email } = req.body;
 
   if(!email) return res.status(400).send('¿Cuál es el email a buscar?');
 
   try {
     const userByEmail = await User.findOne({
-      where: { email }
+      where: { email },
+      attributes: {
+      exclude: ['createdAt', 'updatedAt', 'resetPasswordExpires', 'resetPasswordToken', 'password', 'deletedAt']}
     });
+
+    const userRole = await Role.findOne({
+      where: { QuizId: id, UserId: userByEmail.id},
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']}
+    });
+
+  let response = {
+      user: userByEmail,
+      role: userRole
+    };
   
-    return res.status(200).send(userByEmail);
+    return res.status(200).send(response);
   } catch(error) {
     console.error(error);
     return res.send(500).send('CATCH /users/email');

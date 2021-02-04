@@ -227,9 +227,10 @@ server.post(
         city,
         address,
         logo,
-      } = req.school;
+      } = req.user;
 
-      var token = jwt.sign(
+      let token = makeJWT(req.user);
+/*       var token = jwt.sign(
         {
           id,
           name,
@@ -241,7 +242,7 @@ server.post(
           logo,
         },
         SECRET_KEY
-      );
+      ); */
 
       return res.status(200).send({
         user: req.user,
@@ -348,6 +349,7 @@ server.put('/pass/:id', (req, res) => {
     });
 });
 
+// RUTA para el registro final de la SCHOOL - POST a /auth/org/register
 
 server.post(
   "/org/register", 
@@ -355,20 +357,20 @@ server.post(
   async (req, res) => {
     try {
       const { name, email, country, city, description, code, logo } = req.user;
-      console.log('email', email)
       
       let token = makeJWT(req.user);
-
-      if(token) {
+      
+/*       if(token) {
         let payload = {
           user: {
-            name,
+            firstName: name,
             email
           },
-          type: 'welcomeSchool',
+          type: 'welcome',
         }
         sendMail(payload);
-      };
+      }; */
+
       return res.status(200).send({
         user: req.user,
         token,
