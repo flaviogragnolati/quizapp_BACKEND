@@ -77,19 +77,7 @@ server.get('/', async (req, res) => {
       raw: true,
       nest: true,
     });
-    // let data = await Quiz.findByPk(1, {
-    //   include: {
-    //     model: Subject,
-    //     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    //   },
-    //   raw: true,
-    //   nest: true,
-    // });
-    console.log('DATa', data.slice(0, 5));
-    // data.map((d) => {
-    //   console.log('ID', d.id);
-    //   console.log(d.Reviews);
-    // });
+  
     const UserSchema = new schema.Entity('users');
     const SubjectsSchema = new schema.Entity('subjects');
     const SchoolSchema = new schema.Entity('schools');
@@ -128,12 +116,7 @@ server.get('/', async (req, res) => {
       }
     );
 
-    // QuizSchema.define({
-    //   Subject: SubjectsSchema,
-    //   School: SchoolSchema,
-    //   // QuizTags: QuizTagSchema,
-    // });
-
+  
     const normalizedData = normalize(data, [QuizSchema]);
 
     return res.status(200).send(normalizedData);
@@ -171,41 +154,8 @@ server.get('/info/:id', async (req, res) => {
           attributes: { exclude: ['createdAt', 'updatedAt', 'Quiz_QTag'] },
         },
       ],
-      // raw: true,
-      // nest: true,
+    
     });
-
-    // const quiz = await Quiz.findOne({
-    //   where: { id },
-    //   raw: true,
-    //   nest: true,
-    // });
-
-    // const school = await School.findOne({
-    //   where: { id: quiz.SchoolId },
-    //   raw: true,
-    //   nest: true,
-    // });
-
-    // const subject = await Subject.findOne({
-    //   where: { id: quiz.SubjectId },
-    //   raw: true,
-    //   nest: true,
-    // });
-
-    // const quizTags = await QuizTag.findAll({
-    //   where: { QuizId: quiz.id },
-    //   raw: true,
-    //   nest: true,
-    // });
-
-    // console.log(`encontré quizTags ${quizTags}`);
-
-    // const reviews = await Review.findAll({
-    //   where: { QuizId: quiz.id },
-    //   raw: true,
-    //   nest: true,
-    // });
 
     const teachers = await Role.findAll({
       where: {
@@ -220,27 +170,6 @@ server.get('/info/:id', async (req, res) => {
       ...data[0].dataValues,
       teachers,
     };
-
-    // response.quiz = quiz;
-
-    // response.school = school;
-
-    // response.subject.byId = subject;
-
-    // // response.quizTags.byId = quizTags;
-    // // response.quizTags.allIds = quizTags.map((qt) => {
-    // //   return qt.id;
-    // // });
-
-    // response.reviews.byId = reviews;
-    // response.reviews.allIds = reviews.map((r) => {
-    //   return r.id;
-    // });
-
-    // response.teachers.byId = teachers;
-    // response.teachers.allIds = teachers.map((t) => {
-    //   return t.id;
-    // });
 
     return res.status(200).send(response);
   } catch (error) {
@@ -339,17 +268,6 @@ server.post(
       const setTheSchool = await School.findByPk(SchoolId);
       newQuiz.setSchool(setTheSchool);
 
-/*       if (teachers) {
-        // Array con id de los user a agregar como teachers
-        teachers.forEach(async (t) => {
-          await Role.create({
-            //Cuando haya data, revisar si agrega por segunda vez un teacher
-            QuizId: newQuiz.id,
-            UserId: t,
-            name: 'Teacher',
-          });
-        });
-      } */
 
       return res.status(200).send(newQuiz);
     } catch (error) {
@@ -456,5 +374,6 @@ server.put('/activate/:id', async (req, res) => {
     return res.status(500).send('CATCH activate quiz');
   }
 });
+
 
 module.exports = server;
