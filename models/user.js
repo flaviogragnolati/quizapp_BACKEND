@@ -70,7 +70,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       paranoid: true,
       sequelize,
-      //paranoid: true,
       timestamps: true,
       modelName: 'User',
     }
