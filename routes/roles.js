@@ -1,20 +1,21 @@
 const server = require('express').Router();
+const { Role } = require('../models/index');
 
-// Editar un ROL - PUT a /role/:id //Ver relación con quizId (cómo lo recibimos y buscar en la tabla por QuizId)
-//!NO ANDA. Está en TEACHERS
-server.put("/:id"), async(req, res) => {
-    let { id } = req.params;
-    let { name } = req.body;
-    if (!id) return res.status(400).send("Se necesita indicar el Id del usuario al que se le quiere modificar el rol");
+// Inscribirse a un Quiz - POST a /enroll 
+
+server.post("/enroll", async(req, res) => {
+    console.log("ENTRÉ")
+    let { UserId, QuizId } = req.body;
+    if (!UserId || !QuizId) return res.status(400).send("Se necesita indicar el usuario y del quiz para realizar la inscripción");
     try {
-        const userToModify = await Roles.findOne({where: {UserId: id}});
-        const userModified = await userToModify.update({name});
-        return res.status(200).send(userModified);
+        const userToEnroll = await Role.create({UserId, QuizId, name: "Enrolled"});
+      
+        return res.status(200).send(userToEnroll);
     } catch (error){
         console.error(error);
         res.status(500).send("Error al editar el rol");
     }    
-}
+})
 
 module.exports = server;
 
