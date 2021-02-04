@@ -1,6 +1,7 @@
 const server = require("express").Router();
 const { School, Quiz, Subject, SchoolCode } = require("../models/index");
-const { makeid } = require("../utils/index")
+const { makeid } = require("../utils/index");
+const sendMail = require('./mails');
 
 // RUTA para BORRAR School - delete a /org/:id
 
@@ -98,9 +99,8 @@ server.get("/:id/quizzes", async (req, res) => {
 // RUTA para AGREGAR/CREAR School - post a /org
 
 server.post("/", async (req, res, next) => {
-  let { email } = req.body;
+  let { name, email } = req.body;
  try {
-
    const schoolCodeGen = await SchoolCode.findOrCreate({
       where: {
         email
@@ -108,10 +108,22 @@ server.post("/", async (req, res, next) => {
         email,
         code: makeid(6),
       }
-    })
+    });
+
+    let payload = {
+      user: {
+        name,
+        email,
+        code: schoolCodeGen[0].code,
+      },
+      type: "createSchool",
+    };
+    sendMail(payload);
+
     return res.status(200).send();
  } catch(error) {
-   return res.status(400).send("El código no ha sido generado", error)
+   console.error(error);
+   return res.status(400).send("El código no ha sido generado")
  }
 })
 

@@ -30,7 +30,8 @@ module.exports = {
       // await queryInterface.bulkInsert('Users', users, { hooks: true }),
       await User.bulkCreate(users, { hooks: true }),
       //Cargamos Organizaciones
-      await queryInterface.bulkInsert('Schools', schools, { hooks: true }),
+      await School.bulkCreate(schools, { hooks: true }),
+      // await queryInterface.bulkInsert('Schools', schools, { hooks: true }),
       //Cargamos Subjects (materias)
       await queryInterface.bulkInsert('Subjects', subjects, { hooks: true }),
       //Cargamos Quizzes

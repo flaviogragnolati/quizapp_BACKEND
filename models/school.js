@@ -48,6 +48,18 @@ module.exports = (sequelize, DataTypes) => {
           isURL: true,
         },
         allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        //defaultValue: "1234",
+        allowNull: false,
+        set(value) {
+          if (value) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(value, salt);
+            this.setDataValue('password', hash);
+          }
+        },
       }
     },
     {

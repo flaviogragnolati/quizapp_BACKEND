@@ -26,13 +26,13 @@ server.delete("/:id", async (req, res) => {
 
 // Traer todas las QUESTION de un QUIZ - GET a /questions/:id
 
-server.get("/", async (req, res) => {
-  let { QuizId } = req.body;
+server.get("/:id", async (req, res) => {
+  let { id } = req.params;
 
-  if (!QuizId) return res.status(400).send("No se encuentra el QUIZ indicado");
+  if (!id) return res.status(400).send("No se encuentra el QUIZ indicado");
 
   Question.findAll({
-    where: { QuizId },
+    where: { QuizId: id },
   })
     .then((questions) => {
       return res.status(200).send(questions);
@@ -46,10 +46,10 @@ server.get("/", async (req, res) => {
 // Crear una QUESTION - POST a /questions
 
 server.post("/", async (req, res) => {
-  let { title, modifiedBy, createdBy, QuizId } = req.body;
+  let { title, modifiedBy, createdBy, QuizId, question } = req.body;
 
   try {
-    const newQuestion = await Question.create({ title, modifiedBy, createdBy, QuizId });
+    const newQuestion = await Question.create({ title, modifiedBy, createdBy, QuizId, question });
 
     return res.status(200).send(newQuestion);
   } catch (error) {

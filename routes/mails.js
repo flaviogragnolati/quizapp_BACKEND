@@ -1,16 +1,16 @@
 require("dotenv").config();
-const express = require("express");
-const sendMailRouter = express.Router();
+//const express = require("express");
+//const sendMailRouter = express.Router();
 const nodemailer = require("nodemailer");
 let smtpTransport = require("nodemailer-smtp-transport");
 const handlebars = require("handlebars");
 const fs = require("fs");
-const { User, School } = require("../models/index");
+//const { User, School } = require("../models/index");
 const { FRONT_URL } = require("../config/environments/production");
 const BASE_URL = process.env.BASE_URL;
+const { THE_EMAIL, THE_PASSWORD } = process.env;
 
 const sendMail = ({ user, type, quiz, school }) => {
-  let text;
   let subject;
 
   let htmlTemplate = type;
@@ -29,20 +29,28 @@ const sendMail = ({ user, type, quiz, school }) => {
     smtpTransport({
       service: "gmail",
       auth: {
-        user: process.env.THE_EMAIL,
-        pass: process.env.THE_PASSWORD,
+        user: THE_EMAIL,
+        pass: THE_PASSWORD,
       },
     })
   );
 
   switch (type) {
     case "welcome":
+      console.log('en case welcome', user)
       var replacements = {
         // Espacios que van a ser reemplazados en el HTML Mail
         link: FRONT_URL,
       };
       subject = `Bienvenid@, ${user.firstName} a Quizapp`;
       break;
+       
+/*       case "schoolWelcome":
+      var replacements = {
+        link: FRONT_URL,
+      };
+      subject = `Bienvenid@, ${user.name} a Quizapp`;
+      break; */
 
     case "accepted":
       var replacements = {
@@ -53,8 +61,13 @@ const sendMail = ({ user, type, quiz, school }) => {
       break;
 
     case "promote":
+      var replacements = {
+        quiz: quiz.name,
+        quizImage: quiz.logo,
+        description: quiz.description,
+        link: `${FRONT_URL} + /${quiz.id}`,
+      };
       subject = `${user.firstName} has sido promovido a Teacher`;
-      text = "Te damos la bienvenida al equipo docente de Quizapp!";
       break;
 
     case "resetPassword":
@@ -68,11 +81,11 @@ const sendMail = ({ user, type, quiz, school }) => {
       break;
 
     case "createSchool":
-      let linkCreateSchool = FRONT_URL + "rutaParaEditarElPassword"; // ¡¡¡CAMBIAR POR LA RUTA REAL!!!
-      // Ingrese a la web con el código ${school.password}. Debe ingresar un nuevo password para habilitar la cuenta
       var replacements = {
-        school: school.name,
-        link: linkCreateSchool,
+        name: user.name,
+        email: user.email,
+        code: user.code,
+        link: FRONT_URL + 'registerSchool'
       };
       subject = "Inscripción de organización";
       break;
@@ -86,7 +99,7 @@ const sendMail = ({ user, type, quiz, school }) => {
 
       let mail = {
         from: process.env.THE_EMAIL,
-        to: 'damsta1995@gmail.com', //user.email,
+        to: user.email,
         subject,
         html: htmlToSend,
       };

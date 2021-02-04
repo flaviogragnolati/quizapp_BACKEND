@@ -21,6 +21,7 @@ server.delete("/:id", async (req, res) => {
     name: subject.title,
     description: subject.description,
   };
+
   await subjectToDestroy.destroy();
   return res.status(200).send(payload);
 });
@@ -68,10 +69,9 @@ server.get("/quizzes/", async (req, res) => {
 // Crear una SUBJECT - POST a /subject
 
 server.post("/", async (req, res) => {
-  let { name, description, schoolId } = req.body;
-
+  let { name, description, SchoolId } = req.body;
   try {
-    const newSubject = await Subject.create({ name, description, schoolId });
+    const newSubject = await Subject.create({ name, description, SchoolId });
 
     return res.status(200).send(newSubject);
   } catch (error) {
@@ -83,7 +83,7 @@ server.post("/", async (req, res) => {
 // Editar una SUBJECT - PUT a /subject/:id
 
 server.put("/:id", async (req, res) => {
-  let { subjectId } = req.params;
+  let { id } = req.params;
   let { name, description } = req.body;
 
   if (!id)
@@ -92,10 +92,9 @@ server.put("/:id", async (req, res) => {
       .send("Es necesario indicar el ID de la subject a editar");
 
   try {
-    const subjectToEdit = await Subject.findOne({ where: { id } });
+    const subjectToEdit = await Subject.findByPk(id);
 
     const subjectEdited = await subjectToEdit.update({
-      title,
       name, 
       description,
     });

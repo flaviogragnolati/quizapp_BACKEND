@@ -205,7 +205,7 @@ const migrationCommands = (transaction) => {
           createdBy: {
             type: Sequelize.INTEGER,
             field: 'createdBy',
-            allowNull: false,
+            allowNull: true,
           },
           createdAt: {
             type: Sequelize.DATE,
@@ -476,7 +476,7 @@ const migrationCommands = (transaction) => {
         'Roles',
         {
           name: {
-            type: Sequelize.ENUM('Student', 'Teacher'),
+            type: Sequelize.ENUM('Student', 'Teacher', 'Enrolled'),
             field: 'name',
             allowNull: false,
           },
