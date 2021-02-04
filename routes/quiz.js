@@ -22,8 +22,8 @@ const { normalize, schema } = require('normalizr');
 
 server.delete(
   '/:id',
-  passport.authenticate('jwt-school', { session: false }),
-  checkSuperAdmin, // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
+  // passport.authenticate('jwt-school', { session: false }),
+  // checkSuperAdmin, // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
     let { id } = req.params;
 
