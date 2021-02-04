@@ -332,11 +332,15 @@ server.post(
         //createdBy: 1,
       });
 
+      console.log('651+6', newQuiz)
+
       const setTheSubject = await Subject.findByPk(SubjectId);
       newQuiz.setSubject(setTheSubject);
 
       const setTheSchool = await School.findByPk(SchoolId);
       newQuiz.setSchool(setTheSchool);
+
+      console.log(newQuiz)
 
 /*       if (teachers) {
         // Array con id de los user a agregar como teachers

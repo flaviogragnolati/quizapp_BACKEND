@@ -21,6 +21,7 @@ server.delete("/:id", async (req, res) => {
     name: subject.title,
     description: subject.description,
   };
+
   await subjectToDestroy.destroy();
   return res.status(200).send(payload);
 });
