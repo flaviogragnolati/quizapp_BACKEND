@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     code: DataTypes.STRING
   }, {
     sequelize,
+    timestamps: true,
+    paranoid: true,
     modelName: 'SchoolCode',
   });
   return SchoolCode;
