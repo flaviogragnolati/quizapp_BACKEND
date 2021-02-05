@@ -60,7 +60,7 @@ server.get(
 
 server.post('/email/:id', async (req, res) => {
   let { id } = req.params;
-  let { email } = req.query;
+  let { email } = req.body;
 
   if(!email) return res.status(400).send('¿Cuál es el email a buscar?');
 
