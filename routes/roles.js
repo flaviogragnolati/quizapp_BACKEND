@@ -1,6 +1,42 @@
 const server = require("express").Router();
 const { Role, User } = require("../models/index");
 
+//Promover inscripto a STUDENT - GET a : roles/student/
+server.post("/student/", async (req, res, next) => {
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId)
+    return res.status(400).send("Se necesita indicar el Id del usuario del Quiz para modificar un rol");
+  try {
+    //console.log(teacherId, quizzId);
+    const userEdited = await Role.update(
+      {name: "Student"},
+      {where: {QuizId, UserId}}
+      );
+
+    const userPromoted = await User.findByPk(UserId);
+      console.log("user promoted", userPromoted)
+    const quizAccepted = await Quiz.findByPk(QuizId);
+      console.log("quiz promoted", quizAccepted)
+
+    let payload = {
+      user: {
+        firstName: userPromoted.firstName,
+        email: userPromoted.email,
+      },
+      quiz: {
+        name: quizAccepted.name,
+        logo: quizAccepted.logo,
+        description: quizAccepted.description,
+      },
+      type: "promote", //cambiar acá!!! Armar nueva plantilla
+    };
+    sendMail(payload);
+    return res.status(200).send(userPromoted);
+  } catch (error) {
+    return res.status(400).send("No se ha asignado teacher al quiz");
+  }
+});
+
 // Inscribirse a un Quiz - POST a /roles/enroll
 
 server.post("/enroll", async (req, res) => {
