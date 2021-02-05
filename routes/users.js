@@ -71,6 +71,8 @@ server.get('/email/:id', async (req, res) => {
       exclude: ['createdAt', 'updatedAt', 'resetPasswordExpires', 'resetPasswordToken', 'password', 'deletedAt']}
     });
 
+    if (userByEmail === null ) return res.status(400).send('Ne existe usuario con ese mail');
+
     const userRole = await Role.findOne({
       where: { QuizId: id, UserId: userByEmail.id},
       attributes: {
