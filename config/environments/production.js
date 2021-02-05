@@ -14,6 +14,7 @@ module.exports = {
       min: 1,
       idle: 10000,
     },
+    ssl: true,
     dialectOptions: {
       ssl: {
         require: true,
