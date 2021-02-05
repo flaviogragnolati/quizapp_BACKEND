@@ -101,7 +101,8 @@ server.get("/quizzesTeacher/:teacherId", async (req, res) => {
     const dataQuizzesTeacher = () => {
       return Promise.all(quizzesId.map((qId) => 
         Quiz.findByPk(qId, { attributes: {
-            exclude: ['createdAt', 'updatedAt']}})
+            exclude: ['createdAt', 'updatedAt', 'modifiedBy',
+            "createdBy", "SubjectId", "SchoolId"]}})
       ));
     };
 
