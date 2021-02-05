@@ -125,7 +125,8 @@ server.post("/", async (req, res, next) => {
 // Ruta para eliminar un teacher de un quiz - DELETE a /teachers
 
 server.delete("/", async(req, res) => {
-  let { UserId, QuizId } = req.body;
+  let { UserId, QuizId } = req.query;
+
   if (!UserId || !QuizId){
     return res.status(400).send("Se necesita indicar el Id del usuario del Quiz para modificar un rol");
   }
