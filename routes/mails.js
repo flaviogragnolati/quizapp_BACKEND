@@ -55,9 +55,11 @@ const sendMail = ({ user, type, quiz, school }) => {
     case "accepted":
       var replacements = {
         name: user.firstName,
+        quizImage: quiz.logo,
+        quiz: user.name,
         link: `${FRONT_URL} + /${quiz.id}`,
       };
-      subject = `Bienvenido al curso ${quiz}`;
+      subject = `Bienvenido al curso ${quiz.name}`;
       break;
 
     case "promote":
@@ -96,22 +98,20 @@ const sendMail = ({ user, type, quiz, school }) => {
     function (err, html) {
       var template = handlebars.compile(html);
       var htmlToSend = template(replacements);
-
       let mail = {
         from: process.env.THE_EMAIL,
         to: user.email,
         subject,
         html: htmlToSend,
       };
-
-      smtpTransport.sendMail(mail, (err, response) => {
+       smtpTransport.sendMail(mail, (err, response) => {
         if (err) {
           console.log("NO se ha enviado el mail", err);
         } else {
           console.log("Se ha enviado el mail");
         }
       });
-    }
+     }
   );
 };
 
