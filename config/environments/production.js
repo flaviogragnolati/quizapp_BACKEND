@@ -16,13 +16,13 @@ module.exports = {
     },
     dialectOptions: {
       ssl: {
+        rejectUnauthorized: false,
         require: true,
         // Ref.: https://github.com/brianc/node-postgres/issues/2009
-        rejectUnauthorized: false,
       },
       keepAlive: true,
-    }
-   },
+    },
+  },
   FRONT_URL: process.env.FRONT_URL,
   SECRET_KEY: process.env.SECRET_KEY,
 };
