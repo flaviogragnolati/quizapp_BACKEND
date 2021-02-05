@@ -12,6 +12,15 @@ const sendMail = require('./mails');
 //encontremos un equilibrio entre cosas `bien` y cosas `humo`,  jajajja
 // Ruta PROFILE - GET a /auth/me/:id
 
+const addTypeToUser = (obj, type) => {
+  if (typeof obj === 'undefined' || typeof type === 'undefined') {
+    throw new Error('es necesario pasar el objeto y la propiedad a agregar');
+  }
+  let newObj = { ...obj };
+  newObj.type = type;
+  return newObj;
+};
+
 server.get('/me/:id', async (req, res, next) => {
   try {
     if (req.params) {
@@ -35,22 +44,24 @@ server.get(
   passport.authenticate('facebook'),
   async (req, res) => {
     try {
-      console.log('entre a facebook', req);
-      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
-      var token = jwt.sign(
-        {
-          id,
-          firstName,
-          lastName,
-          email,
-          birthdate,
-          cellphone,
-        },
-        SECRET_KEY
-      );
+      // console.log('entre a facebook', req);
+      // const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
+      // var token = jwt.sign(
+      //   {
+      //     id,
+      //     firstName,
+      //     lastName,
+      //     email,
+      //     birthdate,
+      //     cellphone,
+      //   },
+      //   SECRET_KEY
+      // );
+      const user = addTypeToUser(req.user, 'user');
+      const token = makeJWT(user);
 
       return res.status(200).send({
-        user: req.user,
+        user,
         token,
       });
 
@@ -80,22 +91,24 @@ server.get(
   passport.authenticate('google'),
   async (req, res) => {
     try {
-      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
+      // const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
 
-      var token = jwt.sign(
-        {
-          id,
-          firstName,
-          lastName,
-          email,
-          birthdate,
-          cellphone,
-        },
-        SECRET_KEY
-      );
+      // var token = jwt.sign(
+      //   {
+      //     id,
+      //     firstName,
+      //     lastName,
+      //     email,
+      //     birthdate,
+      //     cellphone,
+      //   },
+      //   SECRET_KEY
+      // );
+      const user = addTypeToUser(req.user, 'user');
+      const token = makeJWT(user);
 
       return res.status(200).send({
-        user: req.user,
+        user,
         token,
       });
 
@@ -143,39 +156,38 @@ server.get(
   '/restore',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    console.log('restored correctly', req.user);
-    // const newToken = makeJWT(user, refreshTime, 'Bearer');
+    console.log('restored correctly');
+    const user = addTypeToUser(req.user, 'user');
     return res.send({
-      // newToken,
-      user: req.user,
+      user,
     });
   }
 );
 
 // Ruta para Registrarse / crear un usuario - POST a /auth/register
-
 server.post(
   '/register',
   passport.authenticate('register-local', { session: false }),
   async (req, res) => {
     try {
-      const { id, firstName, lastName, email, birthdate, cellphone } = req.user;
-      
-      let token = makeJWT(req.user);
+      const { firstName, email } = req.user;
 
-      if(token) {
+      const user = addTypeToUser(req.user, 'user');
+      let token = makeJWT(user);
+
+      if (token) {
         let payload = {
           user: {
             firstName,
-            email
+            email,
           },
           type: 'welcome',
-        }
+        };
         sendMail(payload);
-      };
+      }
 
       return res.status(200).send({
-        user: req.user,
+        user,
         token,
       });
     } catch (error) {
@@ -186,7 +198,6 @@ server.post(
 );
 
 //Ruta para Loguearse - POST a /auth/login
-
 server.post(
   '/login',
   passport.authenticate('local-login', {
@@ -195,13 +206,12 @@ server.post(
   }),
   async (req, res) => {
     try {
-
-      let token = makeJWT(req.user);
+      const user = addTypeToUser(req.user, 'user');
+      let token = makeJWT(user);
       return res.status(200).send({
-        user: req.user,
+        user,
         token,
       });
-
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
     }
@@ -218,38 +228,49 @@ server.post(
   }),
   async (req, res) => {
     try {
-      const {
-        id,
-        name,
-        email,
-        description,
-        country,
-        city,
-        address,
-        logo,
-      } = req.user;
+      const user = addTypeToUser(req.user, 'school');
 
-      let token = makeJWT(req.user);
-/*       var token = jwt.sign(
-        {
-          id,
-          name,
-          email,
-          description,
-          country,
-          city,
-          address,
-          logo,
-        },
-        SECRET_KEY
-      ); */
+      let token = makeJWT(user);
 
       return res.status(200).send({
-        user: req.user,
+        user,
         token,
       });
     } catch (error) {
       console.error(`CATCH LOGIN`, error);
+    }
+  }
+);
+// RUTA para el registro final de la SCHOOL - POST a /auth/org/register
+
+server.post(
+  '/org/register',
+  passport.authenticate('registerOrg-local', { session: false }),
+  async (req, res) => {
+    try {
+      const { name, email, country, city, description, code, logo } = req.user;
+
+      const user = addTypeToUser(req.user, 'school');
+      let token = makeJWT(req.user);
+
+      /*       if(token) {
+        let payload = {
+          user: {
+            firstName: name,
+            email
+          },
+          type: 'welcome',
+        }
+        sendMail(payload);
+      }; */
+
+      return res.status(200).send({
+        user,
+        token,
+      });
+    } catch (error) {
+      console.error(`CATCH REGISTER`, error);
+      return error;
     }
   }
 );
@@ -287,22 +308,20 @@ server.put('/resetpassword/:id', async (req, res) => {
 
     const userToUpdate = await User.findByPk(id);
 
-    const userUpdated = await userToUpdate.update(
-      {
-        resetPasswordToken,
-        resetPasswordExpires: expiresTime(),
-      }
-    );
+    const userUpdated = await userToUpdate.update({
+      resetPasswordToken,
+      resetPasswordExpires: expiresTime(),
+    });
 
-    if(userUpdated) {
+    if (userUpdated) {
       let payload = {
         user: {
           firstName: userToUpdate.firstName,
           email: userToUpdate.email,
-          resetPasswordToken
+          resetPasswordToken,
         },
         type: 'resetPassword',
-      }
+      };
       sendMail(payload);
     }
 
@@ -348,37 +367,5 @@ server.put('/pass/:id', (req, res) => {
         .send('Se ha modificado la contraseña correctamente');
     });
 });
-
-// RUTA para el registro final de la SCHOOL - POST a /auth/org/register
-
-server.post(
-  "/org/register", 
-  passport.authenticate('registerOrg-local', { session: false }),
-  async (req, res) => {
-    try {
-      const { name, email, country, city, description, code, logo } = req.user;
-      
-      let token = makeJWT(req.user);
-      
-/*       if(token) {
-        let payload = {
-          user: {
-            firstName: name,
-            email
-          },
-          type: 'welcome',
-        }
-        sendMail(payload);
-      }; */
-
-      return res.status(200).send({
-        user: req.user,
-        token,
-      });
-}
-catch (error) {
-  console.error(`CATCH REGISTER`, error);
-  return error;
-}});
 
 module.exports = server;

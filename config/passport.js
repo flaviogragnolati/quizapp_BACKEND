@@ -84,46 +84,46 @@ module.exports = function (passport) {
         passwordField: 'password',
         passReqToCallback: true,
       },
-       async (req, email, password , done) => {
-         try {
-           const {
-             name, 
-             email,
-             password,
-             country, 
-             city, 
-             description, 
-             logo,
-             code
-            } = req.body;
-            //console.log("ENTRÉ", email, password)
+      async (req, email, password, done) => {
+        try {
+          const {
+            name,
+            email,
+            password,
+            country,
+            city,
+            description,
+            logo,
+            code,
+          } = req.body;
+          //console.log("ENTRÉ", email, password)
 
-        var school_code = await SchoolCode.findOne({
+          var school_code = await SchoolCode.findOne({
             where: {
               email,
-              code
-            } 
+              code,
+            },
           });
-          console.log("SCHOOL CODE", school_code)
-            // if (mail y code no coinciden){
-            //   return done(null, school_obj); // revisar como es cuando es error
-            // }
-            const school_data = {
-              name, 
-              email, 
-              country, 
-              city, 
-              logo,
-              description, 
-              password
-            };
-            console.log('school_data', school_data);
-            const school = await School.create(school_data);
-            console.log('creada school', school)
-            //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
-            let school_obj = { ...school.dataValues };
-            delete school_obj.password;
-            await school_code.destroy();
+          console.log('SCHOOL CODE', school_code);
+          // if (mail y code no coinciden){
+          //   return done(null, school_obj); // revisar como es cuando es error
+          // }
+          const school_data = {
+            name,
+            email,
+            country,
+            city,
+            logo,
+            description,
+            password,
+          };
+          console.log('school_data', school_data);
+          const school = await School.create(school_data);
+          console.log('creada school', school);
+          //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
+          let school_obj = { ...school.dataValues };
+          delete school_obj.password;
+          await school_code.destroy();
           // console.log('REGISTER STRATEGY', user_obj);
           return done(null, school_obj);
         } catch (error) {
@@ -133,7 +133,6 @@ module.exports = function (passport) {
       }
     )
   );
-
 
   passport.use(
     /**
@@ -155,7 +154,6 @@ module.exports = function (passport) {
             return done(null, false, { message: 'No se encontro el usuario' });
           }
 
-       
           const match = await bcrypt.compare(password, user.password);
 
           if (!match) {
@@ -259,18 +257,35 @@ module.exports = function (passport) {
   passport.use(
     'jwt',
     new JWTstrategy(jwt_options, async (jwt_payload, done) => {
+      let id = jwt_payload.id;
+      let authData = jwt_payload.user;
+      let user;
       try {
-        // if (user.role === 'school') {
-        //   //Tenemos que guardar el `rol` del usuario en algun lugar???
-        //   const school = await School.findOne({
-        //     where: { email: jwt_payload.user.email },
-        //   });
-        //   //!seguir con la logica aca....deberiamos chquear la school y retornar null, error, o el school_obj sin el password
-        // }
-        const user = await User.findOne({
-          where: { email: jwt_payload.user.email },
-        });
-        console.log('USER JWT', user);
+        if (authData.type === 'school') {
+          user = await School.findByPk(id);
+          const userByEmail = await School.findOne({
+            where: { email: authData.email },
+          });
+          if (user.id !== userByEmail.id) {
+            return done(null, false, {
+              message: 'incongruencia entre la data del token',
+            });
+          }
+        } else {
+          user = await User.findByPk(id);
+          const userByEmail = await User.findOne({
+            where: { email: authData.email },
+          });
+          if (user.id !== userByEmail.id) {
+            return done(null, false, {
+              message: 'incongruencia entre la data del token',
+            });
+          }
+        }
+        // const user = await User.findOne({
+        //   where: { email: jwt_payload.user.email },
+        // });
+        // console.log('USER JWT', user);
         if (!user) {
           return done(null, false, { message: 'No se encontro el usuario' });
         }
