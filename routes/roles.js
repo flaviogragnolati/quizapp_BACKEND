@@ -1,23 +1,31 @@
-const server = require('express').Router();
-const { Role, User } = require('../models/index');
+const server = require("express").Router();
+const { Role, User } = require("../models/index");
 
-// Inscribirse a un Quiz - POST a /roles/enroll 
+// Inscribirse a un Quiz - POST a /roles/enroll
 
-server.post("/enroll", async(req, res) => {
-    let { UserId, QuizId } = req.body;
-    if (!UserId || !QuizId) return res.status(400).send("Se necesita indicar el usuario y del quiz para realizar la inscripción");
-    try {
-        const userToEnroll = await Role.create({UserId, QuizId, name: "Enrolled"});
-      
-        return res.status(200).send(userToEnroll);
-    } catch (error){
-        console.error(error);
-        res.status(500).send("Error al editar el rol");
-    }    
-})
+server.post("/enroll", async (req, res) => {
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId)
+    return res
+      .status(400)
+      .send(
+        "Se necesita indicar el usuario y del quiz para realizar la inscripción"
+      );
+  try {
+    const userToEnroll = await Role.create({
+      UserId,
+      QuizId,
+      name: "Enrolled",
+    });
 
+    return res.status(200).send(userToEnroll);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al editar el rol");
+  }
+});
 
-server.get("/enrolled/:id", async(req, res) => {
+/* server.get("/enrolled/:id", async(req, res) => {
     let { id } = req.params;
     if (!id) return res.status(400).send("El id indicado no existe")
     let pivot = [];
@@ -43,10 +51,36 @@ server.get("/enrolled/:id", async(req, res) => {
         console.error(error);
         res.status(500).send("Error al buscar usuarios por ese rol");
     }   
-})
-  
+}); */
 
+server.get("/enrolled/:id", async (req, res) => {
+  let { id } = req.params;
+  if (!id) return res.status(400).send("El id indicado no existe");
+
+  try {
+    const enrolledUsers = await Role.findAll({
+      where: { QuizId: id, name: "Enrolled" },
+    });
+
+    let usersId = enrolledUsers.map((user) => {
+      return user.dataValues.UserId;
+    });
+
+    const dataUsersEnrolled = () => {
+      return Promise.all(usersId.map((uid) => 
+        User.findByPk(uid, { attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'password', 'resetPasswordExpires', 'resetPasswordToken', 'cellphone', 'birthdate']}})
+      ));
+    };
+
+    dataUsersEnrolled().then((enrolledUsers) => {
+      return res.status(200).send(enrolledUsers);
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar usuarios por ese rol");
+  }
+});
 
 module.exports = server;
-
-

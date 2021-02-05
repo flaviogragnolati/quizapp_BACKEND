@@ -56,9 +56,9 @@ server.get(
   }
 );
 
-// Devuelve USER por email - GET a /users/email
+// Devuelve USER por email - GET a /users/email/:id
 
-server.get('/email/:id', async (req, res) => {
+server.post('/email/:id', async (req, res) => {
   let { id } = req.params;
   let { email } = req.body;
 
