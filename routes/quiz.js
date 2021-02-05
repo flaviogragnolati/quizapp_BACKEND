@@ -54,6 +54,9 @@ server.delete(
 // En vez de cantidad de estudiantes poner el promedio de la review?
 server.get('/', async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
+
+  // TRAE EL DOBLE DE QUIZZES QUE PIDE PORQUE EN LA FUNCIÓN (EN INDEX) LE ESTAMOS PIDIENDO EL DOBLE PARA QUE HAGA EL PEDIDO AL BACK MENOS VECES
+
   const { page, pageSize } = req.query;
   try {
     let data = await Quiz.findAll(
@@ -187,6 +190,7 @@ server.get('/info/:id', async (req, res) => {
 
 // Traer Questions & Answers de un quiz - GET a /quiz/:id
 // Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
+
 server.get('/:id', async (req, res) => {
   let { id } = req.params;
   console.log('ID', id);
@@ -257,17 +261,14 @@ server.get('/:QuizId/students', async (req, res) => {
   if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
 
   try {
-    const students = [];
-    const studentsQuiz = await Role.findAndCountAll({
+    const studentsQuiz = await Role.count({
       where: {
         QuizId,
         name: 'Student',
       },
     });
 
-    studentsQuiz.forEach((student) => {
-      students.push(student.UserId);
-    });
+    
 
     return res.status(200).send(students);
   } catch (error) {
