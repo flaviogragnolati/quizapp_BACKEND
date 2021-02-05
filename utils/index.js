@@ -81,7 +81,7 @@ const makeid = (length)=> {
 
 const paginate = (query, { page, pageSize }) => {
   const offset = page * pageSize;
-  const limit = pageSize * 2;
+  const limit = pageSize;
 
   return {
     ...query,

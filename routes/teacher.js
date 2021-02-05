@@ -4,7 +4,6 @@ const { checkAdmin } = require("../utils/authTools.js");
 const passport = require("passport");
 const sendMail = require("./mails");
 
-
 //! ESTA RUTA PARECERÍA ESTAR ANDANDO SIN ROMPER. LA DEJO COMENTADA POR AHORA.
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
 /*server.get(
@@ -82,7 +81,7 @@ server.get(
   }
 );
 
-//RUTA para listar todos los QUIZZES de un TEACHER - get a /teachers/quizzesTeacher/:teacherId
+//RUTA para listar todos los QUIZZES de un TEACHER - GET a /teachers/quizzesTeacher/:teacherId
 
 server.get("/quizzesTeacher/:teacherId", async (req, res) => {
   let { teacherId } = req.params;
@@ -91,7 +90,7 @@ server.get("/quizzesTeacher/:teacherId", async (req, res) => {
 
   try {
     const quizzesTeacher = await Role.findAll({
-      where: { UserId: teacherId, name: "Teacher" }
+      where: { UserId: teacherId, name: "Teacher" },
     });
 
     let quizzesId = quizzesTeacher.map((quiz) => {
@@ -99,17 +98,27 @@ server.get("/quizzesTeacher/:teacherId", async (req, res) => {
     });
 
     const dataQuizzesTeacher = () => {
-      return Promise.all(quizzesId.map((qId) => 
-        Quiz.findByPk(qId, { attributes: {
-            exclude: ['createdAt', 'updatedAt', 'modifiedBy',
-            "createdBy", "SubjectId", "SchoolId"]}})
-      ));
+      return Promise.all(
+        quizzesId.map((qId) =>
+          Quiz.findByPk(qId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "modifiedBy",
+                "createdBy",
+                "SubjectId",
+                "SchoolId",
+              ],
+            },
+          })
+        )
+      );
     };
 
     dataQuizzesTeacher().then((quizzesOfTeacher) => {
       return res.status(200).send(quizzesOfTeacher);
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al buscar los quizzes por este teacher");
@@ -131,7 +140,7 @@ server.post("/", async (req, res, next) => {
     const userEdited = await Role.create({
       name: "Teacher",
       UserId,
-      QuizId
+      QuizId,
     });
     const userPromoted = await User.findByPk(UserId);
 
@@ -158,23 +167,25 @@ server.post("/", async (req, res, next) => {
 
 // Ruta para eliminar un teacher de un quiz - DELETE a /teachers
 
-server.delete("/", async(req, res) => {
+server.delete("/", async (req, res) => {
   let { UserId, QuizId } = req.query;
 
-  if (!UserId || !QuizId){
-    return res.status(400).send("Se necesita indicar el Id del usuario del Quiz para modificar un rol");
+  if (!UserId || !QuizId) {
+    return res
+      .status(400)
+      .send(
+        "Se necesita indicar el Id del usuario del Quiz para modificar un rol"
+      );
   }
   try {
     const teacherDeleted = await Role.findOne({
-      where: { UserId, QuizId}
+      where: { UserId, QuizId },
     });
-    teacherDeleted.destroy()
+    teacherDeleted.destroy();
     return res.status(200).send(teacherDeleted);
   } catch (error) {
-    return res,status(400).send("No se ha eliminado el teacher")
+    return res, status(400).send("No se ha eliminado el teacher");
   }
-})
-
-
+});
 
 module.exports = server;
