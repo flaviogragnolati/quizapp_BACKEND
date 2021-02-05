@@ -97,7 +97,6 @@ server.post("/", async (req, res, next) => {
       UserId: teacherId,
       QuizId: quizzId,
     });
-
     const userPromoted = await User.findByPk(teacherId);
 
     const quizTeacher = await Quiz.findByPk(quizzId);
@@ -114,7 +113,7 @@ server.post("/", async (req, res, next) => {
       },
       type: "promote",
     };
-    sendMail(payload);
+    // sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
     return res.status(200).send(userEdited);
   } catch (error) {
     return res.status(400).send("No se ha asignado teacher al quiz");
