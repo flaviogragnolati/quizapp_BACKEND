@@ -2,7 +2,8 @@ const server = require("express").Router();
 const { Role, User, Quiz } = require("../models/index");
 const sendMail = require("./mails");
 
-//Promover inscripto a STUDENT - GET a : roles/student/
+//Promover inscripto a STUDENT - GET a : roles/student
+
 server.post("/student/", async (req, res, next) => {
   let { UserId, QuizId } = req.body;
   if (!UserId || !QuizId)
@@ -89,6 +90,8 @@ server.post("/enroll", async (req, res) => {
         res.status(500).send("Error al buscar usuarios por ese rol");
     }   
 }); */
+
+// Ruta que trae todos los usuarios que están enrolados a un QUIZ - GET a /roles/enrolled/:id
 
 server.get("/enrolled/:id", async (req, res) => {
   let { id } = req.params;

@@ -82,6 +82,39 @@ server.get(
   }
 );
 
+//RUTA para listar todos los QUIZZES de un TEACHER - get a /teachers/quizzesTeacher/:teacherId
+
+server.get("/quizzesTeacher/:teacherId", async (req, res) => {
+  let { teacherId } = req.params;
+
+  if (!teacherId) return res.status(400).send("Indique ID del teacher.");
+
+  try {
+    const quizzesTeacher = await Role.findAll({
+      where: { UserId: teacherId, name: "Teacher" }
+    });
+
+    let quizzesId = quizzesTeacher.map((quiz) => {
+      return quiz.dataValues.QuizId;
+    });
+
+    const dataQuizzesTeacher = () => {
+      return Promise.all(quizzesId.map((qId) => 
+        Quiz.findByPk(qId, { attributes: {
+            exclude: ['createdAt', 'updatedAt']}})
+      ));
+    };
+
+    dataQuizzesTeacher().then((quizzesOfTeacher) => {
+      return res.status(200).send(quizzesOfTeacher);
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar los quizzes por este teacher");
+  }
+});
+
 //Ruta para asignar el rol de TEACHER a un usuario - POST a /teachers
 
 server.post("/", async (req, res, next) => {
