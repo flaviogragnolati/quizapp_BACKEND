@@ -58,9 +58,9 @@ server.get(
 
 // Devuelve USER por email - GET a /users/email/:id
 
-server.post('/email/:id', async (req, res) => {
+server.get('/email/:id', async (req, res) => {
   let { id } = req.params;
-  let { email } = req.body;
+  let { email } = req.query;
 
   if(!email) return res.status(400).send('¿Cuál es el email a buscar?');
 
@@ -71,7 +71,7 @@ server.post('/email/:id', async (req, res) => {
       exclude: ['createdAt', 'updatedAt', 'resetPasswordExpires', 'resetPasswordToken', 'password', 'deletedAt']}
     });
 
-    if (userByEmail === null ) return res.status(400).send('Ne existe usuario con ese mail');
+    if (userByEmail === null ) return res.status(400).send('No existe usuario con ese mail');
 
     const userRole = await Role.findOne({
       where: { QuizId: id, UserId: userByEmail.id},

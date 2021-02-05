@@ -97,7 +97,6 @@ server.post("/", async (req, res, next) => {
       UserId: teacherId,
       QuizId: quizzId,
     });
-
     const userPromoted = await User.findByPk(teacherId);
 
     const quizTeacher = await Quiz.findByPk(quizzId);
