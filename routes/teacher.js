@@ -82,6 +82,8 @@ server.get(
   }
 );
 
+//Ruta para asignar el rol de TEACHER a un usuario - POST a /teachers
+
 server.post("/", async (req, res, next) => {
   let { teacherId, quizzId } = req.body;
   if (!teacherId || !quizzId)
@@ -119,5 +121,25 @@ server.post("/", async (req, res, next) => {
     return res.status(400).send("No se ha asignado teacher al quiz");
   }
 });
+
+// Ruta para eliminar un teacher de un quiz - DELETE a /teachers
+
+server.delete("/", async(req, res) => {
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId){
+    return res.status(400).send("Se necesita indicar el Id del usuario del Quiz para modificar un rol");
+  }
+  try {
+    const teacherDeleted = await Role.findOne({
+      where: { UserId, QuizId}
+    });
+    teacherDeleted.destroy()
+    return res.status(200).send(teacherDeleted);
+  } catch (error) {
+    return res,status(400).send("No se ha eliminado el teacher")
+  }
+})
+
+
 
 module.exports = server;
