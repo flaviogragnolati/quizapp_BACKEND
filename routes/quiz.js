@@ -13,6 +13,7 @@ const {
 } = require('../models/index');
 const quiz = require('../models/quiz');
 const { checkSuperAdmin } = require('../utils/authTools.js');
+const { paginate } = require('../utils/index.js');
 
 const { normalize, schema } = require('normalizr');
 
@@ -53,30 +54,36 @@ server.delete(
 // En vez de cantidad de estudiantes poner el promedio de la review?
 server.get('/', async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
+  const { page, pageSize } = req.query;
   try {
-    let data = await Quiz.findAll({
-      //where: { active: true },
-      attributes: {
-        exclude: ['createdAt', 'updatedAt', 'SubjectId', 'SchoolId'],
-      },
-      include: [
+    let data = await Quiz.findAll(
+      paginate(
         {
-          model: Subject,
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          //where: { active: true },
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'SubjectId', 'SchoolId'],
+          },
+          include: [
+            {
+              model: Subject,
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+            },
+            { model: School, attributes: { exclude: ['createdAt', 'updatedAt'] } },
+            {
+              model: Review,
+              attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
+            },
+            {
+              model: QuizTag,
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+            },
+          ],
+          raw: true,
+          nest: true,
         },
-        { model: School, attributes: { exclude: ['createdAt', 'updatedAt'] } },
-        {
-          model: Review,
-          attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
-        },
-        {
-          model: QuizTag,
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-        },
-      ],
-      raw: true,
-      nest: true,
-    });
+        { page, pageSize }
+      )
+    );
   
     const UserSchema = new schema.Entity('users');
     const SubjectsSchema = new schema.Entity('subjects');
@@ -239,6 +246,32 @@ server.get('/:QuizId/Teachers', async (req, res) => {
     return res.status(200).send(teachers);
   } catch (error) {
     console.error('CATCH TEACHERS QUIZ', error);
+  }
+});
+
+// Traer todos los students de un QUIZ - GET a /quiz/:QuizId/students
+
+server.get('/:QuizId/students', async (req, res) => {
+  let { QuizId } = req.params;
+
+  if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
+
+  try {
+    const students = [];
+    const studentsQuiz = await Role.findAndCountAll({
+      where: {
+        QuizId,
+        name: 'Student',
+      },
+    });
+
+    studentsQuiz.forEach((student) => {
+      students.push(student.UserId);
+    });
+
+    return res.status(200).send(students);
+  } catch (error) {
+    console.error('CATCH STUDENTS QUIZ', error);
   }
 });
 

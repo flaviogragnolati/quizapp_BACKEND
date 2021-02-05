@@ -79,6 +79,16 @@ const makeid = (length)=> {
   return result;
 }
 
+const paginate = (query, { page, pageSize }) => {
+  const offset = page * pageSize;
+  const limit = pageSize //* 2;
+
+  return {
+    ...query,
+    offset,
+    limit,
+  };
+};
 
 exports.extractDigitsFromString = extractDigitsFromString;
 exports.capitalize = capitalize;
@@ -86,3 +96,4 @@ exports.makeJWT = makeJWT;
 exports.cookieMaker = cookieMaker;
 exports.makeid = makeid;
 exports.refreshTime = refreshTime;
+exports.paginate = paginate;
