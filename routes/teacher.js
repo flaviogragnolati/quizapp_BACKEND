@@ -85,8 +85,8 @@ server.get(
 //Ruta para asignar el rol de TEACHER a un usuario - POST a /teachers
 
 server.post("/", async (req, res, next) => {
-  let { teacherId, quizzId } = req.body;
-  if (!teacherId || !quizzId)
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId)
     return res
       .status(400)
       .send(
@@ -96,12 +96,12 @@ server.post("/", async (req, res, next) => {
     //console.log(teacherId, quizzId);
     const userEdited = await Role.create({
       name: "Teacher",
-      UserId: teacherId,
-      QuizId: quizzId,
+      UserId,
+      QuizId
     });
-    const userPromoted = await User.findByPk(teacherId);
+    const userPromoted = await User.findByPk(UserId);
 
-    const quizTeacher = await Quiz.findByPk(quizzId);
+    const quizTeacher = await Quiz.findByPk(QuizId);
 
     let payload = {
       user: {
