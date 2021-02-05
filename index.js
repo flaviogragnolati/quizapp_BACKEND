@@ -20,8 +20,7 @@
 
 const server = require('./server');
 const db = require('./models');
+var port = process.env.PORT || 8080; 
 // const { conn } = require('./BACKEND/db');
-server.listen(3000, async function () {
- // await db.sequelize.sync();
-  console.log('%s listening at 3000');
-});
+server.listen(port,function() {
+  console.log(`app running on port ${port}`); });
