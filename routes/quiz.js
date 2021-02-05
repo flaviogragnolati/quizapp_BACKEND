@@ -193,7 +193,7 @@ server.get('/info/:id', async (req, res) => {
 
 server.get('/:id', async (req, res) => {
   let { id } = req.params;
-  console.log('ID', id);
+
   if (!id)
     return res.status(400).send('Debe indicar el id del quiz que desea buscar');
 
@@ -227,9 +227,26 @@ server.get('/:id', async (req, res) => {
   }
 });
 
+// Contar todos los QUIZZES - GET a /quiz/all/quizzes
+
+server.get('/all/quizzes', async (req, res) => {
+
+  try {
+    const allQuizzes = await Quiz.count({});
+
+    return res.status(200).send(allQuizzes.toString()); // Primera opción: No me deja enviar números (lo toma como que intento enviar un status), por eso lo paso a STRING
+    //return res.status(200).send({
+      //numberOfQuizzes: allQuizzes
+    //}); // Segunda opción: enviar un objeto con el valor
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('CATCH COUNT ALL QUIZZES');
+  }
+});
+
 // Traer todos los teachers de un QUIZ - GET a /quiz/:QuizId/teachers
 
-server.get('/:QuizId/Teachers', async (req, res) => {
+server.get('/:QuizId/teachers', async (req, res) => {
   let { QuizId } = req.params;
 
   if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
@@ -261,18 +278,20 @@ server.get('/:QuizId/students', async (req, res) => {
   if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
 
   try {
-    const studentsQuiz = await Role.count({
+    const studentsInQuiz = await Role.count({
       where: {
         QuizId,
         name: 'Student',
       },
     });
 
-    
-
-    return res.status(200).send(students);
+    return res.status(200).send(studentsInQuiz.toString()); // Primera opción: No me deja enviar números (lo toma como que intento enviar un status), por eso lo paso a STRING
+    //return res.status(200).send({
+      //numberOfStudents: studentsInQuiz
+    //}); // Segunda opción: enviar un objeto con el valor
   } catch (error) {
-    console.error('CATCH STUDENTS QUIZ', error);
+    console.error(error);
+    return res.status(500).send('CATCH STUDENTS QUIZ');
   }
 });
 
