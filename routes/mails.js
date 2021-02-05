@@ -55,6 +55,7 @@ const sendMail = ({ user, type, quiz, school }) => {
     case "accepted":
       var replacements = {
         name: user.firstName,
+        quizImage: quiz.logo,
         quiz: user.name,
         link: `${FRONT_URL} + /${quiz.id}`,
       };
