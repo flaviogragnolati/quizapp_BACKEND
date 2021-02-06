@@ -148,7 +148,7 @@ module.exports = function (passport) {
         session: false,
       },
       async (email, password, done) => {
-        try {
+         try {
           const user = await User.findOne({ where: { email } });
           if (!user) {
             return done(null, false, { message: 'No se encontro el usuario' });
