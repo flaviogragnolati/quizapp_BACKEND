@@ -136,12 +136,32 @@ server.post("/", async (req, res, next) => {
         "Se necesita indicar el Id del usuario del Quiz para modificar un rol"
       );
   try {
-    //console.log(teacherId, quizzId);
-    const userEdited = await Role.create({
-      name: "Teacher",
-      UserId,
-      QuizId,
+    const userToEdit = await Role.findOne({
+      where: {
+        name: "Student",
+        UserId,
+        QuizId,
+      },
     });
+
+    if (userToEdit) {
+      const userEdited = await userToEdit.update(
+        { name: "Teacher" },
+        {
+          where: {
+            UserId,
+            QuizId,
+          },
+        }
+      );
+    } else {
+      const userCreated = await Role.create({
+        name: "Teacher",
+        UserId,
+        QuizId,
+      });
+    }
+
     const userPromoted = await User.findByPk(UserId);
 
     const quizTeacher = await Quiz.findByPk(QuizId);
@@ -158,8 +178,8 @@ server.post("/", async (req, res, next) => {
       },
       type: "promote",
     };
-    // sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
-    return res.status(200).send(userEdited);
+    //sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
+    return res.status(200).send(userPromoted);
   } catch (error) {
     return res.status(400).send("No se ha asignado teacher al quiz");
   }

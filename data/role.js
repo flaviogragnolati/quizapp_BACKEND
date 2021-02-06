@@ -1,12 +1,12 @@
 const roles = [{
-    name: "Enrolled",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 1,
     UserId: 1,
 },
 {
-    name: "Enrolled",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 1,
