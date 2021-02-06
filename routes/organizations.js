@@ -32,7 +32,9 @@ server.delete(
 // RUTA para LISTAR TODAS las School - get a /org
 
 server.get("/", (req, res, next) => {
-  School.findAll()
+  School.findAll( {attributes: {
+    exclude: ['password'],
+  }})
     .then((school) => {
       return res.status(200).send(school);
     })

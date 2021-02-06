@@ -11,6 +11,7 @@ const quizRouter = require('./quiz.js');
 const subjectRouter = require('./subject.js');
 const rolesRouter = require('./roles.js');
 const teachersRouter = require('./teacher.js');
+const mobileRouter = require('./mobile.js');
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.use('/quiz', quizRouter);
 router.use('/subject', subjectRouter);
 router.use('/roles', rolesRouter);
 router.use('/teachers', teachersRouter);
+router.use('/mobile', mobileRouter);
 
 module.exports = router;

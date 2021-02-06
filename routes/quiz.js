@@ -56,8 +56,8 @@ server.get('/', async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
 
   // TRAE EL DOBLE DE QUIZZES QUE PIDE PORQUE EN LA FUNCIÓN (EN INDEX) LE ESTAMOS PIDIENDO EL DOBLE PARA QUE HAGA EL PEDIDO AL BACK MENOS VECES
-
-  const { page, pageSize } = req.query;
+  let { page, pageSize  } = req.query;
+  
   try {
     let data = await Quiz.findAll(
       paginate(
