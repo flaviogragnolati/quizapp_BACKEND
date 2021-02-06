@@ -205,7 +205,7 @@ server.post(
     session: false,
   }),
   async (req, res) => {
-    try {
+      try {
       const user = addTypeToUser(req.user, 'user');
       let token = makeJWT(user);
       return res.status(200).send({
