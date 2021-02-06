@@ -127,7 +127,7 @@ server.get("/quizzesTeacher/:teacherId", async (req, res) => {
 
 //Ruta para asignar el rol de TEACHER a un usuario - POST a /teachers
 
-server.post("/", async (req, res, next) => {
+server.post("/", async (req, res) => {
   let { UserId, QuizId } = req.body;
   if (!UserId || !QuizId)
     return res
@@ -144,6 +144,8 @@ server.post("/", async (req, res, next) => {
       },
     });
 
+    let newRole;
+
     if (userToEdit) {
       const userEdited = await userToEdit.update(
         { name: "Teacher" },
@@ -154,15 +156,30 @@ server.post("/", async (req, res, next) => {
           },
         }
       );
+      newRole = await Role.findOne({
+        where: { UserId, QuizId }
+      })
     } else {
-      const userCreated = await Role.create({
+      newRole = await Role.create({
         name: "Teacher",
         UserId,
         QuizId,
       });
     }
 
-    const userPromoted = await User.findByPk(UserId);
+    const userPromoted = await User.findByPk(UserId, {
+      attributes: {
+        exclude: [
+          "createdAt",
+          "updatedAt",
+          "deletedAt",
+          "createdBy",
+          "password",
+          "resetPasswordExpires",
+          "resetPasswordToken",
+        ],
+      },
+    });
 
     const quizTeacher = await Quiz.findByPk(QuizId);
 
@@ -178,8 +195,12 @@ server.post("/", async (req, res, next) => {
       },
       type: "promote",
     };
-    //sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
-    return res.status(200).send(userPromoted);
+    sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
+
+    return res.status(200).send({
+      user: userPromoted,
+      role: newRole,
+    });
   } catch (error) {
     return res.status(400).send("No se ha asignado teacher al quiz");
   }
