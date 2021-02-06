@@ -195,7 +195,7 @@ server.post("/", async (req, res) => {
       },
       type: "promote",
     };
-    sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
+    // sendMail(payload); // promueve pero entra en el catch y regresa un 400 (en redux un rejected)
 
     return res.status(200).send({
       user: userPromoted,
