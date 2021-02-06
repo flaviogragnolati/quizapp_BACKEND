@@ -2,7 +2,7 @@ const server = require("express").Router();
 const { Role, User, Quiz } = require("../models/index");
 const sendMail = require("./mails");
 
-//Promover inscripto a STUDENT - GET a : roles/student
+//Promover inscripto a STUDENT - POST a : roles/student
 
 server.post("/student/", async (req, res, next) => {
   let { UserId, QuizId } = req.body;
@@ -31,7 +31,7 @@ server.post("/student/", async (req, res, next) => {
       type: "accepted"
     };
   
-    sendMail(payload);
+    // sendMail(payload);
 
     return res.status(200).send(userPromoted);
   } catch (error) {
