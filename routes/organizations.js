@@ -41,6 +41,19 @@ server.get("/", (req, res, next) => {
     .catch(next);
 });
 
+// RUTA para LISTAR UNA School - get a /org/:id
+
+server.get("/:id", (req, res, next) => {
+  let { id } = req.params;
+  School.findByPk((id), {attributes: {
+    exclude: ['password'],
+  }})
+    .then((school) => {
+      return res.status(200).send(school);
+    })
+    .catch(next);
+});
+
 // RUTA para listar todas las SUBJECTS de una SCHOOL - GET a /org/:id/subjects
 
 server.get("/:id/subjects", async (req, res) => {
