@@ -48,7 +48,9 @@ server.get(
   // passport.authenticate('jwt', { session: false }),
   // checkAdmin,
   (req, res, next) => {
-    User.findAll()
+    User.findAll({attributes: {
+      exclude: ['password'],
+    }})
       .then((user) => {
         return res.status(200).send(user);
       })

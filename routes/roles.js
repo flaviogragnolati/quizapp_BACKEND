@@ -1,5 +1,100 @@
 const server = require("express").Router();
-const { Role, User } = require("../models/index");
+const { Role, User, Quiz } = require("../models/index");
+const sendMail = require("./mails");
+
+//Promover inscripto a STUDENT - POST a : roles/student
+
+server.post("/student", async (req, res) => {
+  let { UserId, QuizId, accepted } = req.body;
+
+  if (!UserId || !QuizId)
+    return res
+      .status(400)
+      .send(
+        "Se necesita indicar el Id del usuario del Quiz para modificar un rol"
+      );
+
+  try {
+    if (accepted) {
+      const userAccepted = await Role.update(
+        { name: "Student" },
+        { returning: true, where: { QuizId, UserId } }
+      );
+
+      const userPromoted = await User.findByPk(UserId, {
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "deletedAt",
+            "createdBy",
+            "password",
+            "resetPasswordExpires",
+            "resetPasswordToken",
+          ],
+        }
+      });
+        
+      const quizAccepted = await Quiz.findByPk(QuizId);
+
+      let payload = {
+        user: {
+          firstName: userPromoted.firstName,
+          email: userPromoted.email,
+        },
+        quiz: {
+          id: quizAccepted.id,
+          name: quizAccepted.name,
+          logo: quizAccepted.logo,
+          description: quizAccepted.description,
+        },
+        type: "accepted",
+      };
+
+      // sendMail(payload);
+      return res.status(200).send({ user: userPromoted, role: userAccepted[1][0] });
+    } else {
+      const userRejected = await Role.destroy({
+        where: { name: "Enrolled", QuizId, UserId },
+      });
+
+      const userNotPromoted = await User.findByPk(UserId, {
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "deletedAt",
+            "createdBy",
+            "password",
+            "resetPasswordExpires",
+            "resetPasswordToken",
+          ],
+        }
+      });
+
+      const quizRejected = await Quiz.findByPk(QuizId);
+
+      let payload = {
+        user: {
+          firstName: userNotPromoted.firstName,
+          email: userNotPromoted.email,
+        },
+        quiz: {
+          id: quizRejected.id,
+          name: quizRejected.name,
+          logo: quizRejected.logo,
+          description: quizRejected.description,
+        },
+        type: "rejected",
+      };
+      // sendMail(payload);
+
+      return res.status(200).send({ user: userNotPromoted, role: 'El usuario no fue aceptado en el quiz.' });
+    }
+  } catch (error) {
+    return res.status(500).send("No se ha asignado STUDENT al quiz");
+  }
+});
 
 //Promover inscripto a STUDENT - GET a : roles/student/
 server.post("/student/", async (req, res, next) => {
@@ -89,6 +184,8 @@ server.post("/enroll", async (req, res) => {
     }   
 }); */
 
+// Ruta que trae todos los usuarios que están enrolados a un QUIZ - GET a /roles/enrolled/:id
+
 server.get("/enrolled/:id", async (req, res) => {
   let { id } = req.params;
   if (!id) return res.status(400).send("El id indicado no existe");
@@ -103,16 +200,29 @@ server.get("/enrolled/:id", async (req, res) => {
     });
 
     const dataUsersEnrolled = () => {
-      return Promise.all(usersId.map((uid) => 
-        User.findByPk(uid, { attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt', 'password', 'resetPasswordExpires', 'resetPasswordToken', 'cellphone', 'birthdate']}})
-      ));
+      return Promise.all(
+        usersId.map((uid) =>
+          User.findByPk(uid, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "deletedAt",
+                "password",
+                "resetPasswordExpires",
+                "resetPasswordToken",
+                "cellphone",
+                "birthdate",
+              ],
+            },
+          })
+        )
+      );
     };
 
     dataUsersEnrolled().then((enrolledUsers) => {
       return res.status(200).send(enrolledUsers);
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al buscar usuarios por ese rol");
