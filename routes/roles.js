@@ -229,4 +229,38 @@ server.get("/enrolled/:id", async (req, res) => {
   }
 });
 
+// Ruta que trae todos favoritos - GET a /roles/favorites
+
+server.get("/favorites", async (req, res) => {
+  try {
+    const quizzesFavorites = await Role.findAll({
+      where: { name: "Fan" },
+    });
+
+    return res.status(200).send(quizzesFavorites);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar favoritos");
+  }
+});
+
+// Ruta que trae todos los favoritos de un usuario - GET a /roles/favorites/:id
+
+server.get("/favorites/:id", async (req, res) => {
+  let { id } = req.params;
+
+  if(!id) return res.status(400).send('Debe incluir el ID')
+
+  try {
+    const quizzesFavoritesUser = await Role.findAll({
+      where: { UserId: id, name: "Fan" },
+    });
+
+    return res.status(200).send(quizzesFavoritesUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar favoritos");
+  }
+});
+
 module.exports = server;

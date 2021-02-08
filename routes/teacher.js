@@ -6,7 +6,7 @@ const sendMail = require("./mails");
 
 //! ESTA RUTA PARECERÍA ESTAR ANDANDO SIN ROMPER. LA DEJO COMENTADA POR AHORA.
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
-/*server.get(
+server.get(
   "/school/:id",
   // passport.authenticate('jwt', { session: false }),
   // checkAdmin,
@@ -40,17 +40,23 @@ const sendMail = require("./mails");
       };
 
       dataQuizzes().then((teachersList) => {
-        return res.status(200).send(teachersList[0]); //Por el findAll y el Promise.all se hace un arreglo dentro de otro, por eso tomo la primera posición (que sería la única)
+        let finalList = [];
+        teachersList.forEach(t => {
+          if(t[0]) {
+            finalList.push(t[0])
+          }
+        })
+        return res.status(200).send(finalList); //Por el findAll y el Promise.all se hace un arreglo dentro de otro, por eso tomo la primera posición (que sería la única)
       });
     } catch (error) {
       console.error(error);
       res.status(500).send("Error al buscar usuarios por ese rol");
     }
   }
-);*/
+);
 
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
-server.get(
+/*server.get(
   "/school/:id",
   // passport.authenticate('jwt', { session: false }),
   // checkAdmin,
@@ -79,7 +85,7 @@ server.get(
       });
     });
   }
-);
+);*/
 
 //RUTA para listar todos los QUIZZES de un TEACHER - GET a /teachers/quizzesTeacher/:teacherId
 
