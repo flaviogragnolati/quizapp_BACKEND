@@ -421,7 +421,7 @@ server.put('/activate/:id', async (req, res) => {
       active: !quizToActivate.active,
     });
 
-    return res.status(200).send('El QUIZ ha sido activado');
+    return res.status(200).send(id);
   } catch (error) {
     console.error(error);
     return res.status(500).send('CATCH activate quiz');
