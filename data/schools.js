@@ -32,7 +32,7 @@ const schools = [{
     city: "Montevideo",
     password: "qwerty",
     address: "alguna calle más al norte 123",
-    logo: "https://lh3.googleusercontent.com/proxy/NOWx5p0sU6lzR6Dh5EEtsjarvuqD2NI77-I3kNQlpH_02_aa-pJeRlBy3x2zM5EXrqwrHxCK1AFmVZQGQeOtxZN0447Ia7t39IKsDs3J",
+    logo: "https://img2.freepng.es/20180715/pew/kisspng-university-of-the-republic-university-of-lyon-univ-departamento-de-recursos-humanos-5b4c0ea10e13e5.9442534415317111370577.jpg",
     createdAt: new Date(),
     updatedAt: new Date()
   },

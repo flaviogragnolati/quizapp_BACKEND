@@ -185,7 +185,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 2,
   },
  {
     title: 'Question 22',
@@ -194,7 +194,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 2,
   },
  {
     title: 'Question 23',
@@ -203,7 +203,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 2,
   },
  {
     title: 'Question 24',
@@ -212,7 +212,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 2,
   },
  {
     title: 'Question 25',
@@ -221,7 +221,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 2,
   },
  {
     title: 'Question 26',
@@ -230,7 +230,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 5,
   },
  {
     title: 'Question 27',
@@ -239,7 +239,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 5,
   },
  {
     title: 'Question 28',
@@ -248,7 +248,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 5,
   },
  {
     title: 'Question 29',
@@ -257,7 +257,7 @@ const questions = [{
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 1,
+    QuizId: 5,
   },
   {
     title: 'Question 30',
