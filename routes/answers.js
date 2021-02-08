@@ -32,7 +32,7 @@ server.delete("/:id", async (req, res) => {
 server.post("/", async (req, res) => {
   let { text, correct, QuestionId } = req.body;
 
-  if (!text || !correct)
+  if (!text || correct === undefined)
     return res
       .status(400)
       .send("No ha ingresado una respuesta o si es correcta o no");
