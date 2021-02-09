@@ -476,7 +476,7 @@ const migrationCommands = (transaction) => {
         'Roles',
         {
           name: {
-            type: Sequelize.ENUM('Student', 'Teacher', 'Enrolled', 'Fan'),
+            type: Sequelize.ENUM('Student', 'Teacher', 'Enrolled'),
             field: 'name',
             allowNull: false,
           },

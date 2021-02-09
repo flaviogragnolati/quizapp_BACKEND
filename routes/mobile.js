@@ -145,4 +145,4 @@ server.get("/quizzes/:studentId", async (req, res) => {
   }
 });
 
-  module.exports = server;
+module.exports = server;
