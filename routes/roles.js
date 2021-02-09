@@ -159,6 +159,7 @@ server.post("/enroll", async (req, res) => {
 // Inscribirse a un Quiz - POST a /roles/fan
 
 server.post("/fan", async (req, res) => {
+  console.log("entré")
   let { UserId, QuizId } = req.body;
   if (!UserId || !QuizId)
     return res
