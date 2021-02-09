@@ -255,24 +255,9 @@ server.get("/enrolled/:id", async (req, res) => {
   }
 });
 
-// Ruta que trae todos favoritos - GET a /roles/favorites
+// Ruta que trae todos los favoritos de un usuario - GET a /roles/favorites/user/:id
 
-server.get("/favorites", async (req, res) => {
-  try {
-    const quizzesFavorites = await Role.findAll({
-      where: { name: "Fan" },
-    });
-
-    return res.status(200).send(quizzesFavorites);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al buscar favoritos");
-  }
-});
-
-// Ruta que trae todos los favoritos de un usuario - GET a /roles/favorites/:id
-
-server.get("/favorites/:id", async (req, res) => {
+server.get("/favorites/user/:id", async (req, res) => {
   let { id } = req.params;
 
   if(!id) return res.status(400).send('Debe incluir el ID')
@@ -282,10 +267,79 @@ server.get("/favorites/:id", async (req, res) => {
       where: { UserId: id, name: "Fan" },
     });
 
-    return res.status(200).send(quizzesFavoritesUser);
+    let quizzesId = quizzesFavoritesUser.map((quiz) => {
+      return quiz.dataValues.QuizId;
+    });
+
+    const dataFavoritesQuizzes = () => {
+      return Promise.all(
+        quizzesId.map((qId) =>
+          Quiz.findByPk(qId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "modifiedBy",
+                "createdBy",
+                "SubjectId",
+                "SchoolId",
+              ],
+            },
+          })
+        )
+      );
+    };
+
+    dataFavoritesQuizzes().then((favoritesQuizzes) => {
+      return res.status(200).send(favoritesQuizzes);
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al buscar favoritos");
+  }
+});
+
+// Ruta que trae todos los QUIZZES en los que está enrolado el usuario - GET a /roles/enrolled/user/:id
+
+server.get("/enrolled/user/:id", async (req, res) => {
+  let { id } = req.params;
+
+  if(!id) return res.status(400).send('Debe incluir el ID')
+
+  try {
+    const quizzesEnrolledUser = await Role.findAll({
+      where: { UserId: id, name: "Enrolled" },
+    });
+
+    let quizzesId = quizzesEnrolledUser.map((quiz) => {
+      return quiz.dataValues.QuizId;
+    });
+
+    const dataEnrolledQuizzes = () => {
+      return Promise.all(
+        quizzesId.map((qId) =>
+          Quiz.findByPk(qId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "modifiedBy",
+                "createdBy",
+                "SubjectId",
+                "SchoolId",
+              ],
+            },
+          })
+        )
+      );
+    };
+
+    dataEnrolledQuizzes().then((enrolledQuizzes) => {
+      return res.status(200).send(enrolledQuizzes);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar los quizzes en los que está enrolado el USER");
   }
 });
 
