@@ -52,5 +52,4 @@ const paginate = (query, { page, pageSize }) => {
 exports.capitalize = capitalize;
 exports.makeJWT = makeJWT;
 exports.makeid = makeid;
-exports.refreshTime = refreshTime;
 exports.paginate = paginate;
