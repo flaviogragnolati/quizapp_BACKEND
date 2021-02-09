@@ -6,7 +6,7 @@ const sendMail = require("./mails");
 
 //! ESTA RUTA PARECERÍA ESTAR ANDANDO SIN ROMPER. LA DEJO COMENTADA POR AHORA.
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
-/*server.get(
+server.get(
   "/school/:id",
   // passport.authenticate('jwt', { session: false }),
   // checkAdmin,
@@ -24,7 +24,6 @@ const sendMail = require("./mails");
       let quizzesIds = allQuizzes.map((quizId) => {
         return quizId.dataValues.id;
       });
-      console.log('IDS', quizzesIds)
       const dataQuizzes = () => {
         return Promise.all(
           quizzesIds.map((QuizId) =>
@@ -47,39 +46,39 @@ const sendMail = require("./mails");
       res.status(500).send("Error al buscar usuarios por ese rol");
     }
   }
-);*/
+);
 
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
-server.get(
-  "/school/:id",
-  // passport.authenticate('jwt', { session: false }),
-  // checkAdmin,
-  async (req, res, next) => {
-    let { id } = req.params;
-    let idQ = [];
-    var teachersList = [];
-    //Buscar todos los QUIZZES de la SCHOOL:
-    var allQuizzes = await Quiz.findAll({
-      where: {
-        SchoolId: id,
-      },
-    });
-    allQuizzes.map((q) => {
-      idQ.push(q.id);
-    });
-    idQ.map((e) => {
-      Role.findAll({
-        //con un include, tomar solo el id
-        where: {
-          name: "Teacher",
-          QuizId: e,
-        },
-      }).then((tf) => {
-        return res.status(200).send(tf);
-      });
-    });
-  }
-);
+// server.get(
+//   "/school/:id",
+//   // passport.authenticate('jwt', { session: false }),
+//   // checkAdmin,
+//   async (req, res, next) => {
+//     let { id } = req.params;
+//     let idQ = [];
+//     var teachersList = [];
+//     //Buscar todos los QUIZZES de la SCHOOL:
+//     var allQuizzes = await Quiz.findAll({
+//       where: {
+//         SchoolId: id,
+//       },
+//     });
+//     allQuizzes.map((q) => {
+//       idQ.push(q.id);
+//     });
+//     idQ.map((e) => {
+//       Role.findAll({
+//         //con un include, tomar solo el id
+//         where: {
+//           name: "Teacher",
+//           QuizId: e,
+//         },
+//       }).then((tf) => {
+//         return res.status(200).send(tf);
+//       });
+//     });
+//   }
+// );
 
 //RUTA para listar todos los QUIZZES de un TEACHER - GET a /teachers/quizzesTeacher/:teacherId
 
