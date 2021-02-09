@@ -252,7 +252,6 @@ server.get('/:QuizId/teachers', async (req, res) => {
   if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
 
   try {
-    const teachers = [];
     const teachersQuiz = await Role.findAll({
       where: {
         QuizId,
@@ -260,13 +259,81 @@ server.get('/:QuizId/teachers', async (req, res) => {
       },
     });
 
-    teachersQuiz.forEach((teacher) => {
-      teachers.push(teacher.UserId);
+
+    let teachersIds = teachersQuiz.map((teacher) => {
+      return teacher.dataValues.UserId;
     });
 
-    return res.status(200).send(teachers);
+    const teachersInfo = () => {
+      return Promise.all(
+        teachersIds.map((tId) =>
+          User.findByPk(tId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "deletedAt",
+                "password",
+                "resetPasswordExpires",
+                "resetPasswordToken",
+                "cellphone",
+                "birthdate",
+              ],
+            },
+          })
+        )
+      );
+    };
+
+    teachersInfo().then((teachers) => {
+      return res.status(200).send(teachers);
+    });
   } catch (error) {
-    console.error('CATCH TEACHERS QUIZ', error);
+    console.error('CATCH TEACHERS OF THE QUIZ', error);
+  }
+});
+
+// Ruta que trae todos los QUIZZES en los que está enrolado el usuario - GET a /roles/enrolled/user/:id
+
+server.get("/enrolled/user/:id", async (req, res) => {
+  let { id } = req.params;
+
+  if(!id) return res.status(400).send('Debe incluir el ID')
+
+  try {
+    const quizzesEnrolledUser = await Role.findAll({
+      where: { UserId: id, name: "Enrolled" },
+    });
+
+    let quizzesId = quizzesEnrolledUser.map((quiz) => {
+      return quiz.dataValues.QuizId;
+    });
+
+    const dataEnrolledQuizzes = () => {
+      return Promise.all(
+        quizzesId.map((qId) =>
+          Quiz.findByPk(qId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "modifiedBy",
+                "createdBy",
+                "SubjectId",
+                "SchoolId",
+              ],
+            },
+          })
+        )
+      );
+    };
+
+    dataEnrolledQuizzes().then((enrolledQuizzes) => {
+      return res.status(200).send(enrolledQuizzes);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar los quizzes en los que está enrolado el USER");
   }
 });
 

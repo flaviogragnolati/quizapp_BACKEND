@@ -47,6 +47,34 @@ const roles = [{
     QuizId: 3,
     UserId: 3,
 },
+{
+    name: "Student",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuizId: 20,
+    UserId: 2,
+},
+{
+    name: "Student",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuizId: 25,
+    UserId: 2,
+},
+{
+    name: "Student",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuizId: 11,
+    UserId: 2,
+},
+{
+    name: "Student",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuizId: 7,
+    UserId: 2,
+},
 ]
 
 module.exports = roles;
