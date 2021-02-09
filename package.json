@@ -53,6 +53,7 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.4.0",
     "sequelize-mig": "^2.6.0",
+    "sequelize-replace-enum-postgres": "^1.6.0",
     "yarn": "^1.22.10"
   }
 }

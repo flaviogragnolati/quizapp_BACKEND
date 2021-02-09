@@ -1,38 +1,6 @@
 const SECRET_KEY = process.env.SECRET_KEY;
 const jwt = require('jsonwebtoken');
 
-const refreshTime = 60 * 5 * 1000;
-
-const extractDigitsFromString = (str) => {
-  //* func que recibe la string del search input y devuelve un objeto
-  //* que contiene un array de palabras y un array de numeros
-  //* str<String> => <{digits:null|[...],words:null|[...]}>
-  if (typeof str !== 'string') return null;
-  let words, digits;
-  let search = {
-    digits: null,
-    words: null,
-  };
-  const digitPattern = /(\d+)/g;
-  const letterPattern = /(\D+)/g;
-
-  digits = str.match(digitPattern, str);
-  if (digits) {
-    search.digits = digits.map((number) => Number(number));
-  }
-
-  words = str.match(letterPattern, '');
-  if (words) {
-    search.words = words
-      .map((word) => {
-        let w = word.trim();
-        if (w.length > 0) return w;
-      })
-      .filter((word) => !!word);
-  }
-
-  return search;
-};
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
@@ -59,25 +27,16 @@ const makeJWT = (user) => {
   return BearerToken;
 };
 
-const cookieMaker = (name, token, res) => {
-  let cookieOptions = {
-    httpOnly: true,
-    sameSite: false,
-    signed: true,
-    secure: true,
-  };
-  return res.cookie(name, token, cookieOptions);
-};
-
-const makeid = (length)=> {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const makeid = (length) => {
+  var result = '';
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
 
 const paginate = (query, { page, pageSize }) => {
   const offset = page * pageSize;
@@ -90,10 +49,8 @@ const paginate = (query, { page, pageSize }) => {
   };
 };
 
-exports.extractDigitsFromString = extractDigitsFromString;
 exports.capitalize = capitalize;
 exports.makeJWT = makeJWT;
-exports.cookieMaker = cookieMaker;
 exports.makeid = makeid;
 exports.refreshTime = refreshTime;
 exports.paginate = paginate;
