@@ -156,6 +156,31 @@ server.post("/enroll", async (req, res) => {
   }
 });
 
+// Inscribirse a un Quiz - POST a /roles/fan
+
+server.post("/fan", async (req, res) => {
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId)
+    return res
+      .status(400)
+      .send(
+        "Se necesita indicar el usuario y del quiz para agregar a favoritos"
+      );
+  try {
+    const userToFav = await Role.create({
+      UserId,
+      QuizId,
+      name: "Fan",
+    });
+
+    return res.status(200).send(userToFav);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al editar el rol");
+  }
+});
+
+
 /* server.get("/enrolled/:id", async(req, res) => {
     let { id } = req.params;
     if (!id) return res.status(400).send("El id indicado no existe")

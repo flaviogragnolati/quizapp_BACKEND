@@ -1,15 +1,22 @@
 const roles = [{
-    name: "Teacher",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 17,
-    UserId: 1,
+    QuizId: 3,
+    UserId: 2,
 },
 {
-    name: "Teacher",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 13,
+    QuizId: 1,
+    UserId: 2,
+},
+{
+    name: "Enrolled",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuizId: 4,
     UserId: 2,
 },
 {
@@ -38,7 +45,7 @@ const roles = [{
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 3,
-    UserId: 2,
+    UserId: 3,
 },
 ]
 
