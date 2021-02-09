@@ -29,25 +29,34 @@ module.exports = {
       //Cargamos Usuarios
       // await queryInterface.bulkInsert('Users', users, { hooks: true }),
       await User.bulkCreate(users, { hooks: true }),
+      console.log("1"),
       //Cargamos Organizaciones
       await School.bulkCreate(schools, { hooks: true }),
+      console.log("1"),
       // await queryInterface.bulkInsert('Schools', schools, { hooks: true }),
       //Cargamos Subjects (materias)
       await queryInterface.bulkInsert('Subjects', subjects, { hooks: true }),
+      console.log("1"),
       //Cargamos Quizzes
       await queryInterface.bulkInsert('Quizzes', quizzes, { hooks: true }),
+      console.log("1"),
       //Cargamos los TAGS
-      await queryInterface.bulkInsert('QuizTags', tags, { hooks: true }),
+      // await queryInterface.bulkInsert('QuizTags', tags, { hooks: true }),
+      // console.log("1"),
       //Cargamos Preguntas
       await queryInterface.bulkInsert('Questions', questions, { hooks: true }),
+      console.log("1"),
       //Cargamos Respuestas
       await queryInterface.bulkInsert('Answers', answers, { hooks: true }),
+      console.log("1"),
       //Cargamos Reviews
-      await queryInterface.bulkInsert('Reviews', reviews, { hooks: true }),
+      // await queryInterface.bulkInsert('Reviews', reviews, { hooks: true }),
+      // console.log("1"),
       // Cargamos los ROLES
       await queryInterface.bulkInsert('Roles', roles, { hooks: true }),
+      console.log("1"),
       //Cargamos la tabla intermadia de Quiz-Tags
-      await queryInterface.bulkInsert('Quiz_QTag', quizQtag, { hooks: true }),
+      // await queryInterface.bulkInsert('Quiz_QTag', quizQtag, { hooks: true }),
       /**
        * !en las migraciones/seeds es preferible no hacer referencia al modelo directamente
        * !queremos utilizar la `queryInerface` que nos provee de los metodos adecuados y preparados
