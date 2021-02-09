@@ -39,7 +39,13 @@ server.get(
       };
 
       dataQuizzes().then((teachersList) => {
-        return res.status(200).send(teachersList[0]); //Por el findAll y el Promise.all se hace un arreglo dentro de otro, por eso tomo la primera posición (que sería la única)
+        let finalList = [];
+        teachersList.forEach(t => {
+          if(t[0]) {
+            finalList.push(t[0])
+          }
+        })
+        return res.status(200).send(finalList); //Por el findAll y el Promise.all se hace un arreglo dentro de otro, por eso tomo la primera posición (que sería la única)
       });
     } catch (error) {
       console.error(error);
@@ -49,36 +55,36 @@ server.get(
 );
 
 // Listar todos los TEACHERS de una SCHOOL - GET a /teachers/school/:id
-// server.get(
-//   "/school/:id",
-//   // passport.authenticate('jwt', { session: false }),
-//   // checkAdmin,
-//   async (req, res, next) => {
-//     let { id } = req.params;
-//     let idQ = [];
-//     var teachersList = [];
-//     //Buscar todos los QUIZZES de la SCHOOL:
-//     var allQuizzes = await Quiz.findAll({
-//       where: {
-//         SchoolId: id,
-//       },
-//     });
-//     allQuizzes.map((q) => {
-//       idQ.push(q.id);
-//     });
-//     idQ.map((e) => {
-//       Role.findAll({
-//         //con un include, tomar solo el id
-//         where: {
-//           name: "Teacher",
-//           QuizId: e,
-//         },
-//       }).then((tf) => {
-//         return res.status(200).send(tf);
-//       });
-//     });
-//   }
-// );
+/*server.get(
+  "/school/:id",
+  // passport.authenticate('jwt', { session: false }),
+  // checkAdmin,
+  async (req, res, next) => {
+    let { id } = req.params;
+    let idQ = [];
+    var teachersList = [];
+    //Buscar todos los QUIZZES de la SCHOOL:
+    var allQuizzes = await Quiz.findAll({
+      where: {
+        SchoolId: id,
+      },
+    });
+    allQuizzes.map((q) => {
+      idQ.push(q.id);
+    });
+    idQ.map((e) => {
+      Role.findAll({
+        //con un include, tomar solo el id
+        where: {
+          name: "Teacher",
+          QuizId: e,
+        },
+      }).then((tf) => {
+        return res.status(200).send(tf);
+      });
+    });
+  }
+);*/
 
 //RUTA para listar todos los QUIZZES de un TEACHER - GET a /teachers/quizzesTeacher/:teacherId
 

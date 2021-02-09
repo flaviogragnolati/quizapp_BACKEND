@@ -62,6 +62,16 @@ const sendMail = ({ user, type, quiz, school }) => {
       subject = `Bienvenido al curso ${quiz.name}`;
       break;
 
+      case "rejected":
+      var replacements = {
+        name: user.firstName,
+        quizImage: quiz.logo,
+        quiz: user.name,
+        link: FRONT_URL,
+      };
+      subject = "Lamentamos ser portadores de malas noticias";
+      break;
+
     case "promote":
       var replacements = {
         quiz: quiz.name,
