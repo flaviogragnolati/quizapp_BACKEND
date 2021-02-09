@@ -143,12 +143,18 @@ server.post("/enroll", async (req, res) => {
         "Se necesita indicar el usuario y del quiz para realizar la inscripción"
       );
   try {
-    const userToEnroll = await Role.create({
-      UserId,
-      QuizId,
-      name: "Enrolled",
-    });
-
+    const userToEnroll = await Role.update({
+        where: {
+          UserId,
+          QuizId,
+        }, defaults:{
+          UserId,
+          QuizId,
+          name: "Enrolled",
+        },
+      }
+      );
+      console.log("USER",userToEnroll)
     return res.status(200).send(userToEnroll);
   } catch (error) {
     console.error(error);
