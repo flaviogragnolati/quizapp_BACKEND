@@ -121,9 +121,9 @@ server.put(
       lastName,
       email,
       birthdate,
-      photo,
       cellphone,
       password,
+      photo,
     } = req.body;
 
     if (!id) return res.status(400).send('El usuario no existe');
@@ -131,7 +131,7 @@ server.put(
     const userToEdit = await User.findByPk(id);
 
     const userEdited = await userToEdit.update(
-      { firstName, lastName, email, birthdate, photo, cellphone, password },
+      { firstName, lastName, email, birthdate, cellphone, password, photo },
       { where: { id } }
     );
 
