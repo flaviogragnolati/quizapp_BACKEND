@@ -41,8 +41,8 @@ server.put("/:id", async(req, res) => {
 
 // Devuelve todos los attempts de un usuario - GET a /attempts
 
-server.get("/", async(req, res) => {
-    let { id } = req.query;
+server.get("/user/:id", async(req, res) => {
+    let { id } = req.params;
     if (!id) return res.status(404).send("Se necesita el id del usuario");
     const userAttempts = await QuizAttempt.findAll({
         where: {UserId: id},
