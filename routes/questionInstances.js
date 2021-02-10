@@ -24,7 +24,7 @@ server.post("/", async(req, res) => {
 
 server.put("/:id", async(req, res) => {
     let { id } = req.params;
-    let { QuestionId, AnswerId, QuizAttemptId } = req.body;
+    let { QuestionId, AnswerId, QuizAttemptId, name } = req.body;
     const instance = await QuestionInstance.findOne({ where: { id } });
     if (!instance) return res.status(404).send("No se ha encontrado la instancia solicitada");
     try {
@@ -32,6 +32,7 @@ server.put("/:id", async(req, res) => {
             QuestionId,
             AnswerId, 
             QuizAttemptId, 
+            name,
         });
         return res.status(200).send(updatedInstance);
     } catch(error){
