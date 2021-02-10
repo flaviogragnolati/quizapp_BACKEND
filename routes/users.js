@@ -121,6 +121,7 @@ server.put(
       lastName,
       email,
       birthdate,
+      photo,
       cellphone,
       password,
     } = req.body;
@@ -130,7 +131,7 @@ server.put(
     const userToEdit = await User.findByPk(id);
 
     const userEdited = await userToEdit.update(
-      { firstName, lastName, email, birthdate, cellphone, password },
+      { firstName, lastName, email, birthdate, photo, cellphone, password },
       { where: { id } }
     );
 

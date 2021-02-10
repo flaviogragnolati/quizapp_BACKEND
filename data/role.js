@@ -62,7 +62,7 @@ const roles = [{
     UserId: 2,
 },
 {
-    name: "Student",
+    name: "Enrolled",
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 11,
