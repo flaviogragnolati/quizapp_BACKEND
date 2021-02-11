@@ -1,23 +1,23 @@
-const server = require("express").Router();
-const { School, Quiz, Subject, SchoolCode } = require("../models/index");
-const { makeid } = require("../utils/index");
+const server = require('express').Router();
+const { School, Quiz, Subject, SchoolCode } = require('../models/index');
+const { makeid } = require('../utils/index');
 const sendMail = require('./mails');
 
 // RUTA para BORRAR School - delete a /org/:id
 
 server.delete(
-  "/:id",
+  '/:id',
   // passport.authenticate('jwt', { session: false }),
   // checkAdmin,
   async (req, res) => {
     let { id } = req.params;
 
-    if (!id) return res.status(400).send("No se recibió ID");
+    if (!id) return res.status(400).send('No se recibió ID');
 
     const schoolToDestroy = await School.findByPk(id);
 
     if (!schoolToDestroy)
-      return res.status(400).send("No existe la school a eliminar");
+      return res.status(400).send('No existe la school a eliminar');
 
     const school = { ...schoolToDestroy.dataValues };
     const payload = {
@@ -31,10 +31,12 @@ server.delete(
 
 // RUTA para LISTAR TODAS las School - get a /org
 
-server.get("/", (req, res, next) => {
-  School.findAll( {attributes: {
-    exclude: ['password'],
-  }})
+server.get('/', (req, res, next) => {
+  School.findAll({
+    attributes: {
+      exclude: ['password'],
+    },
+  })
     .then((school) => {
       return res.status(200).send(school);
     })
@@ -43,11 +45,13 @@ server.get("/", (req, res, next) => {
 
 // RUTA para LISTAR UNA School - get a /org/:id
 
-server.get("/:id", (req, res, next) => {
+server.get('/:id', (req, res, next) => {
   let { id } = req.params;
-  School.findByPk((id), {attributes: {
-    exclude: ['password'],
-  }})
+  School.findByPk(id, {
+    attributes: {
+      exclude: ['password'],
+    },
+  })
     .then((school) => {
       return res.status(200).send(school);
     })
@@ -56,31 +60,33 @@ server.get("/:id", (req, res, next) => {
 
 // RUTA para listar todas las SUBJECTS de una SCHOOL - GET a /org/:id/subjects
 
-server.get("/:id/subjects", async (req, res) => {
+server.get('/:id/subjects', async (req, res) => {
   let { id } = req.params;
-  if (!id) return res.status(400).send("La Organización no existe");
+  if (!id) return res.status(400).send('La Organización no existe');
 
   try {
-    const subjects = await Subject.findAll({
-      where: {
-        SchoolId: id,
-      }
-    }, { raw:true });
+    const subjects = await Subject.findAll(
+      {
+        where: {
+          SchoolId: id,
+        },
+      },
+      { raw: true }
+    );
 
-    return res.status(200).send(subjects)
-
-  } catch(error){
+    return res.status(200).send(subjects);
+  } catch (error) {
     console.error(error);
-    return res.status(500).send("Error en la búsqueda de los subjects")
+    return res.status(500).send('Error en la búsqueda de los subjects');
   }
 });
 
 //RUTA para listar todos los QUIZZES de una SCHOOL - get a /org/:id/quizzes
 
-server.get("/:id/quizzes", async (req, res) => {
+server.get('/:id/quizzes', async (req, res) => {
   let { id } = req.params;
 
-  if (!id) return res.status(400).send("La Organización no existe");
+  if (!id) return res.status(400).send('La Organización no existe');
 
   try {
     const quizzes = await Quiz.findAll({
@@ -90,7 +96,7 @@ server.get("/:id/quizzes", async (req, res) => {
       include: {
         model: Subject,
         attributes: {
-          exclude: ["createdAt", "updatedAt", "SchoolId"],
+          exclude: ['createdAt', 'updatedAt', 'SchoolId'],
         },
       },
     }); // Ver de traer solo los id
@@ -103,26 +109,27 @@ server.get("/:id/quizzes", async (req, res) => {
     response.quizzes.allIds = quizzes.map((q) => {
       return q.id;
     });
-   
+
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "Error al buscar los quizzes" });
+    return res.status(500).send({ message: 'Error al buscar los quizzes' });
   }
 });
 
 // RUTA para AGREGAR/CREAR School - post a /org
 
-server.post("/", async (req, res, next) => {
+server.post('/', async (req, res, next) => {
   let { name, email } = req.body;
- try {
-   const schoolCodeGen = await SchoolCode.findOrCreate({
+  try {
+    const schoolCodeGen = await SchoolCode.findOrCreate({
       where: {
-        email
-      }, defaults:{
+        email,
+      },
+      defaults: {
         email,
         code: makeid(6),
-      }
+      },
     });
 
     let payload = {
@@ -131,16 +138,16 @@ server.post("/", async (req, res, next) => {
         email,
         code: schoolCodeGen[0].code,
       },
-      type: "createSchool",
+      type: 'createSchool',
     };
     sendMail(payload);
 
     return res.status(200).send();
- } catch(error) {
-   console.error(error);
-   return res.status(400).send("El código no ha sido generado")
- }
-})
+  } catch (error) {
+    console.error(error);
+    return res.status(400).send('El código no ha sido generado');
+  }
+});
 
 // server.post("/", (req, res, next) => {
 //   let {
@@ -184,7 +191,7 @@ server.post("/", async (req, res, next) => {
 
 // RUTA para EDITAR School - PUT a /org/:id
 
-server.put("/:id", async (req, res) => {
+server.put('/:id', async (req, res) => {
   let { id } = req.params;
   let {
     name,
@@ -200,7 +207,7 @@ server.put("/:id", async (req, res) => {
   if (!id)
     return res
       .status(400)
-      .send("Es necesario indicar la escuela a actualizar/modificar");
+      .send('Es necesario indicar la escuela a actualizar/modificar');
 
   const schoolToEdit = await School.findByPk(id);
 

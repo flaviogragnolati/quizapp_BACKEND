@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // Subject.hasMany(models.QuizTag);
       Subject.hasMany(models.Quiz);
       Subject.belongsTo(models.School);
-      }
+    }
   }
   Subject.init(
     {

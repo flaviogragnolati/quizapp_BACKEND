@@ -16,8 +16,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   Review.init(
     {
-      puntaje: {  // points no sería mejor ??
-        type:  DataTypes.SMALLINT, //O mejor TINYINT?? 
+      puntaje: {
+        // points no sería mejor ??
+        type: DataTypes.SMALLINT, //O mejor TINYINT??
         allowNull: false,
       },
       description: {

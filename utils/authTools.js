@@ -4,7 +4,7 @@ const { School, Role } = require('../models/index');
 
 const checkSuperAdmin = async (req, res, next) => {
   const { isSuperAdmin } = req.school;
- 
+
   if (isSuperAdmin) {
     return next();
   } else {
@@ -17,7 +17,7 @@ const checkSuperAdmin = async (req, res, next) => {
 const isStudent = async (req, res, next) => {
   const { id } = req.user;
 
-  if (role !== "student") {
+  if (role !== 'student') {
     return next();
   } else {
     return res.status(401).send({ message: 'No posee el nivel de acceso' });
@@ -26,5 +26,5 @@ const isStudent = async (req, res, next) => {
 
 module.exports = {
   checkSuperAdmin,
-  isStudent
+  isStudent,
 };

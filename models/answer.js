@@ -1,7 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
 
-
 module.exports = (sequelize, DataTypes) => {
   class Answer extends Model {
     /**
@@ -17,19 +16,20 @@ module.exports = (sequelize, DataTypes) => {
   }
   Answer.init(
     {
-      text: { 
-        type:  DataTypes.TEXT, 
+      text: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       correct: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-      }
-     },
+      },
+    },
     {
       sequelize,
       modelName: 'Answer',
     }
   );
   return Answer;
-};0
+};
+0;

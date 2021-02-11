@@ -19,10 +19,10 @@ const { normalize, schema } = require('normalizr');
 
 // server.get('/', async (req, res) => {
 //     //Agregar el tag dentro del objeto de cada quiz.
-  
+
 //      let page = 0;
 //     let pageSize = 6;
-    
+
 //     try {
 //       let data = await Quiz.findAll(
 //         paginate(
@@ -52,7 +52,7 @@ const { normalize, schema } = require('normalizr');
 //           { page, pageSize }
 //         )
 //       );
-    
+
 //       const UserSchema = new schema.Entity('users');
 //       const SubjectsSchema = new schema.Entity('subjects');
 //       const SchoolSchema = new schema.Entity('schools');
@@ -90,10 +90,9 @@ const { normalize, schema } = require('normalizr');
 //           }),
 //         }
 //       );
-  
-    
+
 //       const normalizedData = normalize(data, [QuizSchema]);
-  
+
 //       return res.status(200).send(normalizedData);
 //     } catch (error) {
 //       console.error(error);
@@ -103,14 +102,14 @@ const { normalize, schema } = require('normalizr');
 
 //Listar todos los quizzes de un student
 
-server.get("/quizzes/:studentId", async (req, res) => {
+server.get('/quizzes/:studentId', async (req, res) => {
   let { studentId } = req.params;
 
-  if (!studentId) return res.status(400).send("Indique ID del estudiante.");
+  if (!studentId) return res.status(400).send('Indique ID del estudiante.');
 
   try {
     const quizzesStudent = await Role.findAll({
-      where: { UserId: studentId, name: "Student" },
+      where: { UserId: studentId, name: 'Student' },
     });
 
     let quizzesId = quizzesStudent.map((quiz) => {
@@ -123,12 +122,12 @@ server.get("/quizzes/:studentId", async (req, res) => {
           Quiz.findByPk(qId, {
             attributes: {
               exclude: [
-                "createdAt",
-                "updatedAt",
-                "modifiedBy",
-                "createdBy",
-                "SubjectId",
-                "SchoolId",
+                'createdAt',
+                'updatedAt',
+                'modifiedBy',
+                'createdBy',
+                'SubjectId',
+                'SchoolId',
               ],
             },
           })
@@ -141,7 +140,7 @@ server.get("/quizzes/:studentId", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al buscar los quizzes por este estudiante");
+    res.status(500).send('Error al buscar los quizzes por este estudiante');
   }
 });
 

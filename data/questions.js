@@ -1,4 +1,5 @@
-const questions = [{
+const questions = [
+  {
     title: 'Question 1',
     question: '¿En que año descubrió Colón América?',
     createdBy: 1,
@@ -6,7 +7,7 @@ const questions = [{
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 1,
-   },
+  },
   {
     title: 'Question 2',
     question: '¿En que guerra participó Juana de Arco?',
@@ -15,7 +16,7 @@ const questions = [{
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 1,
-   },
+  },
   {
     title: 'Question 3',
     question: '¿Cuál era la capital del Imperio Inca?',
@@ -45,86 +46,95 @@ const questions = [{
   },
   {
     title: 'Question 6',
-    question: 'Which of the following is not a valid HTTP methods used in RESTful web services?',
+    question:
+      'Which of the following is not a valid HTTP methods used in RESTful web services?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 3,
   },
- {
+  {
     title: 'Question 7',
-    question: 'Which of the following component of HTTP request contains message content or Resource representation?',
+    question:
+      'Which of the following component of HTTP request contains message content or Resource representation?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 3,
   },
- {
+  {
     title: 'Question 8',
-    question: 'Which of the following is correct about URI in RESTful web services?',
+    question:
+      'Which of the following is correct about URI in RESTful web services?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 3,
   },
- {
+  {
     title: 'Question 9',
-    question: 'Which of the following HTTP method should be used to fetch resource using RESTful web service?',
+    question:
+      'Which of the following HTTP method should be used to fetch resource using RESTful web service?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 3,
   },
- {
+  {
     title: 'Question 10',
-    question: 'Public directive of Cache Control Header of HTTP response indicates that resource is cachable by any component.',
+    question:
+      'Public directive of Cache Control Header of HTTP response indicates that resource is cachable by any component.',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 3,
   },
- {
+  {
     title: 'Question 11',
-    question: 'Which of the following is a best practice for designing a secure RESTful web service?',
+    question:
+      'Which of the following is a best practice for designing a secure RESTful web service?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 6,
   },
- {
+  {
     title: 'Question 12',
-    question: 'Which of the following annotation of JAX RS API is used to annotate a method to get the relative path of the resource class/method?',
+    question:
+      'Which of the following annotation of JAX RS API is used to annotate a method to get the relative path of the resource class/method?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 6,
   },
- {
+  {
     title: 'Question 13',
-    question: 'Which of the following annotation of JAX RS API binds the parameter passed to method to a form value?',
+    question:
+      'Which of the following annotation of JAX RS API binds the parameter passed to method to a form value?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 6,
   },
- {
+  {
     title: 'Question 14',
-    question: 'A web service is a collection of open protocols and standards used for exchanging data between applications or systems.',
+    question:
+      'A web service is a collection of open protocols and standards used for exchanging data between applications or systems.',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 6,
   },
- {
+  {
     title: 'Question 15',
     question: 'Web services can treat each method request independently.',
     createdBy: 1,
@@ -142,43 +152,47 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 4,
   },
- {
+  {
     title: 'Question 17',
-    question: 'Which of the following defines a measurement relative to the x-height of a font?',
+    question:
+      'Which of the following defines a measurement relative to the x-height of a font?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 4,
   },
- {
+  {
     title: 'Question 18',
-    question: 'Which of the following property is used to control the position of an image in the background?',
+    question:
+      'Which of the following property is used to control the position of an image in the background?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 4,
   },
- {
+  {
     title: 'Question 19',
-    question: 'Which of the following property serves as shorthand for the marker properties?',
+    question:
+      'Which of the following property serves as shorthand for the marker properties?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 4,
   },
- {
+  {
     title: 'Question 20',
-    question: 'Which of the following property is used to control the flow and formatting of text?',
+    question:
+      'Which of the following property is used to control the flow and formatting of text?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 4,
   },
-{
+  {
     title: 'Question 21',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -187,7 +201,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 2,
   },
- {
+  {
     title: 'Question 22',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -196,7 +210,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 2,
   },
- {
+  {
     title: 'Question 23',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -205,7 +219,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 2,
   },
- {
+  {
     title: 'Question 24',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -214,7 +228,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 2,
   },
- {
+  {
     title: 'Question 25',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -223,7 +237,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 2,
   },
- {
+  {
     title: 'Question 26',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -232,7 +246,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 5,
   },
- {
+  {
     title: 'Question 27',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -241,7 +255,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 5,
   },
- {
+  {
     title: 'Question 28',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -250,7 +264,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 5,
   },
- {
+  {
     title: 'Question 29',
     question: '¿Cómo se llamaba el padre de Alejandro Magno?',
     createdBy: 1,
@@ -295,7 +309,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 8,
   },
- {
+  {
     title: 'Question 34',
     question: 'Los diferentes tipos de articulaciones que existen son:',
     createdBy: 1,
@@ -304,7 +318,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 8,
   },
- {
+  {
     title: 'Question 35',
     question: '¿Cómo se llaman las células maduras propias del tejido óseo?',
     createdBy: 1,
@@ -313,7 +327,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 8,
   },
- {
+  {
     title: 'Question 36',
     question: '¿Qué jugador marcó el hat-trick más rápido en LaLiga?',
     createdBy: 1,
@@ -322,16 +336,17 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 9,
   },
- {
+  {
     title: 'Question 37',
-    question: '¿Cuándo se jugó la primera edición de la Primera División del fútbol español?',
+    question:
+      '¿Cuándo se jugó la primera edición de la Primera División del fútbol español?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 9,
   },
- {
+  {
     title: 'Question 38',
     question: '¿Quién fue el primer campeón en la Primera División?',
     createdBy: 1,
@@ -340,7 +355,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 9,
   },
- {
+  {
     title: 'Question 39',
     question: '¿En qué temporada las victorias empezaron a valer 3 puntos?',
     createdBy: 1,
@@ -349,52 +364,57 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 9,
   },
- {
+  {
     title: 'Question 40',
-    question: '¿Quién es el jugador que más veces vio la tarjeta roja en la historia de LaLiga?',
+    question:
+      '¿Quién es el jugador que más veces vio la tarjeta roja en la historia de LaLiga?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 9,
   },
- {
+  {
     title: 'Question 41',
-    question: 'Hubo dos trofeos para la Copa del Mundo. ¿Cómo se llamaba el primero?',
+    question:
+      'Hubo dos trofeos para la Copa del Mundo. ¿Cómo se llamaba el primero?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 10,
   },
- {
+  {
     title: 'Question 42',
-    question: '¿Quién de estos jugadores no ganó la Copa del Mundo como jugador y como entrenador?',
+    question:
+      '¿Quién de estos jugadores no ganó la Copa del Mundo como jugador y como entrenador?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 10,
   },
- {
+  {
     title: 'Question 43',
-    question: '¿Qué selección llegó a tres finales de la Copa del Mundo pero nunca la ganó?',
+    question:
+      '¿Qué selección llegó a tres finales de la Copa del Mundo pero nunca la ganó?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 10,
   },
- {
+  {
     title: 'Question 44',
-    question: 'El máximo goleador de la historia de la Copa del Mundo hizo 16 tantos, ¿quién es?',
+    question:
+      'El máximo goleador de la historia de la Copa del Mundo hizo 16 tantos, ¿quién es?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 10,
   },
- {
+  {
     title: 'Question 45',
     question: '¿Dónde se jugará la Copa del Mundo de 2026?',
     createdBy: 1,
@@ -403,7 +423,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 10,
   },
- {
+  {
     title: 'Question 46',
     question: '¿¿Cuál fue la primera princesa de películas de Disney',
     createdBy: 1,
@@ -412,7 +432,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 11,
   },
- {
+  {
     title: 'Question 47',
     question: '¿Qué princesa se viste como hombre para salvar a su padre?',
     createdBy: 1,
@@ -423,7 +443,8 @@ const questions = [{
   },
   {
     title: 'Question 48',
-    question: '¿De quién es el castillo que se muestra en el emblemático logotipo de Walt Disney Company?',
+    question:
+      '¿De quién es el castillo que se muestra en el emblemático logotipo de Walt Disney Company?',
     createdBy: 1,
     modifiedBy: 1,
     createdAt: new Date(),
@@ -448,9 +469,7 @@ const questions = [{
     updatedAt: new Date(),
     QuizId: 11,
   },
-]
-
-
+];
 
 module.exports = questions;
 //  {
@@ -472,7 +491,5 @@ module.exports = questions;
 //     QuizId: 1,
 //   },
 // ]
-
-
 
 module.exports = questions;

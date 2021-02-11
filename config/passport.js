@@ -61,7 +61,7 @@ module.exports = function (passport) {
             password,
             cellphone,
           };
-          console.log('user_data', user_data);
+          // console.log('user_data', user_data);
           const user = await User.create(user_data);
           //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
           let user_obj = { ...user.dataValues };
@@ -104,7 +104,7 @@ module.exports = function (passport) {
               code,
             },
           });
-          console.log('SCHOOL CODE', school_code);
+          // console.log('SCHOOL CODE', school_code);
           // if (mail y code no coinciden){
           //   return done(null, school_obj); // revisar como es cuando es error
           // }
@@ -117,9 +117,9 @@ module.exports = function (passport) {
             description,
             password,
           };
-          console.log('school_data', school_data);
+          // console.log('school_data', school_data);
           const school = await School.create(school_data);
-          console.log('creada school', school);
+          // console.log('creada school', school);
           //clonamos el objeto user, eliminamos el campo password y devolvemos el obj user
           let school_obj = { ...school.dataValues };
           delete school_obj.password;
@@ -148,7 +148,7 @@ module.exports = function (passport) {
         session: false,
       },
       async (email, password, done) => {
-         try {
+        try {
           const user = await User.findOne({ where: { email } });
           if (!user) {
             return done(null, false, { message: 'No se encontro el usuario' });
@@ -314,7 +314,7 @@ module.exports = function (passport) {
         }
         let school_obj = { ...school.dataValues };
         delete school_obj.password;
-        console.log('RETURN JWT', school_obj);
+        // console.log('RETURN JWT', school_obj);
         return done(null, school_obj, { message: 'Token Autorizado' });
       } catch (error) {
         return done(error);
@@ -377,7 +377,7 @@ module.exports = function (passport) {
               cellphone,
             };
             const new_user = await User.create(user_data);
-            console.log('newUser', new_user);
+            // console.log('newUser', new_user);
             if (!new_user)
               return done(null, false, {
                 message: 'No se pudo crear el usuario',
@@ -407,10 +407,10 @@ passport.use(
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
-        console.log('profile', profile);
+        // console.log('profile', profile);
         let { displayName, emails } = profile;
         const email = emails[0].value;
-        console.log('email', email);
+        // console.log('email', email);
         let user = await User.findOne({ where: { email } }); //buscamos el email que devuelve google
         // si no hay user entonces creamos uno con datos `default`
         // si encontramos un user, entonces solamente devolvemos ese user
@@ -427,9 +427,9 @@ passport.use(
             password,
             cellphone,
           };
-          console.log('user_data', user_data);
+          // console.log('user_data', user_data);
           const new_user = await User.create(user_data);
-          console.log('newUser', new_user);
+          // console.log('newUser', new_user);
           if (!new_user)
             return done(null, false, {
               message: 'No se pudo crear el usuario',

@@ -56,8 +56,8 @@ server.get('/', async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
 
   // TRAE EL DOBLE DE QUIZZES QUE PIDE PORQUE EN LA FUNCIÓN (EN INDEX) LE ESTAMOS PIDIENDO EL DOBLE PARA QUE HAGA EL PEDIDO AL BACK MENOS VECES
-  let { page, pageSize  } = req.query;
-  
+  let { page, pageSize } = req.query;
+
   try {
     let data = await Quiz.findAll(
       paginate(
@@ -71,7 +71,10 @@ server.get('/', async (req, res) => {
               model: Subject,
               attributes: { exclude: ['createdAt', 'updatedAt'] },
             },
-            { model: School, attributes: { exclude: ['createdAt', 'updatedAt'] } },
+            {
+              model: School,
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+            },
             {
               model: Review,
               attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
@@ -87,7 +90,7 @@ server.get('/', async (req, res) => {
         { page, pageSize }
       )
     );
-  
+
     const UserSchema = new schema.Entity('users');
     const SubjectsSchema = new schema.Entity('subjects');
     const SchoolSchema = new schema.Entity('schools');
@@ -126,7 +129,6 @@ server.get('/', async (req, res) => {
       }
     );
 
-  
     const normalizedData = normalize(data, [QuizSchema]);
 
     return res.status(200).send(normalizedData);
@@ -164,7 +166,6 @@ server.get('/info/:id', async (req, res) => {
           attributes: { exclude: ['createdAt', 'updatedAt', 'Quiz_QTag'] },
         },
       ],
-    
     });
 
     const teachers = await Role.findAll({
@@ -175,7 +176,7 @@ server.get('/info/:id', async (req, res) => {
       raw: true,
       nest: true,
     });
-    console.log(data[0]);
+    // console.log(data[0]);
     let response = {
       ...data[0].dataValues,
       teachers,
@@ -230,13 +231,12 @@ server.get('/:id', async (req, res) => {
 // Contar todos los QUIZZES - GET a /quiz/all/quizzes
 
 server.get('/all/quizzes', async (req, res) => {
-
   try {
     const allQuizzes = await Quiz.count({});
 
     return res.status(200).send(allQuizzes.toString()); // Primera opción: No me deja enviar números (lo toma como que intento enviar un status), por eso lo paso a STRING
     //return res.status(200).send({
-      //numberOfQuizzes: allQuizzes
+    //numberOfQuizzes: allQuizzes
     //}); // Segunda opción: enviar un objeto con el valor
   } catch (error) {
     console.error(error);
@@ -259,7 +259,6 @@ server.get('/:QuizId/teachers', async (req, res) => {
       },
     });
 
-
     let teachersIds = teachersQuiz.map((teacher) => {
       return teacher.dataValues.UserId;
     });
@@ -270,14 +269,14 @@ server.get('/:QuizId/teachers', async (req, res) => {
           User.findByPk(tId, {
             attributes: {
               exclude: [
-                "createdAt",
-                "updatedAt",
-                "deletedAt",
-                "password",
-                "resetPasswordExpires",
-                "resetPasswordToken",
-                "cellphone",
-                "birthdate",
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+                'password',
+                'resetPasswordExpires',
+                'resetPasswordToken',
+                'cellphone',
+                'birthdate',
               ],
             },
           })
@@ -295,14 +294,14 @@ server.get('/:QuizId/teachers', async (req, res) => {
 
 // Ruta que trae todos los QUIZZES en los que está enrolado el usuario - GET a /roles/enrolled/user/:id
 
-server.get("/enrolled/user/:id", async (req, res) => {
+server.get('/enrolled/user/:id', async (req, res) => {
   let { id } = req.params;
 
-  if(!id) return res.status(400).send('Debe incluir el ID')
+  if (!id) return res.status(400).send('Debe incluir el ID');
 
   try {
     const quizzesEnrolledUser = await Role.findAll({
-      where: { UserId: id, name: "Enrolled" },
+      where: { UserId: id, name: 'Enrolled' },
     });
 
     let quizzesId = quizzesEnrolledUser.map((quiz) => {
@@ -315,12 +314,12 @@ server.get("/enrolled/user/:id", async (req, res) => {
           Quiz.findByPk(qId, {
             attributes: {
               exclude: [
-                "createdAt",
-                "updatedAt",
-                "modifiedBy",
-                "createdBy",
-                "SubjectId",
-                "SchoolId",
+                'createdAt',
+                'updatedAt',
+                'modifiedBy',
+                'createdBy',
+                'SubjectId',
+                'SchoolId',
               ],
             },
           })
@@ -333,7 +332,9 @@ server.get("/enrolled/user/:id", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al buscar los quizzes en los que está enrolado el USER");
+    res
+      .status(500)
+      .send('Error al buscar los quizzes en los que está enrolado el USER');
   }
 });
 
@@ -354,7 +355,7 @@ server.get('/:QuizId/students', async (req, res) => {
 
     return res.status(200).send(studentsInQuiz.toString()); // Primera opción: No me deja enviar números (lo toma como que intento enviar un status), por eso lo paso a STRING
     //return res.status(200).send({
-      //numberOfStudents: studentsInQuiz
+    //numberOfStudents: studentsInQuiz
     //}); // Segunda opción: enviar un objeto con el valor
   } catch (error) {
     console.error(error);
@@ -378,7 +379,7 @@ server.post(
         quantity: 0,
         name,
         description,
-        logo
+        logo,
         //createdBy: 1,
       });
 
@@ -387,7 +388,6 @@ server.post(
 
       const setTheSchool = await School.findByPk(SchoolId);
       newQuiz.setSchool(setTheSchool);
-
 
       return res.status(200).send(newQuiz);
     } catch (error) {
@@ -495,5 +495,20 @@ server.put('/activate/:id', async (req, res) => {
   }
 });
 
+server.post('/bulkUpdate', async (req, res) => {
+  const { quizId, questions } = req.body;
+  try {
+    const quiz = Quiz.findByPk(parseInt(id));
+    if (!quiz)
+      return res
+        .status(400)
+        .send({ message: 'El id no corresponde a ningun quiz' });
+    console.log('QUIZ', quiz);
+  } catch (error) {
+    console.error(`Error en /bulkUpdate:
+    ${error}`);
+    return res.status(500).send({ message: 'Ha ocurrido un error!' });
+  }
+});
 
 module.exports = server;

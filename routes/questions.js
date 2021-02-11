@@ -1,22 +1,22 @@
-const server = require("express").Router();
-const { Question } = require("../models/index");
+const server = require('express').Router();
+const { Question } = require('../models/index');
 
 // Borrar una QUESTION by ID - DELETE a /questions/:id
 
-server.delete("/:id", async (req, res) => {
+server.delete('/:id', async (req, res) => {
   let { id } = req.params;
 
   if (!id)
-    return res.status(400).send("Debe indicar el ID de la pregunta a eliminar");
+    return res.status(400).send('Debe indicar el ID de la pregunta a eliminar');
 
   const questionToDestroy = await Question.findByPk(id);
 
   if (!questionToDestroy)
-    return res.status(400).send("No existe la pregunta a eliminar");
+    return res.status(400).send('No existe la pregunta a eliminar');
 
   const question = { ...questionToDestroy.dataValues };
   const payload = {
-    message: "Se ha eliminado la pregunta",
+    message: 'Se ha eliminado la pregunta',
     id: question.id,
     name: question.title,
   };
@@ -26,10 +26,10 @@ server.delete("/:id", async (req, res) => {
 
 // Traer todas las QUESTION de un QUIZ - GET a /questions/:id
 
-server.get("/:id", async (req, res) => {
+server.get('/:id', async (req, res) => {
   let { id } = req.params;
 
-  if (!id) return res.status(400).send("No se encuentra el QUIZ indicado");
+  if (!id) return res.status(400).send('No se encuentra el QUIZ indicado');
 
   Question.findAll({
     where: { QuizId: id },
@@ -39,35 +39,41 @@ server.get("/:id", async (req, res) => {
     })
     .catch((error) => {
       console.error(error);
-      return res.status(500).send({ message: "Error al traer las preguntas" });
+      return res.status(500).send({ message: 'Error al traer las preguntas' });
     });
 });
 
 // Crear una QUESTION - POST a /questions
 
-server.post("/", async (req, res) => {
+server.post('/', async (req, res) => {
   let { title, modifiedBy, createdBy, QuizId, question } = req.body;
 
   try {
-    const newQuestion = await Question.create({ title, modifiedBy, createdBy, QuizId, question });
+    const newQuestion = await Question.create({
+      title,
+      modifiedBy,
+      createdBy,
+      QuizId,
+      question,
+    });
 
     return res.status(200).send(newQuestion);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "Error al crear la pregunta" });
+    return res.status(500).send({ message: 'Error al crear la pregunta' });
   }
 });
 
 // Editar una QUESTION - PUT a /questions/:id
 
-server.put("/:id", async (req, res) => {
+server.put('/:id', async (req, res) => {
   let { id } = req.params;
   let { title, modifiedBy, createdBy } = req.body;
 
   if (!id)
     return res
       .status(400)
-      .send("Es necesario indicar el ID de la pregunta a editar");
+      .send('Es necesario indicar el ID de la pregunta a editar');
 
   try {
     const questionToEdit = await Question.findOne({ where: { id } });
@@ -81,7 +87,7 @@ server.put("/:id", async (req, res) => {
     return res.status(200).send(questionEdited);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: "Error al editar la pregunta" });
+    res.status(500).send({ message: 'Error al editar la pregunta' });
   }
 });
 

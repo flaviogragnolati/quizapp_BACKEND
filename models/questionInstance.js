@@ -13,14 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       QuestionInstance.belongsTo(models.Answer);
       QuestionInstance.belongsTo(models.Question);
       QuestionInstance.belongsTo(models.QuizAttempt);
-     }
+    }
   }
   QuestionInstance.init(
     {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
     },
     {
       sequelize,

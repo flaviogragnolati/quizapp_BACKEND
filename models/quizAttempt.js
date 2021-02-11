@@ -10,15 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-     QuizAttempt.hasOne(models.QuestionInstance);
-     QuizAttempt.belongsTo(models.Quiz);
-     QuizAttempt.belongsTo(models.User);
+      QuizAttempt.hasOne(models.QuestionInstance);
+      QuizAttempt.belongsTo(models.Quiz);
+      QuizAttempt.belongsTo(models.User);
     }
   }
   QuizAttempt.init(
     {
       finished: {
-        type:  DataTypes.BOOLEAN, 
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       grade: {
@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     },
-     {
-       timestamps: true,
+    {
+      timestamps: true,
       sequelize,
       modelName: 'QuizAttempt',
     }

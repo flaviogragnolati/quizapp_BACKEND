@@ -1,1152 +1,1158 @@
-const answers = [{
-    text: "1492",
+const answers = [
+  {
+    text: '1492',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 1,
-},
-{
-    text: "1502",
+  },
+  {
+    text: '1502',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 1,
-},
-{
-    text: "1496",
+  },
+  {
+    text: '1496',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 1,
-},
-{
-    text: "1488",
+  },
+  {
+    text: '1488',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 1,
-},
-{
-    text: "Primera Cruzada",
+  },
+  {
+    text: 'Primera Cruzada',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 2,
-},
-{
-    text: "Guerras napoleónicas",
+  },
+  {
+    text: 'Guerras napoleónicas',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 2,
-},
-{
-    text: "La guerra de los 100 años",
+  },
+  {
+    text: 'La guerra de los 100 años',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 2,
-},
-{
-    text: "La guerra de los 30 años",
+  },
+  {
+    text: 'La guerra de los 30 años',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 2,
-},
-{
-    text: "Cuzco",
+  },
+  {
+    text: 'Cuzco',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 3,
-},
-{
-    text: "Quito",
+  },
+  {
+    text: 'Quito',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 3,
-},
-{
-    text: "Machu Pichu",
+  },
+  {
+    text: 'Machu Pichu',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 3,
-},
-{
-    text: "Lima",
+  },
+  {
+    text: 'Lima',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 3,
-},
-{
-    text: "Siglo XVI",
+  },
+  {
+    text: 'Siglo XVI',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 4,
-},
-{
-    text: "Siglo XVII",
+  },
+  {
+    text: 'Siglo XVII',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 4,
-},
-{
-    text: "Siglo XV",
+  },
+  {
+    text: 'Siglo XV',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 4,
-},
-{
-    text: "Siglo XIV",
+  },
+  {
+    text: 'Siglo XIV',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 4,
-},
-{
-    text: "Filipo II de Macedonia",
+  },
+  {
+    text: 'Filipo II de Macedonia',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 5,
-},
-{
-    text: "Ptolomeo I",
+  },
+  {
+    text: 'Ptolomeo I',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 5,
-},
-{
-    text: "Leonidas",
+  },
+  {
+    text: 'Leonidas',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 5,
-},
-{
-    text: "Flipo I de Grecia",
+  },
+  {
+    text: 'Flipo I de Grecia',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 5,
-},
-{
-    text: "OPTIONS",
+  },
+  {
+    text: 'OPTIONS',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 6,
-},
-{
-    text: "DELETE",
+  },
+  {
+    text: 'DELETE',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 6,
-},
-{
-    text: "DATE",
+  },
+  {
+    text: 'DATE',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 6,
-},
-{
-    text: "POST",
+  },
+  {
+    text: 'POST',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 6,
-},
-{
-    text: "Request Body",
+  },
+  {
+    text: 'Request Body',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 7,
-},
-{
-    text: "URI",
+  },
+  {
+    text: 'URI',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 7,
-},
-{
-    text: "HTTP Version",
+  },
+  {
+    text: 'HTTP Version',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 7,
-},
-{
-    text: "Request Header",
+  },
+  {
+    text: 'Request Header',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 7,
-},
-{
-    text: "Each resource in REST architecture is identified by its URI.",
+  },
+  {
+    text: 'Each resource in REST architecture is identified by its URI.',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 8,
-},
-{
-    text: "Purpose of an URI is to locate a resource(s) on the server hosting the web service.",
+  },
+  {
+    text:
+      'Purpose of an URI is to locate a resource(s) on the server hosting the web service.',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 8,
-},
-{
-    text: "Both",
+  },
+  {
+    text: 'Both',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 8,
-},
-{
-    text: "None",
+  },
+  {
+    text: 'None',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 8,
-},
-{
-    text: "GET",
+  },
+  {
+    text: 'GET',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 9,
-},
-{
-    text: "DELETE",
+  },
+  {
+    text: 'DELETE',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 9,
-},
-{
-    text: "PUT",
+  },
+  {
+    text: 'PUT',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 9,
-},
-{
-    text: "OPTIONS",
+  },
+  {
+    text: 'OPTIONS',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 9,
-},
-{
-    text: "true",
+  },
+  {
+    text: 'true',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 10,
-},
-{
-    text: "false",
+  },
+  {
+    text: 'false',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 10,
-},
-{
-    text: "Validate Malformed XML/JSON - Check for well formed input passed to a web service method.",
+  },
+  {
+    text:
+      'Validate Malformed XML/JSON - Check for well formed input passed to a web service method.',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 11,
-},
-{
-    text: "Throw generic Error Messages - A web service method should use HTTP error messages like 403 to show access forbidden etc.",
+  },
+  {
+    text:
+      'Throw generic Error Messages - A web service method should use HTTP error messages like 403 to show access forbidden etc.',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 11,
-},
-{
-    text: "Both",
+  },
+  {
+    text: 'Both',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 11,
-},
-{
-    text: "None",
+  },
+  {
+    text: 'None',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 11,
-},
-{
-    text: "@Path",
+  },
+  {
+    text: '@Path',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 12,
-},
-{
-    text: "@GET",
+  },
+  {
+    text: '@GET',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 12,
-},
-{
-    text: "@PUT",
+  },
+  {
+    text: '@PUT',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 12,
-},
-{
-    text: "@POST",
+  },
+  {
+    text: '@POST',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 12,
-},
-{
-    text: "@CookieParam",
+  },
+  {
+    text: '@CookieParam',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 13,
-},
-{
-    text: "@FormParam",
+  },
+  {
+    text: '@FormParam',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 13,
-},
-{
-    text: "@DefaultValue",
+  },
+  {
+    text: '@DefaultValue',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 13,
-},
-{
-    text: "@Context",
+  },
+  {
+    text: '@Context',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 13,
-},
-{
-    text: "true",
+  },
+  {
+    text: 'true',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 14,
-},
-{
-    text: "false",
+  },
+  {
+    text: 'false',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 14,
-},
-{
-    text: "true",
+  },
+  {
+    text: 'true',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 15,
-},
-{
-    text: "false",
+  },
+  {
+    text: 'false',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 15,
-},
-{
-    text: "The CSS code you write is usable only in one HTML page.",
+  },
+  {
+    text: 'The CSS code you write is usable only in one HTML page.',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 16,
-},
+  },
 
-{
-    text: "CSS is used to control the style of a web document in a simple and easy way.",
+  {
+    text:
+      'CSS is used to control the style of a web document in a simple and easy way.',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 16,
-},
-{
-    text: "CSS is the acronym for Creating Style Sheets.",
+  },
+  {
+    text: 'CSS is the acronym for Creating Style Sheets.',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 16,
-},
-{
-    text: "You can write CSS once and then reuse same sheet in multiple HTML pages.",
+  },
+  {
+    text:
+      'You can write CSS once and then reuse same sheet in multiple HTML pages.',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 16,
-},
-{
-    text: "%",
+  },
+  {
+    text: '%',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 17,
-},
-{
-    text: "em",
+  },
+  {
+    text: 'em',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 17,
-},
-{
-    text: "cm",
+  },
+  {
+    text: 'cm',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 17,
-},
-{
-    text: "ex",
+  },
+  {
+    text: 'ex',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 17,
-},
-{
-    text: "background-repeat",
+  },
+  {
+    text: 'background-repeat',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 18,
-},
-{
-    text: "background-color",
+  },
+  {
+    text: 'background-color',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 18,
-},
-{
-    text: "background-position",
+  },
+  {
+    text: 'background-position',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 18,
-},
-{
-    text: "background-image",
+  },
+  {
+    text: 'background-image',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 18,
-},
-{
-    text: "list-style-type",
+  },
+  {
+    text: 'list-style-type',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 19,
-},
-{
-    text: "list-style-position",
+  },
+  {
+    text: 'list-style-position',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 19,
-},
-{
-    text: "list-style",
+  },
+  {
+    text: 'list-style',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 19,
-},
-{
-    text: "list-style-image",
+  },
+  {
+    text: 'list-style-image',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 19,
-},
-{
-    text: "white-space",
+  },
+  {
+    text: 'white-space',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 20,
-},
-{
-    text: "text-shadow",
+  },
+  {
+    text: 'text-shadow',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 20,
-},
-{
-    text: "text-decoration",
+  },
+  {
+    text: 'text-decoration',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 20,
-},
-{
-    text: "text-transform",
+  },
+  {
+    text: 'text-transform',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 20,
-},
-// {
-//     text: "Siglo XV",
-//     correct: false,
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     QuestionId: 4,
-// },
-// {
-//     text: "Siglo XIV",
-//     correct: false,
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     QuestionId: 4,
-// },
-// {
-//     text: "Filipo II de Macedonia",
-//     correct: true,
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     QuestionId: 5,
-// },
-// {
-//     text: "Ptolomeo I",
-//     correct: false,
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     QuestionId: 5,
-// },
-// {
-//     text: "Leonidas",
-//     correct: false,
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     QuestionId: 5,
-// },
-// {
-//     text: "Flipo I de Grecia",
-//     correct: false,
-//     createdAt: new Date(),
-//     updatedAt: new Date(),
-//     QuestionId: 5,
-// },
-    // TEST DE ANATOMÍA
-{
-    text: "Articulación",
+  },
+  // {
+  //     text: "Siglo XV",
+  //     correct: false,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     QuestionId: 4,
+  // },
+  // {
+  //     text: "Siglo XIV",
+  //     correct: false,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     QuestionId: 4,
+  // },
+  // {
+  //     text: "Filipo II de Macedonia",
+  //     correct: true,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     QuestionId: 5,
+  // },
+  // {
+  //     text: "Ptolomeo I",
+  //     correct: false,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     QuestionId: 5,
+  // },
+  // {
+  //     text: "Leonidas",
+  //     correct: false,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     QuestionId: 5,
+  // },
+  // {
+  //     text: "Flipo I de Grecia",
+  //     correct: false,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     QuestionId: 5,
+  // },
+  // TEST DE ANATOMÍA
+  {
+    text: 'Articulación',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 30,
-},
-{
-    text: "Torso",
+  },
+  {
+    text: 'Torso',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 30,
-},
-{
-    text: "Esqueleto",
+  },
+  {
+    text: 'Esqueleto',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 30,
-},
-{
-    text: "Cráneo",
+  },
+  {
+    text: 'Cráneo',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 30,
-},
-{
-    text: "Protección",
+  },
+  {
+    text: 'Protección',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 31,
-},
-{
-    text: "Movimiento",
+  },
+  {
+    text: 'Movimiento',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 31,
-},
-{
-    text: "Apoyo",
+  },
+  {
+    text: 'Apoyo',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 31,
-},
-{
-    text: "Contracción",
+  },
+  {
+    text: 'Contracción',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 31,
-},
-{
-    text: "Pelvis",
+  },
+  {
+    text: 'Pelvis',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 32,
-},
-{
-    text: "Fémur",
+  },
+  {
+    text: 'Fémur',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 32,
-},
-{
-    text: "Costilla",
+  },
+  {
+    text: 'Costilla',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 32,
-},
-{
-    text: "Cráneo",
+  },
+  {
+    text: 'Cráneo',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 32,
-},
-{
-    text: "Codos y rodillas",
+  },
+  {
+    text: 'Codos y rodillas',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 33,
-},
-{
-    text: "Muñecas y tobillos",
+  },
+  {
+    text: 'Muñecas y tobillos',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 33,
-},
-{
-    text: "Brazos y piernas",
+  },
+  {
+    text: 'Brazos y piernas',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 33,
-},
-{
-    text: "Dedos de manos y pies",
+  },
+  {
+    text: 'Dedos de manos y pies',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 33,
-},
-{
-    text: "Fijas, móviles y semimóviles",
+  },
+  {
+    text: 'Fijas, móviles y semimóviles',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 34,
-},
-{
-    text: "Planas, largas y fuisiformes",
+  },
+  {
+    text: 'Planas, largas y fuisiformes',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 34,
-},
-{
-    text: "Fijas, móviles y alternativas",
+  },
+  {
+    text: 'Fijas, móviles y alternativas',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 34,
-},
-{
-    text: "Fijas, móviles y fusiformes",
+  },
+  {
+    text: 'Fijas, móviles y fusiformes',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 34,
-},
-{
-    text: "Condrocitos",
+  },
+  {
+    text: 'Condrocitos',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 35,
-},
-{
-    text: "Condroblastos",
+  },
+  {
+    text: 'Condroblastos',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 35,
-},
-{
-    text: "Osteocitos",
+  },
+  {
+    text: 'Osteocitos',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 35,
-},
-{
-    text: "Osteoblastos",
+  },
+  {
+    text: 'Osteoblastos',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 35,
-},
-{
-    text: "Lionel Messi",
+  },
+  {
+    text: 'Lionel Messi',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 36,
-},
-{
-    text: "Cristiano Ronaldo",
+  },
+  {
+    text: 'Cristiano Ronaldo',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 36,
-},
-{
-    text: "Romario",
+  },
+  {
+    text: 'Romario',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 36,
-},
-{
-    text: "Bebeto",
+  },
+  {
+    text: 'Bebeto',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 36,
-},
-{
-    text: "1930/31",
+  },
+  {
+    text: '1930/31',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 37,
-},
-{
-    text: "1926/27",
+  },
+  {
+    text: '1926/27',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 37,
-},
-{
-    text: "1934/35",
+  },
+  {
+    text: '1934/35',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 37,
-},
-{
-    text: "1928/29",
+  },
+  {
+    text: '1928/29',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 37,
-},
-{
-    text: "Real Madrid",
+  },
+  {
+    text: 'Real Madrid',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 38,
-},
-{
-    text: "Athletic de Bilbao",
+  },
+  {
+    text: 'Athletic de Bilbao',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 38,
-},
-{
-    text: "RCD Espanyol",
+  },
+  {
+    text: 'RCD Espanyol',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 38,
-},
-{
-    text: "FC Barcelona",
+  },
+  {
+    text: 'FC Barcelona',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 38,
-},
-{
-    text: "1995/96",
+  },
+  {
+    text: '1995/96',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 39,
-},
-{
-    text: "1996/97",
+  },
+  {
+    text: '1996/97',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 39,
-},
-{
-    text: "1997/98",
+  },
+  {
+    text: '1997/98',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 39,
-},
-{
-    text: "1998/99",
+  },
+  {
+    text: '1998/99',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 39,
-},
-{
-    text: "Sergio Ramos",
+  },
+  {
+    text: 'Sergio Ramos',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 40,
-},
-{
-    text: "Carles Puyol",
+  },
+  {
+    text: 'Carles Puyol',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 40,
-},
-{
-    text: "Gerard Piqué",
+  },
+  {
+    text: 'Gerard Piqué',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 40,
-},
-{
-    text: "Fernando Hierro",
+  },
+  {
+    text: 'Fernando Hierro',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 40,
-},
-{
-    text: "Jules Rimet",
+  },
+  {
+    text: 'Jules Rimet',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 41,
-},
-{
-    text: "Pierre de Coubertin",
+  },
+  {
+    text: 'Pierre de Coubertin',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 41,
-},
-{
-    text: "Copa FIFA",
+  },
+  {
+    text: 'Copa FIFA',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 41,
-},
-{
-    text: "Robert Guerin",
+  },
+  {
+    text: 'Robert Guerin',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 41,
-},
-{
-    text: "Daniel Passarella",
+  },
+  {
+    text: 'Daniel Passarella',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 42,
-},
-{
-    text: "Mario Zagallo",
+  },
+  {
+    text: 'Mario Zagallo',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 42,
-},
-{
-    text: "Didier Deschamps",
+  },
+  {
+    text: 'Didier Deschamps',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 42,
-},
-{
-    text: "Franz Beckenbauer",
+  },
+  {
+    text: 'Franz Beckenbauer',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 42,
-},
-{
-    text: "Holanda",
+  },
+  {
+    text: 'Holanda',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 43,
-},
-{
-    text: "Suecia",
+  },
+  {
+    text: 'Suecia',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 43,
-},
-{
-    text: "Inglaterra",
+  },
+  {
+    text: 'Inglaterra',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 43,
-},
-{
-    text: "Checoslovaquia",
+  },
+  {
+    text: 'Checoslovaquia',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 43,
-},
-{
-    text: "Miroslav Klose",
+  },
+  {
+    text: 'Miroslav Klose',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 44,
-},
-{
-    text: "Ronaldo",
+  },
+  {
+    text: 'Ronaldo',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 44,
-},
-{
-    text: "Just Fontaine",
+  },
+  {
+    text: 'Just Fontaine',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 44,
-},
-{
-    text: "Gerd Muller",
+  },
+  {
+    text: 'Gerd Muller',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 44,
-},
-{
-    text: "Estados Unidos, Canadá y México",
+  },
+  {
+    text: 'Estados Unidos, Canadá y México',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 45,
-},
-{
-    text: "Italia",
+  },
+  {
+    text: 'Italia',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 45,
-},
-{
-    text: "Marruecos",
+  },
+  {
+    text: 'Marruecos',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 45,
-},
-{
-    text: "Australia",
+  },
+  {
+    text: 'Australia',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 45,
-},
-{
-    text: "Blancanieves",
+  },
+  {
+    text: 'Blancanieves',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 46,
-},
-{
-    text: "Cenicienta",
+  },
+  {
+    text: 'Cenicienta',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 46,
-},
-{
-    text: "Aurora, la bella durmiente",
+  },
+  {
+    text: 'Aurora, la bella durmiente',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 46,
-},
-{
-    text: "Ariel, la sirenita",
+  },
+  {
+    text: 'Ariel, la sirenita',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 46,
-},
-{
-    text: "Mulan",
+  },
+  {
+    text: 'Mulan',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 47,
-},
-{
-    text: "Pocahontas",
+  },
+  {
+    text: 'Pocahontas',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 47,
-},
-{
-    text: "Tiana",
+  },
+  {
+    text: 'Tiana',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 47,
-},
-{
-    text: "Bella",
+  },
+  {
+    text: 'Bella',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 47,
-},
-{
-    text: "de Cenicienta",
+  },
+  {
+    text: 'de Cenicienta',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 48,
-},
-{
-    text: "de Aurora",
+  },
+  {
+    text: 'de Aurora',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 48,
-},
-{
-    text: "de Blancanieves",
+  },
+  {
+    text: 'de Blancanieves',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 48,
-},
-{
-    text: "de ninguna",
+  },
+  {
+    text: 'de ninguna',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 48,
-},
-{
-    text: "Príncipe Encantador",
+  },
+  {
+    text: 'Príncipe Encantador',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 49,
-},
-{
-    text: "Príncipe Felipe",
+  },
+  {
+    text: 'Príncipe Felipe',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 49,
-},
-{
-    text: "Príncipe Florian",
+  },
+  {
+    text: 'Príncipe Florian',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 49,
-},
-{
-    text: "Príncipe Eric",
+  },
+  {
+    text: 'Príncipe Eric',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 49,
-},
-{
-    text: "Tigre",
+  },
+  {
+    text: 'Tigre',
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 50,
-},
-{
-    text: "Loro",
+  },
+  {
+    text: 'Loro',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 50,
-},
-{
-    text: "Elefante",
+  },
+  {
+    text: 'Elefante',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 50,
-},
-{
-    text: "Mono",
+  },
+  {
+    text: 'Mono',
     correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 50,
-},
-]
+  },
+];
 module.exports = answers;

@@ -12,12 +12,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Session.belongsTo(models.User);
     }
-  };
-  Session.init({
-    device: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Session',
-  });
+  }
+  Session.init(
+    {
+      device: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: 'Session',
+    }
+  );
   return Session;
 };

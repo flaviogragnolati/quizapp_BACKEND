@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       School.hasMany(models.Quiz);
       School.hasMany(models.Subject);
-      School.belongsToMany(models.User, {through: 'School-User'});
-     }
+      School.belongsToMany(models.User, { through: 'School-User' });
+    }
   }
   School.init(
     {
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           isEmail: true,
-        }
+        },
       },
       description: {
         type: DataTypes.TEXT,
@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
             this.setDataValue('password', hash);
           }
         },
-      }
+      },
     },
     {
       sequelize,

@@ -1,12 +1,12 @@
-require("dotenv").config();
+require('dotenv').config();
 //const express = require("express");
 //const sendMailRouter = express.Router();
-const nodemailer = require("nodemailer");
-let smtpTransport = require("nodemailer-smtp-transport");
-const handlebars = require("handlebars");
-const fs = require("fs");
+const nodemailer = require('nodemailer');
+let smtpTransport = require('nodemailer-smtp-transport');
+const handlebars = require('handlebars');
+const fs = require('fs');
 //const { User, School } = require("../models/index");
-const { FRONT_URL } = require("../config/environments/production");
+const { FRONT_URL } = require('../config/environments/production');
 const BASE_URL = process.env.BASE_URL;
 const { THE_EMAIL, THE_PASSWORD } = process.env;
 
@@ -16,7 +16,7 @@ const sendMail = ({ user, type, quiz, school }) => {
   let htmlTemplate = type;
 
   var readHTMLFile = (path, callback) => {
-    fs.readFile(path, { encoding: "utf-8" }, (err, html) => {
+    fs.readFile(path, { encoding: 'utf-8' }, (err, html) => {
       if (err) {
         throw err;
       } else {
@@ -27,7 +27,7 @@ const sendMail = ({ user, type, quiz, school }) => {
 
   smtpTransport = nodemailer.createTransport(
     smtpTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
         user: THE_EMAIL,
         pass: THE_PASSWORD,
@@ -36,23 +36,23 @@ const sendMail = ({ user, type, quiz, school }) => {
   );
 
   switch (type) {
-    case "welcome":
-      console.log('en case welcome', user)
+    case 'welcome':
+      // console.log('en case welcome', user)
       var replacements = {
         // Espacios que van a ser reemplazados en el HTML Mail
         link: FRONT_URL,
       };
       subject = `Bienvenid@, ${user.firstName} a Quizapp`;
       break;
-       
-/*       case "schoolWelcome":
+
+    /*       case "schoolWelcome":
       var replacements = {
         link: FRONT_URL,
       };
       subject = `Bienvenid@, ${user.name} a Quizapp`;
       break; */
 
-    case "accepted":
+    case 'accepted':
       var replacements = {
         name: user.firstName,
         quizImage: quiz.logo,
@@ -62,17 +62,17 @@ const sendMail = ({ user, type, quiz, school }) => {
       subject = `Bienvenido al curso ${quiz.name}`;
       break;
 
-      case "rejected":
+    case 'rejected':
       var replacements = {
         name: user.firstName,
         quizImage: quiz.logo,
         quiz: user.name,
         link: FRONT_URL,
       };
-      subject = "Lamentamos ser portadores de malas noticias";
+      subject = 'Lamentamos ser portadores de malas noticias';
       break;
 
-    case "promote":
+    case 'promote':
       var replacements = {
         quiz: quiz.name,
         quizImage: quiz.logo,
@@ -82,24 +82,24 @@ const sendMail = ({ user, type, quiz, school }) => {
       subject = `${user.firstName} has sido promovido a Teacher`;
       break;
 
-    case "resetPassword":
+    case 'resetPassword':
       let linkResetPassword =
-        BASE_URL + "auth/resetpassword?token=" + user.resetPasswordToken;
+        BASE_URL + 'auth/resetpassword?token=' + user.resetPasswordToken;
       var replacements = {
         name: user.firstName,
         link: linkResetPassword,
       };
-      subject = "Recuperación de contraseña";
+      subject = 'Recuperación de contraseña';
       break;
 
-    case "createSchool":
+    case 'createSchool':
       var replacements = {
         name: user.name,
         email: user.email,
         code: user.code,
-        link: FRONT_URL + 'registerSchool'
+        link: FRONT_URL + 'registerSchool',
       };
-      subject = "Inscripción de organización";
+      subject = 'Inscripción de organización';
       break;
   }
 
@@ -114,14 +114,14 @@ const sendMail = ({ user, type, quiz, school }) => {
         subject,
         html: htmlToSend,
       };
-       smtpTransport.sendMail(mail, (err, response) => {
+      smtpTransport.sendMail(mail, (err, response) => {
         if (err) {
-          console.log("NO se ha enviado el mail", err);
+          console.error('NO se ha enviado el mail', err);
         } else {
-          console.log("Se ha enviado el mail");
+          console.log('Se ha enviado el mail');
         }
       });
-     }
+    }
   );
 };
 

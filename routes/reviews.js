@@ -80,7 +80,7 @@ server.get('/:quizId', (req, res, next) => {
         );
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return res.status(304).send(error);
       });
   });
@@ -110,7 +110,7 @@ server.get('/user/:userId', (req, res, next) => {
         );
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         return res.status(304).send(error);
       });
   });
