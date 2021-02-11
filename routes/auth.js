@@ -157,9 +157,9 @@ server.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // console.log('restored correctly');
-    const user = addTypeToUser(req.user, 'user');
+    // const user = addTypeToUser(req.user, 'user'); //comentado por que ahora setea el type desde la estrategia de passport
     return res.send({
-      user,
+      user: req.user,
     });
   }
 );
