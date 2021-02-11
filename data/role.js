@@ -1,22 +1,15 @@
 const roles = [{
-    name: "Fan",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    QuizId: 3,
-    UserId: 2,
-},
-{
-    name: "Enrolled",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 1,
     UserId: 2,
 },
 {
-    name: "Fan",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 4,
+    QuizId: 3,
     UserId: 2,
 },
 {
@@ -48,31 +41,10 @@ const roles = [{
     UserId: 3,
 },
 {
-    name: "Student",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    QuizId: 20,
-    UserId: 2,
-},
-{
-    name: "Student",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    QuizId: 25,
-    UserId: 2,
-},
-{
     name: "Enrolled",
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 11,
-    UserId: 2,
-},
-{
-    name: "Student",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    QuizId: 7,
     UserId: 2,
 },
 ]
