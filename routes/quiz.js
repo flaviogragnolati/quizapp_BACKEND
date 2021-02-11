@@ -247,6 +247,25 @@ server.get('/all/quizzes', async (req, res) => {
   }
 });
 
+//Contar todos los estudiantes de un QUIZ - GET a /quiz/countStudents/:id
+server.get('/countStudents/:id', async (req, res) => {
+  let { id } = req.params;
+  try {
+    const quantity = await Role.count({
+      where: {
+        QuizId: id,
+        name: "Student"
+      }
+    });
+   console.log("cantidad",quantity)
+    return res.sendStatus(200).send(quantity); 
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('CATCH COUNT STUDENTS FROM QUIZ');
+  }
+});
+
 // Traer todos los teachers de un QUIZ - GET a /quiz/:QuizId/teachers
 
 server.get('/:QuizId/teachers', async (req, res) => {
