@@ -260,6 +260,7 @@ module.exports = function (passport) {
       let id = jwt_payload.id;
       let authData = jwt_payload.user;
       let user;
+      let school = false;
       try {
         if (authData.type === 'school') {
           user = await School.findByPk(id);
@@ -271,6 +272,7 @@ module.exports = function (passport) {
               message: 'incongruencia entre la data del token',
             });
           }
+          school = true;
         } else {
           user = await User.findByPk(id);
           const userByEmail = await User.findOne({
@@ -291,6 +293,8 @@ module.exports = function (passport) {
         }
         let user_obj = { ...user.dataValues };
         delete user_obj.password;
+        if (school) user_obj.type = 'school';
+        else user_obj.type = 'user';
         return done(null, user_obj, { message: 'Token Autorizado' });
       } catch (error) {
         return done(error);
