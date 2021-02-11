@@ -405,8 +405,5 @@ const quizzes = [{
 
 ]
 
-module.exports = quizzes;
-
-]
 
 module.exports = quizzes;
