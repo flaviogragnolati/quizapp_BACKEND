@@ -1,12 +1,13 @@
-const roles = [{
-    name: "Fan",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    QuizId: 3,
-    UserId: 2,
-},
+const roles = [
+//     {
+//     name: "Fan",
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//     QuizId: 3,
+//     UserId: 2,
+// },
 {
-    name: "Enrolled",
+    name: "Student",
     createdAt: new Date(),
     updatedAt: new Date(),
     QuizId: 1,
@@ -16,7 +17,7 @@ const roles = [{
     name: "Fan",
     createdAt: new Date(),
     updatedAt: new Date(),
-    QuizId: 4,
+    QuizId: 2,
     UserId: 2,
 },
 
