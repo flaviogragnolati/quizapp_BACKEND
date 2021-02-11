@@ -206,6 +206,38 @@ server.post("/fan", async (req, res) => {
 });
 
 
+// Borrar un Quiz de favoritos o de enrolled - DELETE a /roles/
+
+server.delete("/", async (req, res) => {
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId)
+    return res
+      .status(400)
+      .send(
+        "Se necesita indicar el usuario y del quiz para quitar de favoritos o retirar la inscripción"
+      );
+  try {
+    const userToUnroll = await Role.findOne({
+      where: {
+        UserId,
+        QuizId
+      },
+    })
+    await Role.destroy({
+      where: {
+        UserId,
+        QuizId
+      },
+      }).then(() => {return res.status(200).send(userToUnroll)})
+      
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al borrar el rol");
+  }
+});
+
 /* server.get("/enrolled/:id", async(req, res) => {
     let { id } = req.params;
     if (!id) return res.status(400).send("El id indicado no existe")
