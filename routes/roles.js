@@ -159,7 +159,9 @@ server.post('/enroll', async (req, res) => {
         QuizId,
       },
     });
-    //Si ya tiene un Role, chequea que sea Fan. Si es Fan, lo modifica a Enrolled (para no degradar un Student a Enrolled)
+
+    if (userToEnroll && userToEnroll.name !== "Fan") return res.status(200).send(userToEnroll);
+     //Si ya tiene un Role, chequea que sea Fan. Si es Fan, lo modifica a Enrolled (para no degradar un Student a Enrolled)
     if (userToEnroll !== null) {
       const userEnrolled = await Role.update(
         {
@@ -171,10 +173,12 @@ server.post('/enroll', async (req, res) => {
             QuizId,
             name: 'Fan',
           },
+          returning: true,
         }
       );
-      return res.status(200).send(userEnrolled);
-    }
+      return res.status(200).send(userEnrolled[1][0]);
+    } 
+      
     if (userToEnroll === null) {
       const userEnrolled = await Role.create({
         UserId,
@@ -191,25 +195,34 @@ server.post('/enroll', async (req, res) => {
 
 // Agregar un Quiz a favoritos - POST a /roles/fan
 
-server.post('/fan', async (req, res) => {
+
+server.post("/fan", async (req, res) => {
   let { UserId, QuizId } = req.body;
   if (!UserId || !QuizId)
     return res
       .status(400)
       .send(
-        'Se necesita indicar el usuario y del quiz para agregar a favoritos'
+        "Se necesita indicar el usuario y del quiz para agregar a favoritos"
       );
-  try {
+     try {
+       const roleToFind = await Role.findOne({
+         where: {
+          UserId,
+          QuizId,
+         }
+       })
+       if (roleToFind) return res.status(200).send(roleToFind); 
+
     const userToFav = await Role.create({
-      UserId,
-      QuizId,
-      name: 'Fan',
+        UserId,
+        QuizId,
+        name: "Fan",
     });
 
-    return res.status(200).send(userToFav);
+    return res.status(201).send(userToFav);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error al editar el rol');
+    res.status(500).send("Error al editar el rol");
   }
 });
 
