@@ -175,16 +175,16 @@ server.post(
       const user = addTypeToUser(req.user, 'user');
       let token = makeJWT(user);
 
-      if (token) {
-        let payload = {
-          user: {
-            firstName,
-            email,
-          },
-          type: 'welcome',
-        };
-        sendMail(payload);
-      }
+      // if (token) {
+      //   let payload = {
+      //     user: {
+      //       firstName,
+      //       email,
+      //     },
+      //     type: 'welcome',
+      //   };
+      //   sendMail(payload);
+      // }
 
       return res.status(200).send({
         user,

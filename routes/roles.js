@@ -34,7 +34,7 @@ server.post("/student", async (req, res) => {
           ],
         }
       });
-        
+
       const quizAccepted = await Quiz.findByPk(QuizId);
 
       let payload = {
@@ -104,14 +104,14 @@ server.post("/student/", async (req, res, next) => {
   try {
     //console.log(teacherId, quizzId);
     const userEdited = await Role.update(
-      {name: "Student"},
-      {where: {QuizId, UserId}}
-      );
+      { name: "Student" },
+      { where: { QuizId, UserId } }
+    );
 
     const userPromoted = await User.findByPk(UserId);
-      console.log("user promoted", userPromoted)
+    console.log("user promoted", userPromoted)
     const quizAccepted = await Quiz.findByPk(QuizId);
-      console.log("quiz promoted", quizAccepted)
+    console.log("quiz promoted", quizAccepted)
 
     let payload = {
       user: {
@@ -143,18 +143,68 @@ server.post("/enroll", async (req, res) => {
         "Se necesita indicar el usuario y del quiz para realizar la inscripción"
       );
   try {
-    const userToEnroll = await Role.create({
-      UserId,
-      QuizId,
-      name: "Enrolled",
-    });
+    //Busca el Role del usuario en el Quizz
+    const userToEnroll = await Role.findOne({
+      where: {
+        UserId,
+        QuizId,
+      },
+    }
+    );
+    //Si ya tiene un Role, chequea que sea Fan. Si es Fan, lo modifica a Enrolled (para no degradar un Student a Enrolled) 
+    if (userToEnroll !== null) {
+      const userEnrolled = await Role.update({
+        name: "Enrolled"
+      },
+        {
+          where: {
+            UserId,
+            QuizId,
+            name: "Fan"
+          }
 
-    return res.status(200).send(userToEnroll);
+        })
+      return res.status(200).send(userEnrolled);
+    }
+    if (userToEnroll === null) {
+      const userEnrolled = await Role.create({
+        UserId,
+        QuizId,
+        name: "Enrolled"
+      })
+      return res.status(200).send(userEnrolled);
+    }
+
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al editar el rol");
   }
 });
+
+// Agregar un Quiz a favoritos - POST a /roles/fan
+
+server.post("/fan", async (req, res) => {
+  let { UserId, QuizId } = req.body;
+  if (!UserId || !QuizId)
+    return res
+      .status(400)
+      .send(
+        "Se necesita indicar el usuario y del quiz para agregar a favoritos"
+      );
+  try {
+    const userToFav = await Role.create({
+      UserId,
+      QuizId,
+      name: "Fan",
+    });
+
+    return res.status(200).send(userToFav);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al editar el rol");
+  }
+});
+
 
 /* server.get("/enrolled/:id", async(req, res) => {
     let { id } = req.params;
@@ -226,6 +276,94 @@ server.get("/enrolled/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al buscar usuarios por ese rol");
+  }
+});
+
+// Ruta que trae todos los favoritos de un usuario - GET a /roles/favorites/user/:id
+
+server.get("/favorites/user/:id", async (req, res) => {
+  let { id } = req.params;
+
+  if (!id) return res.status(400).send('Debe incluir el ID')
+
+  try {
+    const quizzesFavoritesUser = await Role.findAll({
+      where: { UserId: id, name: "Fan" },
+    });
+
+    let quizzesId = quizzesFavoritesUser.map((quiz) => {
+      return quiz.dataValues.QuizId;
+    });
+
+    const dataFavoritesQuizzes = () => {
+      return Promise.all(
+        quizzesId.map((qId) =>
+          Quiz.findByPk(qId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "modifiedBy",
+                "createdBy",
+                "SubjectId",
+                "SchoolId",
+              ],
+            },
+          })
+        )
+      );
+    };
+
+    dataFavoritesQuizzes().then((favoritesQuizzes) => {
+      return res.status(200).send(favoritesQuizzes);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar favoritos");
+  }
+});
+
+// Ruta que trae todos los QUIZZES en los que está enrolado el usuario - GET a /roles/enrolled/user/:id
+
+server.get("/enrolled/user/:id", async (req, res) => {
+  let { id } = req.params;
+
+  if (!id) return res.status(400).send('Debe incluir el ID')
+
+  try {
+    const quizzesEnrolledUser = await Role.findAll({
+      where: { UserId: id, name: "Enrolled" },
+    });
+
+    let quizzesId = quizzesEnrolledUser.map((quiz) => {
+      return quiz.dataValues.QuizId;
+    });
+
+    const dataEnrolledQuizzes = () => {
+      return Promise.all(
+        quizzesId.map((qId) =>
+          Quiz.findByPk(qId, {
+            attributes: {
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "modifiedBy",
+                "createdBy",
+                "SubjectId",
+                "SchoolId",
+              ],
+            },
+          })
+        )
+      );
+    };
+
+    dataEnrolledQuizzes().then((enrolledQuizzes) => {
+      return res.status(200).send(enrolledQuizzes);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al buscar los quizzes en los que está enrolado el USER");
   }
 });
 

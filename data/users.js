@@ -19,7 +19,7 @@ const users = [
     password: 'qwerty',
     createdAt: new Date(),
     updatedAt: new Date(),
-    photo: "https://img2.freepng.es/20180605/jay/kisspng-computer-icons-avatar-user-profile-5b16409fd8f963.4008572815281849918887.jpg",
+    photo: "https://image.freepik.com/vector-gratis/perfil-empresario-dibujos-animados_18591-58479.jpg",
   },
   {
     firstName: 'John',

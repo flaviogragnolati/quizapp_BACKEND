@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
      QuizAttempt.hasOne(models.QuestionInstance);
      QuizAttempt.belongsTo(models.Quiz);
+     QuizAttempt.belongsTo(models.User);
     }
   }
   QuizAttempt.init(
