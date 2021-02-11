@@ -11,11 +11,14 @@ const {
   School,
   QuizTag,
 } = require('../models/index');
+const { Op } = require('sequelize');
+const db = require('../models');
 const quiz = require('../models/quiz');
 const { checkSuperAdmin } = require('../utils/authTools.js');
 const { paginate } = require('../utils/index.js');
 
 const { normalize, schema } = require('normalizr');
+const sequelize = db.sequelize;
 
 // Borrar una QUIZ by ID - DELETE a /quiz/:id
 
@@ -515,16 +518,110 @@ server.put('/activate/:id', async (req, res) => {
 });
 
 server.post('/bulkUpdate', async (req, res) => {
-  const { quizId, questions } = req.body;
+  const { quizId: QuizId, questions } = req.body;
+  if (questions.length === 0)
+    return res
+      .status(400)
+      .send({ message: 'No se recibieron preguntas a actualizar' });
+  console.log('QQQQQQQQQQQQQQQQQQ', questions);
+  //Buscamos el quiz para verificar que exista
+  const quiz = await Quiz.findByPk(parseInt(QuizId));
+  if (!quiz)
+    return res
+      .status(400)
+      .send({ message: 'El id no corresponde a ningun quiz' });
+
+  //Se podian arman 2 objetos con info anidada adentro....pero asi es mas claro para debuggear :D
+  //variables para guardar la data `vieja` que hay que ACTUALIZAR
+  const toUpdateQuestionsId = [];
+  const toUpdateQuestions = {};
+  const toUpdateAnswersId = {};
+  const toUpdateAnswers = {};
+  //variables para guardar la data `nuev` que hay que CREAR
+  const newQuestionsId = [];
+  const newQuestions = {};
+  const newAnswersId = {};
+  const newAnswers = {};
+  //*Bloque de manipulacion de data, deberiamos extraerlo a otra func
   try {
-    const quiz = Quiz.findByPk(parseInt(id));
-    if (!quiz)
-      return res
-        .status(400)
-        .send({ message: 'El id no corresponde a ningun quiz' });
-    console.log('QUIZ', quiz);
+    for (const question of questions) {
+      if (isNaN(question.id) || typeof question.id === 'string') {
+        //doble chequeo de paranoico??? nunca deberia recibir un id como string, a menos que sea un uuid
+        let { Answers, createdAt: _c, updatedAt: _u, id: _id, ...q } = question;
+        newQuestionsId.push(_id);
+        newQuestions[_id] = q;
+        newAnswersId[_id] = [];
+        newAnswers[_id] = {};
+        Answers.forEach((answer) => {
+          let { id: _ansId, ...ans } = answer;
+          newAnswers[_id][_ansId] = ans;
+          newAnswersId[_id].push(_ansId);
+        });
+      } else {
+        let { Answers, ...q } = question;
+        toUpdateQuestionsId.push(q.id);
+        toUpdateQuestions[q.id] = q;
+        toUpdateAnswersId[q.id] = [];
+        toUpdateAnswers[q.id] = {};
+        Answers.forEach((ans) => {
+          toUpdateAnswers[q.id][ans.id] = ans;
+          toUpdateAnswersId[q.id].push(ans.id);
+        });
+      }
+    }
   } catch (error) {
-    console.error(`Error en /bulkUpdate:
+    console.error(`Error en /bulkUpdate ----> manipulacion de data:
+    ${error}`);
+    return res.status(500).send({ message: 'Ha ocurrido un error!' });
+  }
+  //hacemos un bulk create de las questions
+  // const createdQuestions = await Question.bulkCreate(t, {
+  //   // validate: true,
+  //   // hooks: true,
+  //   // individualHooks: true,
+  //   updateOnDuplicate: toUpdateQuestionsId,
+  //   returning: ['id'],
+  // });
+
+  //*Bloque de operaciones con la DB con transacciones, nop queremos commitear ningun cambio si alguno
+  //* lo mas prolijo seria usar un Promise.all y pasar todas las transacciones ahi, luego validar las transacciones
+  //*
+  try {
+    //!como la documentacion de sequelize es una mierda y no hay nada sobre bulkcreate...
+    //!volvemos al viejo y querido for
+    const result = await sequelize.transaction(async (t) => {
+      for await (const new_qId of newQuestionsId) {
+        let createdQuestion = await Question.create(newQuestions[new_qId], {
+          transaction: t,
+        });
+        for await (const new_aId of newAnswersId[new_qId]) {
+          let newAnsPayload = newAnswers[new_qId][new_aId];
+          newAnsPayload.QuestionId = createdQuestion.id;
+          await Answer.create(newAnsPayload, { transaction: t });
+        }
+      }
+      //ahora actualiamos todas las preguntas&respuestas que ya existen
+      for (const old_qId of toUpdateQuestionsId) {
+        let foundQuestion = await Question.findByPk(old_qId, {
+          transaction: t,
+        });
+        if (!foundQuestion) continue;
+        await foundQuestion.update(toUpdateQuestions[old_qId], {
+          transaction: t,
+        });
+        for await (const old_aId of toUpdateAnswersId[old_qId]) {
+          let foundAns = await Answer.findByPk(old_aId, { transaction: t });
+          if (!foundAns) continue;
+          await foundAns.update(toUpdateAnswers[old_qId[old_aId]], {
+            transaction: t,
+          });
+        }
+      }
+    });
+    return res.status(201).send({ message: 'bulkUpdate con exito' });
+    //mal codigos si lo hay....feo, poco eficiente, pedorro, e ilegible
+  } catch (error) {
+    console.error(`Error en /bulkUpdate ------> DB transaction:
     ${error}`);
     return res.status(500).send({ message: 'Ha ocurrido un error!' });
   }
