@@ -196,13 +196,20 @@ const answers = [{
 },
 {
     text: "Each resource in REST architecture is identified by its URI.",
-    correct: true,
+    correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 8,
 },
 {
     text: "Purpose of an URI is to locate a resource(s) on the server hosting the web service.",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuestionId: 8,
+},
+{
+    text: "Both",
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -259,13 +266,20 @@ const answers = [{
 },
 {
     text: "Validate Malformed XML/JSON - Check for well formed input passed to a web service method.",
-    correct: true,
+    correct: false,
     createdAt: new Date(),
     updatedAt: new Date(),
     QuestionId: 11,
 },
 {
     text: "Throw generic Error Messages - A web service method should use HTTP error messages like 403 to show access forbidden etc.",
+    correct: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    QuestionId: 11,
+},
+{
+    text: "Both",
     correct: true,
     createdAt: new Date(),
     updatedAt: new Date(),
