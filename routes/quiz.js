@@ -1,5 +1,5 @@
-const passport = require("passport");
-const server = require("express").Router();
+const passport = require('passport');
+const server = require('express').Router();
 const {
   Quiz,
   Role,
@@ -10,14 +10,14 @@ const {
   Answer,
   School,
   QuizTag,
-} = require("../models/index");
-const { Op } = require("sequelize");
-const db = require("../models");
-const quiz = require("../models/quiz");
-const { checkSuperAdmin } = require("../utils/authTools.js");
-const { paginate } = require("../utils/index.js");
+} = require('../models/index');
+const { Op } = require('sequelize');
+const db = require('../models');
+const quiz = require('../models/quiz');
+const { checkSuperAdmin } = require('../utils/authTools.js');
+const { paginate } = require('../utils/index.js');
 
-const { normalize, schema } = require("normalizr");
+const { normalize, schema } = require('normalizr');
 const sequelize = db.sequelize;
 
 // Borrar una QUIZ by ID - DELETE a /quiz/:id
@@ -25,7 +25,7 @@ const sequelize = db.sequelize;
 //  SCHOOL(SUPERADMIN) - TEACHER
 
 server.delete(
-  "/:id",
+  '/:id',
   // passport.authenticate('jwt-school', { session: false }),
   // checkSuperAdmin, // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
@@ -34,16 +34,16 @@ server.delete(
     if (!id)
       return res
         .status(400)
-        .send("Debe indicar el ID del cuestionario a eliminar");
+        .send('Debe indicar el ID del cuestionario a eliminar');
 
     const quizToDestroy = await Quiz.findByPk(id);
 
     if (!quizToDestroy)
-      return res.status(400).send("No existe el cuestionario a eliminar");
+      return res.status(400).send('No existe el cuestionario a eliminar');
 
     const quiz = { ...quizToDestroy.dataValues };
     const payload = {
-      message: "Se ha eliminado el cuestionario",
+      message: 'Se ha eliminado el cuestionario',
       id: quiz.id,
       name: quiz.name,
     };
@@ -55,7 +55,7 @@ server.delete(
 // Traer todos los quizzes - GET a /quiz
 // La School, la subject, tags, reviews
 // En vez de cantidad de estudiantes poner el promedio de la review?
-server.get("/", async (req, res) => {
+server.get('/', async (req, res) => {
   //Agregar el tag dentro del objeto de cada quiz.
 
   // TRAE EL DOBLE DE QUIZZES QUE PIDE PORQUE EN LA FUNCIÓN (EN INDEX) LE ESTAMOS PIDIENDO EL DOBLE PARA QUE HAGA EL PEDIDO AL BACK MENOS VECES
@@ -67,24 +67,24 @@ server.get("/", async (req, res) => {
         {
           //where: { active: true },
           attributes: {
-            exclude: ["createdAt", "updatedAt", "SubjectId", "SchoolId"],
+            exclude: ['createdAt', 'updatedAt', 'SubjectId', 'SchoolId'],
           },
           include: [
             {
               model: Subject,
-              attributes: { exclude: ["createdAt", "updatedAt"] },
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
             },
             {
               model: School,
-              attributes: { exclude: ["createdAt", "updatedAt"] },
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
             },
             {
               model: Review,
-              attributes: { exclude: ["createdAt", "updatedAt", "QuizId"] },
+              attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
             },
             {
               model: QuizTag,
-              attributes: { exclude: ["createdAt", "updatedAt"] },
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
             },
           ],
           raw: true,
@@ -99,15 +99,15 @@ server.get("/", async (req, res) => {
     const SchoolSchema = new schema.Entity('schools');
     const TagSchema = new schema.Entity('tags');
     const QuizTagSchema = new schema.Entity(
-      "quizTags",
+      'quizTags',
       {},
       {
         // processStrategy: (entity) => omit(entity, 'name'),
       }
     );
-    const ReviewSchema = new schema.Entity("reviews", {}, {});
+    const ReviewSchema = new schema.Entity('reviews', {}, {});
     const QuizSchema = new schema.Entity(
-      "quizzes",
+      'quizzes',
       {
         Subject: SubjectsSchema,
         School: SchoolSchema,
@@ -155,36 +155,36 @@ server.get("/", async (req, res) => {
     return res.status(200).send(normalizedData);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "Error al buscar los quizzes" });
+    return res.status(500).send({ message: 'Error al buscar los quizzes' });
   }
 });
 
 //Traer info de un QUIZ - GET a /quiz/info/:id
 
-server.get("/info/:id", async (req, res) => {
+server.get('/info/:id', async (req, res) => {
   let { id } = req.params;
   if (!id)
-    return res.status(400).send("Debe indicar el id del quiz que desea buscar");
+    return res.status(400).send('Debe indicar el id del quiz que desea buscar');
 
   try {
     let data = await Quiz.findAll({
       where: { id },
       attributes: {
-        exclude: ["createdAt", "updatedAt", "SubjectId", "SchoolId"],
+        exclude: ['createdAt', 'updatedAt', 'SubjectId', 'SchoolId'],
       },
       include: [
         {
           model: Subject,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
         },
-        { model: School, attributes: { exclude: ["createdAt", "updatedAt"] } },
+        { model: School, attributes: { exclude: ['createdAt', 'updatedAt'] } },
         {
           model: Review,
-          attributes: { exclude: ["createdAt", "updatedAt", "QuizId"] },
+          attributes: { exclude: ['createdAt', 'updatedAt', 'QuizId'] },
         },
         {
           model: QuizTag,
-          attributes: { exclude: ["createdAt", "updatedAt", "Quiz_QTag"] },
+          attributes: { exclude: ['createdAt', 'updatedAt', 'Quiz_QTag'] },
         },
       ],
     });
@@ -192,7 +192,7 @@ server.get("/info/:id", async (req, res) => {
     const teachers = await Role.findAll({
       where: {
         QuizId: id,
-        name: "Teacher",
+        name: 'Teacher',
       },
       raw: true,
       nest: true,
@@ -202,22 +202,21 @@ server.get("/info/:id", async (req, res) => {
       ...data[0].dataValues,
       teachers,
     };
-
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "Error al buscar el quiz" });
+    return res.status(500).send({ message: 'Error al buscar el quiz' });
   }
 });
 
 // Traer Questions & Answers de un quiz - GET a /quiz/:id
 // Los profes, la School, la subject, tags, preguntas, reviews. Y alumnos??? Aunque no se muestren.
 
-server.get("/:id", async (req, res) => {
+server.get('/:id', async (req, res) => {
   let { id } = req.params;
 
   if (!id)
-    return res.status(400).send("Debe indicar el id del quiz que desea buscar");
+    return res.status(400).send('Debe indicar el id del quiz que desea buscar');
 
   try {
     const quiz = await Quiz.findOne({
@@ -245,13 +244,13 @@ server.get("/:id", async (req, res) => {
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "Error al buscar el quiz" });
+    return res.status(500).send({ message: 'Error al buscar el quiz' });
   }
 });
 
 // Contar todos los QUIZZES - GET a /quiz/all/quizzes
 
-server.get("/all/quizzes", async (req, res) => {
+server.get('/all/quizzes', async (req, res) => {
   try {
     const allQuizzes = await Quiz.count({});
 
@@ -261,40 +260,40 @@ server.get("/all/quizzes", async (req, res) => {
     //}); // Segunda opción: enviar un objeto con el valor
   } catch (error) {
     console.error(error);
-    return res.status(500).send("CATCH COUNT ALL QUIZZES");
+    return res.status(500).send('CATCH COUNT ALL QUIZZES');
   }
 });
 
 //Contar todos los estudiantes de un QUIZ - GET a /quiz/countStudents/:id
-server.get("/countStudents/:id", async (req, res) => {
+server.get('/countStudents/:id', async (req, res) => {
   let { id } = req.params;
   try {
     const quantity = await Role.count({
       where: {
         QuizId: id,
-        name: "Student",
+        name: 'Student',
       },
     });
     // console.log('cantidad', quantity);
     return res.sendStatus(200).send(quantity);
   } catch (error) {
     console.error(error);
-    return res.status(500).send("CATCH COUNT STUDENTS FROM QUIZ");
+    return res.status(500).send('CATCH COUNT STUDENTS FROM QUIZ');
   }
 });
 
 // Traer todos los teachers de un QUIZ - GET a /quiz/:QuizId/teachers
 
-server.get("/:QuizId/teachers", async (req, res) => {
+server.get('/:QuizId/teachers', async (req, res) => {
   let { QuizId } = req.params;
 
-  if (!QuizId) return res.status(400).send("Debe ingresar el ID del quiz");
+  if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
 
   try {
     const teachersQuiz = await Role.findAll({
       where: {
         QuizId,
-        name: "Teacher",
+        name: 'Teacher',
       },
     });
 
@@ -308,14 +307,14 @@ server.get("/:QuizId/teachers", async (req, res) => {
           User.findByPk(tId, {
             attributes: {
               exclude: [
-                "createdAt",
-                "updatedAt",
-                "deletedAt",
-                "password",
-                "resetPasswordExpires",
-                "resetPasswordToken",
-                "cellphone",
-                "birthdate",
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+                'password',
+                'resetPasswordExpires',
+                'resetPasswordToken',
+                'cellphone',
+                'birthdate',
               ],
             },
           })
@@ -327,20 +326,20 @@ server.get("/:QuizId/teachers", async (req, res) => {
       return res.status(200).send(teachers);
     });
   } catch (error) {
-    console.error("CATCH TEACHERS OF THE QUIZ", error);
+    console.error('CATCH TEACHERS OF THE QUIZ', error);
   }
 });
 
 // Ruta que trae todos los QUIZZES en los que está enrolado el usuario - GET a /roles/enrolled/user/:id
 
-server.get("/enrolled/user/:id", async (req, res) => {
+server.get('/enrolled/user/:id', async (req, res) => {
   let { id } = req.params;
 
-  if (!id) return res.status(400).send("Debe incluir el ID");
+  if (!id) return res.status(400).send('Debe incluir el ID');
 
   try {
     const quizzesEnrolledUser = await Role.findAll({
-      where: { UserId: id, name: "Enrolled" },
+      where: { UserId: id, name: 'Enrolled' },
     });
 
     let quizzesId = quizzesEnrolledUser.map((quiz) => {
@@ -353,12 +352,12 @@ server.get("/enrolled/user/:id", async (req, res) => {
           Quiz.findByPk(qId, {
             attributes: {
               exclude: [
-                "createdAt",
-                "updatedAt",
-                "modifiedBy",
-                "createdBy",
-                "SubjectId",
-                "SchoolId",
+                'createdAt',
+                'updatedAt',
+                'modifiedBy',
+                'createdBy',
+                'SubjectId',
+                'SchoolId',
               ],
             },
           })
@@ -373,22 +372,22 @@ server.get("/enrolled/user/:id", async (req, res) => {
     console.error(error);
     res
       .status(500)
-      .send("Error al buscar los quizzes en los que está enrolado el USER");
+      .send('Error al buscar los quizzes en los que está enrolado el USER');
   }
 });
 
 // Traer todos los students de un QUIZ - GET a /quiz/:QuizId/students
 
-server.get("/:QuizId/students", async (req, res) => {
+server.get('/:QuizId/students', async (req, res) => {
   let { QuizId } = req.params;
 
-  if (!QuizId) return res.status(400).send("Debe ingresar el ID del quiz");
+  if (!QuizId) return res.status(400).send('Debe ingresar el ID del quiz');
 
   try {
     const studentsInQuiz = await Role.count({
       where: {
         QuizId,
-        name: "Student",
+        name: 'Student',
       },
     });
 
@@ -398,7 +397,7 @@ server.get("/:QuizId/students", async (req, res) => {
     //}); // Segunda opción: enviar un objeto con el valor
   } catch (error) {
     console.error(error);
-    return res.status(500).send("CATCH STUDENTS QUIZ");
+    return res.status(500).send('CATCH STUDENTS QUIZ');
   }
 });
 
@@ -407,7 +406,7 @@ server.get("/:QuizId/students", async (req, res) => {
 // SCHOOL(SUPERADMIN) - TEACHER
 
 server.post(
-  "/",
+  '/',
   //passport.authenticate("jwt-school", { session: false }),
   //checkSuperAdmin,  // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
@@ -431,18 +430,18 @@ server.post(
       return res.status(200).send(newQuiz);
     } catch (error) {
       console.error(error);
-      return res.status(500).send({ message: "Error al crear el quiz" });
+      return res.status(500).send({ message: 'Error al crear el quiz' });
     }
   }
 );
 
 // Agregar TAG a QUIZ - POST a /quiz/:id/tags
 
-server.post("/:id/tags", async (req, res) => {
+server.post('/:id/tags', async (req, res) => {
   let { id } = req.params;
   let { tags } = req.body;
 
-  if (!id) return res.status(400).send("Indique el ID del QUIZ");
+  if (!id) return res.status(400).send('Indique el ID del QUIZ');
 
   try {
     const quizToEdit = await Quiz.findByPk(id);
@@ -453,10 +452,10 @@ server.post("/:id/tags", async (req, res) => {
       quizToEdit.setQuizTags(t);
     });
 
-    return res.status(200).send("Tags agregadas con éxito");
+    return res.status(200).send('Tags agregadas con éxito');
   } catch (error) {
     console.error(error);
-    return res.status(400).send("CATCH post TAGS");
+    return res.status(400).send('CATCH post TAGS');
   }
 });
 
@@ -465,8 +464,8 @@ server.post("/:id/tags", async (req, res) => {
 // SCHOOL(SUPERADMIN) - TEACHER
 
 server.put(
-  "/:id",
-  passport.authenticate("jwt-school", { session: false }),
+  '/:id',
+  passport.authenticate('jwt-school', { session: false }),
   checkSuperAdmin, // Por el momento solo pasa el superAdmin, la escuela NO (comentar si es necesario)
   async (req, res) => {
     let { id } = req.params;
@@ -484,7 +483,7 @@ server.put(
     if (!id)
       return res
         .status(400)
-        .send("Debe indicar el id del quiz que desea modificar");
+        .send('Debe indicar el id del quiz que desea modificar');
     //    if (!quizToModify) return res.status(400).send("No existe el quiz que desea modificar");
     try {
       const quizToModify = await Quiz.findByPk(id);
@@ -504,21 +503,21 @@ server.put(
             //Cuando haya data, revisar si agrega por segunda vez un teacher
             QuizId: newQuiz.id,
             UserId: t,
-            name: "Teacher",
+            name: 'Teacher',
           });
         });
       }
       return res.status(200).send(quizEdited);
     } catch (error) {
       console.error(error);
-      return res.status(500).send({ message: "Error al modificar el quiz" });
+      return res.status(500).send({ message: 'Error al modificar el quiz' });
     }
   }
 );
 
 // Ruta para activar/desactivar QUIZZES - PUT a /quiz/activate/:id
 
-server.put("/activate/:id", async (req, res) => {
+server.put('/activate/:id', async (req, res) => {
   let { id } = req.params;
   try {
     const quizToActivate = await Quiz.findByPk(id);
@@ -530,23 +529,37 @@ server.put("/activate/:id", async (req, res) => {
     return res.status(200).send(id);
   } catch (error) {
     console.error(error);
-    return res.status(500).send("CATCH activate quiz");
+    return res.status(500).send('CATCH activate quiz');
   }
 });
 
-server.post("/bulkUpdate", async (req, res) => {
-  const { quizId: QuizId, questions } = req.body;
-  if (questions.length === 0)
+server.post('/bulkUpdate', async (req, res) => {
+  const {
+    quizId: QuizId,
+    questions,
+    toDelete: { questions: toDeleteQuestionsId, answers: toDeleteAnswers },
+  } = req.body;
+  console.log('q to delete', toDeleteQuestionsId);
+  console.log('ans to delete', toDeleteAnswers);
+
+  if (
+    questions.length === 0 &&
+    toDeleteQuestionsId.length === 0 &&
+    Object.keys(toDeleteAnswers).length === 0 &&
+    toDeleteAnswers.constructor === Object
+  )
     return res
       .status(400)
-      .send({ message: "No se recibieron preguntas a actualizar" });
+      .send({
+        message: 'No se recibieron preguntas a actualizar o para borrar',
+      });
   // console.log('QQQQQQQQQQQQQQQQQQ', questions);
   //Buscamos el quiz para verificar que exista
   const quiz = await Quiz.findByPk(parseInt(QuizId));
   if (!quiz)
     return res
       .status(400)
-      .send({ message: "El id no corresponde a ningun quiz" });
+      .send({ message: 'El id no corresponde a ningun quiz' });
 
   //Se podian arman 2 objetos con info anidada adentro....pero asi es mas claro para debuggear :D
   //variables para guardar la data `vieja` que hay que ACTUALIZAR
@@ -563,7 +576,7 @@ server.post("/bulkUpdate", async (req, res) => {
   try {
     for (const question of questions) {
       //las preguntas nuevas tienen un id No numerico
-      if (isNaN(question.id) || typeof question.id === "string") {
+      if (isNaN(question.id) || typeof question.id === 'string') {
         //doble chequeo de paranoico??? nunca deberia recibir un id como string, a menos que sea un uuid
         let { Answers, createdAt: _c, updatedAt: _u, id: _id, ...q } = question;
         newQuestionsId.push(_id);
@@ -588,7 +601,7 @@ server.post("/bulkUpdate", async (req, res) => {
           //if para chequear si es una nueva respuesta para una pregunta existente
           if (!Number(answer.id)) {
             if (!Array.isArray(newAnswersId[q.id])) newAnswersId[q.id] = [];
-            if (typeof newAnswers[q.id] !== "object") newAnswers[q.id] = {};
+            if (typeof newAnswers[q.id] !== 'object') newAnswers[q.id] = {};
             let { id: _ansId, ...ans } = answer;
             newAnswers[q.id][_ansId] = ans;
             newAnswersId[q.id].push(_ansId);
@@ -603,7 +616,7 @@ server.post("/bulkUpdate", async (req, res) => {
   } catch (error) {
     console.error(`Error en /bulkUpdate ----> manipulacion de data:
     ${error}`);
-    return res.status(500).send({ message: "Ha ocurrido un error!" });
+    return res.status(500).send({ message: 'Ha ocurrido un error!' });
   }
   //hacemos un bulk create de las questions
   // const createdQuestions = await Question.bulkCreate(t, {
@@ -621,6 +634,20 @@ server.post("/bulkUpdate", async (req, res) => {
     //!como la documentacion de sequelize es una mierda y no hay nada sobre bulkcreate...
     //!volvemos al viejo y querido for
     const result = await sequelize.transaction(async (t) => {
+      //borramos las preguntas que recibimos en toDeleteQuestions
+      if (toDeleteQuestionsId.length > 0) {
+        for await (const del_qId of toDeleteQuestionsId) {
+          //en caso de que el id no sea numerico, sabemos que es una nueva question que nunca llego a la DB,
+          if (!Number(del_qId)) continue;
+          const foundToDeleteQuestion = await Question.findByPk(del_qId, {
+            transaction: t,
+          });
+          if (!foundToDeleteQuestion) continue;
+          foundToDeleteQuestion.destroy({
+            transaction: t,
+          });
+        }
+      }
       //for para crear nueva preguntas y sus correspondientes respuestas
       for await (const new_qId of newQuestionsId) {
         let createdQuestion = await Question.create(newQuestions[new_qId], {
@@ -632,8 +659,8 @@ server.post("/bulkUpdate", async (req, res) => {
           await Answer.create(newAnsPayload, { transaction: t });
         }
       }
-      //ahora actualiamos todas las preguntas&respuestas que ya existen
-      for (const old_qId of toUpdateQuestionsId) {
+      //ahora actualiamos todas las preguntas&respuestas que ya existen, y borramos las respuestas que estan en toDeleteAnswers
+      for await (const old_qId of toUpdateQuestionsId) {
         let foundQuestion = await Question.findByPk(old_qId, {
           transaction: t,
         });
@@ -641,6 +668,24 @@ server.post("/bulkUpdate", async (req, res) => {
         await foundQuestion.update(toUpdateQuestions[old_qId], {
           transaction: t,
         });
+        //primero borramos las preguntas
+        if (
+          Array.isArray(toDeleteAnswers[old_qId]) &&
+          toDeleteAnswers[old_qId].length > 0
+        ) {
+          for await (const del_aId of toDeleteAnswers[old_qId]) {
+            //en caso de que el id no sea numerico, sabemos que es una nueva respuesta que nunca llego a la DB,no es necesario borrarla
+            if (!Number(del_aId)) continue;
+            const foundToDeleteAnswer = await Answer.findByPk(del_aId, {
+              transaction: t,
+            });
+            if (!foundToDeleteAnswer) continue;
+            foundToDeleteAnswer.destroy({
+              transaction: t,
+            });
+          }
+        }
+        //actualizamos las preguntas
         for await (const old_aId of toUpdateAnswersId[old_qId]) {
           //editamos las respuestas existentes de la pregunta
           let foundAns = await Answer.findByPk(old_aId, { transaction: t });
@@ -658,12 +703,12 @@ server.post("/bulkUpdate", async (req, res) => {
         }
       }
     });
-    return res.status(201).send({ message: "bulkUpdate con exito" });
+    return res.status(201).send({ message: 'bulkUpdate con exito' });
     //mal codigos si lo hay....feo, poco eficiente, pedorro, e ilegible
   } catch (error) {
     console.error(`Error en /bulkUpdate ------> DB transaction:
     ${error}`);
-    return res.status(500).send({ message: "Ha ocurrido un error!" });
+    return res.status(500).send({ message: 'Ha ocurrido un error!' });
   }
 });
 
