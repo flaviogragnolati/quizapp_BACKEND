@@ -254,12 +254,11 @@ server.get('/countStudents/:id', async (req, res) => {
     const quantity = await Role.count({
       where: {
         QuizId: id,
-        name: "Student"
-      }
+        name: 'Student',
+      },
     });
-   console.log("cantidad",quantity)
-    return res.sendStatus(200).send(quantity); 
-
+    console.log('cantidad', quantity);
+    return res.sendStatus(200).send(quantity);
   } catch (error) {
     console.error(error);
     return res.status(500).send('CATCH COUNT STUDENTS FROM QUIZ');
@@ -523,7 +522,7 @@ server.post('/bulkUpdate', async (req, res) => {
     return res
       .status(400)
       .send({ message: 'No se recibieron preguntas a actualizar' });
-  console.log('QQQQQQQQQQQQQQQQQQ', questions);
+  // console.log('QQQQQQQQQQQQQQQQQQ', questions);
   //Buscamos el quiz para verificar que exista
   const quiz = await Quiz.findByPk(parseInt(QuizId));
   if (!quiz)
@@ -533,20 +532,22 @@ server.post('/bulkUpdate', async (req, res) => {
 
   //Se podian arman 2 objetos con info anidada adentro....pero asi es mas claro para debuggear :D
   //variables para guardar la data `vieja` que hay que ACTUALIZAR
-  const toUpdateQuestionsId = [];
-  const toUpdateQuestions = {};
-  const toUpdateAnswersId = {};
-  const toUpdateAnswers = {};
-  //variables para guardar la data `nuev` que hay que CREAR
-  const newQuestionsId = [];
-  const newQuestions = {};
-  const newAnswersId = {};
-  const newAnswers = {};
+  let toUpdateQuestionsId = [];
+  let toUpdateQuestions = {};
+  let toUpdateAnswersId = {};
+  let toUpdateAnswers = {};
+  //variables para guardar la data `nueva` que hay que CREAR
+  let newQuestionsId = [];
+  let newQuestions = {};
+  let newAnswersId = {};
+  let newAnswers = {};
   //*Bloque de manipulacion de data, deberiamos extraerlo a otra func
   try {
     for (const question of questions) {
+      //las preguntas nuevas tienen un id No numerico
       if (isNaN(question.id) || typeof question.id === 'string') {
         //doble chequeo de paranoico??? nunca deberia recibir un id como string, a menos que sea un uuid
+        console.log('sHGOULD NJOT PRINT');
         let { Answers, createdAt: _c, updatedAt: _u, id: _id, ...q } = question;
         newQuestionsId.push(_id);
         newQuestions[_id] = q;
@@ -558,14 +559,28 @@ server.post('/bulkUpdate', async (req, res) => {
           newAnswersId[_id].push(_ansId);
         });
       } else {
+        //las preguntas ya existentes tienen un id numerico y caen en el else
         let { Answers, ...q } = question;
         toUpdateQuestionsId.push(q.id);
         toUpdateQuestions[q.id] = q;
         toUpdateAnswersId[q.id] = [];
         toUpdateAnswers[q.id] = {};
-        Answers.forEach((ans) => {
-          toUpdateAnswers[q.id][ans.id] = ans;
-          toUpdateAnswersId[q.id].push(ans.id);
+        // newAnswersId[q.id] = [];
+        // newAnswers[q.id] = {};
+        Answers.forEach((answer) => {
+          console.log('id', answer.id, !Number(answer.id));
+          //if para chequear si es una nueva respuesta para una pregunta existente
+          if (!Number(answer.id)) {
+            if (!Array.isArray(newAnswersId[q.id])) newAnswersId[q.id] = [];
+            if (typeof newAnswers[q.id] !== 'object') newAnswers[q.id] = {};
+            let { id: _ansId, ...ans } = answer;
+            newAnswers[q.id][_ansId] = ans;
+            newAnswersId[q.id].push(_ansId);
+          } else {
+            //respuestas viejas que van a ser editadas
+            toUpdateAnswers[q.id][answer.id] = answer;
+            toUpdateAnswersId[q.id].push(answer.id);
+          }
         });
       }
     }
@@ -574,6 +589,8 @@ server.post('/bulkUpdate', async (req, res) => {
     ${error}`);
     return res.status(500).send({ message: 'Ha ocurrido un error!' });
   }
+  console.log('new ans id ', newAnswersId);
+  console.log('new ans', newAnswers);
   //hacemos un bulk create de las questions
   // const createdQuestions = await Question.bulkCreate(t, {
   //   // validate: true,
@@ -590,6 +607,7 @@ server.post('/bulkUpdate', async (req, res) => {
     //!como la documentacion de sequelize es una mierda y no hay nada sobre bulkcreate...
     //!volvemos al viejo y querido for
     const result = await sequelize.transaction(async (t) => {
+      //for para crear nueva preguntas y sus correspondientes respuestas
       for await (const new_qId of newQuestionsId) {
         let createdQuestion = await Question.create(newQuestions[new_qId], {
           transaction: t,
@@ -610,11 +628,19 @@ server.post('/bulkUpdate', async (req, res) => {
           transaction: t,
         });
         for await (const old_aId of toUpdateAnswersId[old_qId]) {
+          //editamos las respuestas existentes de la pregunta
           let foundAns = await Answer.findByPk(old_aId, { transaction: t });
           if (!foundAns) continue;
           await foundAns.update(toUpdateAnswers[old_qId[old_aId]], {
             transaction: t,
           });
+        }
+        //chequeamos si hay nuevas preguintas para crear, en caso contrario continuamo
+        if (!newAnswersId[old_qId]) continue;
+        for await (const new_aId of newAnswersId[old_qId]) {
+          let newAnsPayload = newAnswers[old_qId][new_aId];
+          newAnsPayload.QuestionId = foundQuestion.id;
+          await Answer.create(newAnsPayload, { transaction: t });
         }
       }
     });
