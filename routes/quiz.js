@@ -93,7 +93,7 @@ server.get('/', async (req, res) => {
         { page, pageSize }
       )
     );
-
+       
     const UserSchema = new schema.Entity('users');
     const SubjectsSchema = new schema.Entity('subjects');
     const SchoolSchema = new schema.Entity('schools');
@@ -133,7 +133,21 @@ server.get('/', async (req, res) => {
     );
 
     const normalizedData = normalize(data, [QuizSchema]);
-
+    // console.log("Que es?", data)
+    const studentsXquiz = {};
+    data.map(async (quiz) => {
+     const quantity = await Role.count({
+        where: {
+          QuizId: quiz.id,
+          name: "Student"
+        }
+      }).then(y =>{ //REVISAR ACÁ!!!!
+        // console.log("que me llega acá?", quiz.id, y )
+        studentsXquiz[quiz.id] = y
+        console.log("prueba", studentsXquiz[quiz.id])
+      });
+      console.log("Students x quiz???", studentsXquiz)
+    })
     return res.status(200).send(normalizedData);
   } catch (error) {
     console.error(error);
