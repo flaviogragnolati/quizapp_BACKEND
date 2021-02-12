@@ -93,7 +93,7 @@ server.get('/', async (req, res) => {
         { page, pageSize }
       )
     );
-       
+
     const UserSchema = new schema.Entity('users');
     const SubjectsSchema = new schema.Entity('subjects');
     const SchoolSchema = new schema.Entity('schools');
@@ -136,16 +136,16 @@ server.get('/', async (req, res) => {
     const studentsXquiz = {};
     for await (const q of data) {
       const quantity = await Role.count({
-         where: {
-           QuizId: q.id,
-           name: "Student"
-         }
-       }).then( y =>{         
-         return studentsXquiz[q.id] = y
-        })
-      }
-     normalizedData.entities.studentsXquiz = studentsXquiz;
-      return res.status(200).send(normalizedData);
+        where: {
+          QuizId: q.id,
+          name: 'Student',
+        },
+      }).then((y) => {
+        return (studentsXquiz[q.id] = y);
+      });
+    }
+    normalizedData.entities.studentsXquiz = studentsXquiz;
+    return res.status(200).send(normalizedData);
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: 'Error al buscar los quizzes' });
@@ -268,7 +268,7 @@ server.get('/countStudents/:id', async (req, res) => {
         name: 'Student',
       },
     });
-    console.log('cantidad', quantity);
+    // console.log('cantidad', quantity);
     return res.sendStatus(200).send(quantity);
   } catch (error) {
     console.error(error);
@@ -558,7 +558,6 @@ server.post('/bulkUpdate', async (req, res) => {
       //las preguntas nuevas tienen un id No numerico
       if (isNaN(question.id) || typeof question.id === 'string') {
         //doble chequeo de paranoico??? nunca deberia recibir un id como string, a menos que sea un uuid
-        console.log('sHGOULD NJOT PRINT');
         let { Answers, createdAt: _c, updatedAt: _u, id: _id, ...q } = question;
         newQuestionsId.push(_id);
         newQuestions[_id] = q;
@@ -579,7 +578,6 @@ server.post('/bulkUpdate', async (req, res) => {
         // newAnswersId[q.id] = [];
         // newAnswers[q.id] = {};
         Answers.forEach((answer) => {
-          console.log('id', answer.id, !Number(answer.id));
           //if para chequear si es una nueva respuesta para una pregunta existente
           if (!Number(answer.id)) {
             if (!Array.isArray(newAnswersId[q.id])) newAnswersId[q.id] = [];
@@ -600,8 +598,6 @@ server.post('/bulkUpdate', async (req, res) => {
     ${error}`);
     return res.status(500).send({ message: 'Ha ocurrido un error!' });
   }
-  console.log('new ans id ', newAnswersId);
-  console.log('new ans', newAnswers);
   //hacemos un bulk create de las questions
   // const createdQuestions = await Question.bulkCreate(t, {
   //   // validate: true,

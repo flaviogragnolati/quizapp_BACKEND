@@ -46,7 +46,7 @@ server.post('/', async (req, res) => {
       return res.status(200).send(answer);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       return res.status(304).send(error);
     });
 });
@@ -82,7 +82,7 @@ server.get('/:id', (req, res) => {
       return res.status(200).send(answer);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       return res.status(304).send(error);
     });
 });
