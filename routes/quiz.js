@@ -516,6 +516,9 @@ server.put(
 );
 
 // Ruta para activar/desactivar QUIZZES - PUT a /quiz/activate/:id
+const toNum = (n) => {
+  return Number(n) || n;
+};
 
 server.put('/activate/:id', async (req, res) => {
   let { id } = req.params;
@@ -539,8 +542,6 @@ server.post('/bulkUpdate', async (req, res) => {
     questions,
     toDelete: { questions: toDeleteQuestionsId, answers: toDeleteAnswers },
   } = req.body;
-  console.log('q to delete', toDeleteQuestionsId);
-  console.log('ans to delete', toDeleteAnswers);
 
   if (
     questions.length === 0 &&
@@ -548,11 +549,9 @@ server.post('/bulkUpdate', async (req, res) => {
     Object.keys(toDeleteAnswers).length === 0 &&
     toDeleteAnswers.constructor === Object
   )
-    return res
-      .status(400)
-      .send({
-        message: 'No se recibieron preguntas a actualizar o para borrar',
-      });
+    return res.status(400).send({
+      message: 'No se recibieron preguntas a actualizar o para borrar',
+    });
   // console.log('QQQQQQQQQQQQQQQQQQ', questions);
   //Buscamos el quiz para verificar que exista
   const quiz = await Quiz.findByPk(parseInt(QuizId));
@@ -576,39 +575,41 @@ server.post('/bulkUpdate', async (req, res) => {
   try {
     for (const question of questions) {
       //las preguntas nuevas tienen un id No numerico
-      if (isNaN(question.id) || typeof question.id === 'string') {
+      if (!Number(question.id)) {
         //doble chequeo de paranoico??? nunca deberia recibir un id como string, a menos que sea un uuid
         let { Answers, createdAt: _c, updatedAt: _u, id: _id, ...q } = question;
-        newQuestionsId.push(_id);
-        newQuestions[_id] = q;
-        newAnswersId[_id] = [];
-        newAnswers[_id] = {};
+        newQuestionsId.push(toNum(_id));
+        newQuestions[toNum(_id)] = q;
+        newAnswersId[toNum(_id)] = [];
+        newAnswers[toNum(_id)] = {};
         Answers.forEach((answer) => {
           let { id: _ansId, ...ans } = answer;
-          newAnswers[_id][_ansId] = ans;
-          newAnswersId[_id].push(_ansId);
+          newAnswers[toNum(_id)][toNum(_ansId)] = ans;
+          newAnswersId[toNum(_id)].push(toNum(_ansId));
         });
       } else {
         //las preguntas ya existentes tienen un id numerico y caen en el else
         let { Answers, ...q } = question;
-        toUpdateQuestionsId.push(q.id);
-        toUpdateQuestions[q.id] = q;
-        toUpdateAnswersId[q.id] = [];
-        toUpdateAnswers[q.id] = {};
+        toUpdateQuestionsId.push(toNum(q.id));
+        toUpdateQuestions[toNum(q.id)] = q;
+        toUpdateAnswersId[toNum(q.id)] = [];
+        toUpdateAnswers[toNum(q.id)] = {};
         // newAnswersId[q.id] = [];
         // newAnswers[q.id] = {};
         Answers.forEach((answer) => {
           //if para chequear si es una nueva respuesta para una pregunta existente
           if (!Number(answer.id)) {
-            if (!Array.isArray(newAnswersId[q.id])) newAnswersId[q.id] = [];
-            if (typeof newAnswers[q.id] !== 'object') newAnswers[q.id] = {};
+            if (!Array.isArray(newAnswersId[toNum(q.id)]))
+              newAnswersId[toNum(q.id)] = [];
+            if (typeof newAnswers[toNum(q.id)] !== 'object')
+              newAnswers[toNum(q.id)] = {};
             let { id: _ansId, ...ans } = answer;
-            newAnswers[q.id][_ansId] = ans;
-            newAnswersId[q.id].push(_ansId);
+            newAnswers[toNum(q.id)][toNum(_ansId)] = ans;
+            newAnswersId[toNum(q.id)].push(toNum(_ansId));
           } else {
             //respuestas viejas que van a ser editadas
-            toUpdateAnswers[q.id][answer.id] = answer;
-            toUpdateAnswersId[q.id].push(answer.id);
+            toUpdateAnswers[toNum(q.id)][toNum(answer.id)] = answer;
+            toUpdateAnswersId[toNum(q.id)].push(toNum(answer.id));
           }
         });
       }
@@ -690,7 +691,7 @@ server.post('/bulkUpdate', async (req, res) => {
           //editamos las respuestas existentes de la pregunta
           let foundAns = await Answer.findByPk(old_aId, { transaction: t });
           if (!foundAns) continue;
-          await foundAns.update(toUpdateAnswers[old_qId[old_aId]], {
+          await foundAns.update(toUpdateAnswers[old_qId][old_aId], {
             transaction: t,
           });
         }
