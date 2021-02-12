@@ -63,11 +63,9 @@ server.put('/:id', async (req, res) => {
     { text, correct },
     { where: { id } }
   );
-  //.then((answer)=> {
   return res
     .status(200)
     .send({ message: 'Se ha modificado la pregunta', resp: answerEdited });
-  //})
 });
 
 // Devuelve una Answer by ID - GET a /answers/:id

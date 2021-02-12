@@ -4,7 +4,6 @@ const { Quiz, QuizAttempt, User } = require('../models/index');
 // Crear un intento de QUIZ - POST a /attempts
 
 server.post('/', async (req, res) => {
-  // console.log(req.body);
   let { QuizId, UserId, grade, finished } = req.body;
   if (!QuizId || !UserId)
     return res.status(400).send('Se necesita el QuizId y el UserId');
@@ -15,8 +14,7 @@ server.post('/', async (req, res) => {
     finished,
   })
     .then((r) => {
-      // console.log(r);
-      return res.status(200).send(r);
+       return res.status(200).send(r);
     })
     .catch((error) => {
       console.error(error);
@@ -29,7 +27,6 @@ server.post('/', async (req, res) => {
 server.put('/:id', async (req, res) => {
   let { id } = req.params;
   let { QuizId, UserId, grade, finished } = req.body;
-  // console.log(id);
   let attempt = await QuizAttempt.findOne({ where: { UserId } });
   if (!attempt)
     return res.status(404).send('No se encontró el intento buscado');
@@ -51,9 +48,6 @@ server.get('/user/:id', async (req, res) => {
   if (!id) return res.status(404).send('Se necesita el id del usuario');
   const userAttempts = await QuizAttempt.findAll({
     where: { UserId: id },
-    //        include: [{
-    //            model: User,
-    //        }]
   });
   return res.status(200).send(userAttempts);
 });
@@ -62,10 +56,9 @@ server.get('/user/:id', async (req, res) => {
 
 server.get('/:id', async (req, res) => {
   let { id } = req.params;
-  let userId = req.query;
+  // let userId = req.query;
   const userAttempt = await QuizAttempt.findByPk(id);
   if (!userAttempt) return res.status(404).send('No se encontró el intento');
-  //    if (userId !== userAttempt.UserId) return res.status(403).send("No se permite acceder a la información");
   return res.status(200).send(userAttempt);
 });
 

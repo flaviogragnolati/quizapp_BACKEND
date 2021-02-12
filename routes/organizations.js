@@ -149,46 +149,6 @@ server.post('/', async (req, res, next) => {
   }
 });
 
-// server.post("/", (req, res, next) => {
-//   let {
-//     name,
-//     email,
-//     description,
-//     city,
-//     country,
-//     logo,
-//     code,
-//     address,
-//     password,
-//   } = req.body;
-//   School.findOrCreate({
-//     where: {
-//       email,
-//     },
-//     defaults: {
-//       name,
-//       description,
-//       email,
-//       city,
-//       country,
-//       logo,
-//       address,
-//       password: code,
-//     },
-//   })
-//     .then((school) => {
-//       const [instance, wasCreated] = school;
-//       if (!wasCreated) {
-//         return res.status(200).send("La organización ya está registrada");
-//       } else {
-//         return res.status(200).send("La organización ha sido creada");
-//       }
-//     })
-//     .catch((err) => {
-//       return console.log(err);
-//     });
-// });
-
 // RUTA para EDITAR School - PUT a /org/:id
 
 server.put('/:id', async (req, res) => {

@@ -95,8 +95,7 @@ server.get('/user/:userId', (req, res, next) => {
       where: {
         userId,
       },
-      /*     include: { model: User, where: { id: userId } }, */
-    })
+     })
       .then((revs) => {
         res.json(
           revs.map((r) => {

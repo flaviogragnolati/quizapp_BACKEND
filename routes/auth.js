@@ -5,11 +5,7 @@ const passport = require('passport');
 const { SECRET_KEY, FRONT_URL } = process.env;
 const { makeJWT } = require('../utils');
 const sendMail = require('./mails');
-//Vamos a usar solo token. Si sobra tiempo, veremos. Cansado de hacer cosas que nadie ve y luego con boludeces se sacan 10 xD
-//los que hacen boludeces venden mucho humo, pero dsps se les queman los papeles en la vida real,
-//jugando el el arenero de henry podes hacer todo de mentiritas, pero cuando es solo eso...mentiritas....
-//en el `real world` muchos de los vende humo siguen con esa practica y se comen los mocos xD
-//encontremos un equilibrio entre cosas `bien` y cosas `humo`,  jajajja
+
 // Ruta PROFILE - GET a /auth/me/:id
 
 const addTypeToUser = (obj, type) => {
@@ -143,22 +139,14 @@ server.get('/logout', async (req, res) => {
   res.status(200).send('Se ha cerrado la sesión');
 });
 
-/**
- **Ruta para restaurar sesion, por ahora solo devuelve el user
- * !OJO: En la config de passport solo estamos buscando en la tabla de Users,
- * !deberiamos, luego de desarmar el token y tener la data del user:
- * !1. verificar el rol
- * !2. segun el rol buscar en la tabla correspondiente
- * !3. devolver el usuario/escuela segun corresponda, o los errores correspondientes
- */
+
+//  Ruta para restaurar sesion, por ahora solo devuelve el user
 
 server.get(
   '/restore',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // console.log('restored correctly');
-    // const user = addTypeToUser(req.user, 'user'); //comentado por que ahora setea el type desde la estrategia de passport
-    return res.send({
+      return res.send({
       user: req.user,
     });
   }
@@ -274,8 +262,6 @@ server.post(
     }
   }
 );
-
-// Ruta para promover a un USER - PUT a /auth/promote/:id
 
 // Rutas para RESETEAR la contraseña
 

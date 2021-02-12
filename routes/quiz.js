@@ -122,12 +122,12 @@ server.get('/', async (req, res) => {
             ...new Set(
               [entityA.QuizTags].concat(entityB.QuizTags).flat(10 ^ 1000)
             ),
-          ], //!solucionar ULTRA CAVERNICOLA... HAY QUE BUSCAR LA FORMA DE MERGEAR LOS OBJETOS SIN SER TAN NINJA.....
+          ],
           Reviews: [
             ...new Set(
               [entityA.Reviews].concat(entityB.Reviews).flat(10 ^ 1000)
             ),
-          ], //!solucionar ULTRA CAVERNICOLA... HAY QUE BUSCAR LA FORMA DE MERGEAR LOS OBJETOS SIN SER TAN NINJA.....
+          ],
         }),
       }
     );
@@ -253,11 +253,8 @@ server.get('/:id', async (req, res) => {
 server.get('/all/quizzes', async (req, res) => {
   try {
     const allQuizzes = await Quiz.count({});
+    return res.status(200).send(allQuizzes.toString());
 
-    return res.status(200).send(allQuizzes.toString()); // Primera opción: No me deja enviar números (lo toma como que intento enviar un status), por eso lo paso a STRING
-    //return res.status(200).send({
-    //numberOfQuizzes: allQuizzes
-    //}); // Segunda opción: enviar un objeto con el valor
   } catch (error) {
     console.error(error);
     return res.status(500).send('CATCH COUNT ALL QUIZZES');
@@ -274,7 +271,6 @@ server.get('/countStudents/:id', async (req, res) => {
         name: 'Student',
       },
     });
-    // console.log('cantidad', quantity);
     return res.sendStatus(200).send(quantity);
   } catch (error) {
     console.error(error);
@@ -391,10 +387,7 @@ server.get('/:QuizId/students', async (req, res) => {
       },
     });
 
-    return res.status(200).send(studentsInQuiz.toString()); // Primera opción: No me deja enviar números (lo toma como que intento enviar un status), por eso lo paso a STRING
-    //return res.status(200).send({
-    //numberOfStudents: studentsInQuiz
-    //}); // Segunda opción: enviar un objeto con el valor
+    return res.status(200).send(studentsInQuiz.toString()); 
   } catch (error) {
     console.error(error);
     return res.status(500).send('CATCH STUDENTS QUIZ');
@@ -484,7 +477,7 @@ server.put(
       return res
         .status(400)
         .send('Debe indicar el id del quiz que desea modificar');
-    //    if (!quizToModify) return res.status(400).send("No existe el quiz que desea modificar");
+  
     try {
       const quizToModify = await Quiz.findByPk(id);
       const quizEdited = await quizToModify.update({
@@ -494,13 +487,12 @@ server.put(
         modifiedBy,
         SubjectId,
         SchoolId,
-      }); // Habría que ver si se puede poner el "modifiedBy" de manera automática
+      }); 
 
       if (teachers) {
-        // Array con id de los user a agregar como teachers
+      
         teachers.forEach(async (t) => {
           await Role.create({
-            //Cuando haya data, revisar si agrega por segunda vez un teacher
             QuizId: newQuiz.id,
             UserId: t,
             name: 'Teacher',
@@ -552,7 +544,6 @@ server.post('/bulkUpdate', async (req, res) => {
     return res.status(400).send({
       message: 'No se recibieron preguntas a actualizar o para borrar',
     });
-  // console.log('QQQQQQQQQQQQQQQQQQ', questions);
   //Buscamos el quiz para verificar que exista
   const quiz = await Quiz.findByPk(parseInt(QuizId));
   if (!quiz)
@@ -560,23 +551,19 @@ server.post('/bulkUpdate', async (req, res) => {
       .status(400)
       .send({ message: 'El id no corresponde a ningun quiz' });
 
-  //Se podian arman 2 objetos con info anidada adentro....pero asi es mas claro para debuggear :D
-  //variables para guardar la data `vieja` que hay que ACTUALIZAR
   let toUpdateQuestionsId = [];
   let toUpdateQuestions = {};
   let toUpdateAnswersId = {};
   let toUpdateAnswers = {};
-  //variables para guardar la data `nueva` que hay que CREAR
   let newQuestionsId = [];
   let newQuestions = {};
   let newAnswersId = {};
   let newAnswers = {};
-  //*Bloque de manipulacion de data, deberiamos extraerlo a otra func
+  //*Bloque de manipulacion de data
   try {
     for (const question of questions) {
       //las preguntas nuevas tienen un id No numerico
       if (!Number(question.id)) {
-        //doble chequeo de paranoico??? nunca deberia recibir un id como string, a menos que sea un uuid
         let { Answers, createdAt: _c, updatedAt: _u, id: _id, ...q } = question;
         newQuestionsId.push(toNum(_id));
         newQuestions[toNum(_id)] = q;
@@ -594,9 +581,7 @@ server.post('/bulkUpdate', async (req, res) => {
         toUpdateQuestions[toNum(q.id)] = q;
         toUpdateAnswersId[toNum(q.id)] = [];
         toUpdateAnswers[toNum(q.id)] = {};
-        // newAnswersId[q.id] = [];
-        // newAnswers[q.id] = {};
-        Answers.forEach((answer) => {
+         Answers.forEach((answer) => {
           //if para chequear si es una nueva respuesta para una pregunta existente
           if (!Number(answer.id)) {
             if (!Array.isArray(newAnswersId[toNum(q.id)]))
@@ -619,21 +604,9 @@ server.post('/bulkUpdate', async (req, res) => {
     ${error}`);
     return res.status(500).send({ message: 'Ha ocurrido un error!' });
   }
-  //hacemos un bulk create de las questions
-  // const createdQuestions = await Question.bulkCreate(t, {
-  //   // validate: true,
-  //   // hooks: true,
-  //   // individualHooks: true,
-  //   updateOnDuplicate: toUpdateQuestionsId,
-  //   returning: ['id'],
-  // });
-
-  //*Bloque de operaciones con la DB con transacciones, nop queremos commitear ningun cambio si alguno
-  //* lo mas prolijo seria usar un Promise.all y pasar todas las transacciones ahi, luego validar las transacciones
-  //*
+ 
   try {
-    //!como la documentacion de sequelize es una mierda y no hay nada sobre bulkcreate...
-    //!volvemos al viejo y querido for
+
     const result = await sequelize.transaction(async (t) => {
       //borramos las preguntas que recibimos en toDeleteQuestions
       if (toDeleteQuestionsId.length > 0) {

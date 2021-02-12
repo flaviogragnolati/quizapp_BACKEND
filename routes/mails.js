@@ -1,11 +1,8 @@
 require('dotenv').config();
-//const express = require("express");
-//const sendMailRouter = express.Router();
 const nodemailer = require('nodemailer');
 let smtpTransport = require('nodemailer-smtp-transport');
 const handlebars = require('handlebars');
 const fs = require('fs');
-//const { User, School } = require("../models/index");
 const { FRONT_URL } = require('../config/environments/production');
 const BASE_URL = process.env.BASE_URL;
 const { THE_EMAIL, THE_PASSWORD } = process.env;
@@ -37,9 +34,8 @@ const sendMail = ({ user, type, quiz, school }) => {
 
   switch (type) {
     case 'welcome':
-      // console.log('en case welcome', user)
       var replacements = {
-        // Espacios que van a ser reemplazados en el HTML Mail
+    
         link: FRONT_URL,
       };
       subject = `Bienvenid@, ${user.firstName} a Quizapp`;
@@ -127,4 +123,3 @@ const sendMail = ({ user, type, quiz, school }) => {
 
 module.exports = sendMail;
 
-//module.exports = sendMailRouter;

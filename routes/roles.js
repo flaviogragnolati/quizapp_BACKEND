@@ -111,17 +111,14 @@ server.post('/student/', async (req, res, next) => {
         'Se necesita indicar el Id del usuario del Quiz para modificar un rol'
       );
   try {
-    //console.log(teacherId, quizzId);
-    const userEdited = await Role.update(
+     const userEdited = await Role.update(
       { name: 'Student' },
       { where: { QuizId, UserId } }
     );
 
     const userPromoted = await User.findByPk(UserId);
-    // console.log("user promoted", userPromoted)
     const quizAccepted = await Quiz.findByPk(QuizId);
-    // console.log("quiz promoted", quizAccepted)
-
+   
     let payload = {
       user: {
         firstName: userPromoted.firstName,
@@ -132,7 +129,7 @@ server.post('/student/', async (req, res, next) => {
         logo: quizAccepted.logo,
         description: quizAccepted.description,
       },
-      type: 'promote', //cambiar acá!!! Armar nueva plantilla
+      type: 'promote',
     };
     sendMail(payload);
     return res.status(200).send(userPromoted);
@@ -256,34 +253,6 @@ server.delete('/', async (req, res) => {
     res.status(500).send('Error al borrar el rol');
   }
 });
-
-/* server.get("/enrolled/:id", async(req, res) => {
-    let { id } = req.params;
-    if (!id) return res.status(400).send("El id indicado no existe")
-    let pivot = [];
-    let listadoUsers = [];
-    try {
-        const enrolledUsers = await Role.findAll({ where: { QuizId: id, name: "Enrolled"}});
-          enrolledUsers.map((r) => {
-          pivot.push(r.dataValues.UserId);
-        
-        //    let userList2 = User.findByPk(r.dataValues.UserId)
-        //    console.log("datavalues",userList2)
-        //    return userList2;
-    })
-    console.log("PIVOT", pivot)
-   pivot.map(async (e) => {
-     let prueba = await User.findByPk(e)
-        listadoUsers.push(prueba)
-        console.log("PRUEBA", prueba)
-        return res.status(200).send(listadoUsers);
-    })
-   
-    } catch (error){
-        console.error(error);
-        res.status(500).send("Error al buscar usuarios por ese rol");
-    }   
-}); */
 
 // Ruta que trae todos los usuarios que están enrolados a un QUIZ - GET a /roles/enrolled/:id
 
