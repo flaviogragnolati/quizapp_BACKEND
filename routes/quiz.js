@@ -150,7 +150,7 @@ server.get("/", async (req, res) => {
     const allQuizzes = await Quiz.findAll();
     const allQuizzesIds = allQuizzes.map((quiz) => quiz.id);
 
-    normalizedData.entities.allQuizzesIds = allQuizzesIds;
+    normalizedData.allQuizzesIds = allQuizzesIds;
 
     return res.status(200).send(normalizedData);
   } catch (error) {
