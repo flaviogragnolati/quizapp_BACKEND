@@ -73,7 +73,7 @@ server.get('/tags/:studentId', async (req, res) => {
       console.log(subj.name)
       await subjectsByName.push(subj.name)
     });
-  }
+  } 
   return res.status(200).send(subjectsByName);
  }
   catch (error) {
