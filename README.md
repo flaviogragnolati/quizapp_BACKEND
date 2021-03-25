@@ -4,7 +4,7 @@ Web & mobile app for the management of quizzes. A tool designed for education in
 
 FRONTEND REPO: https://github.com/flaviogragnolati/quizapp_WEB
 
-BACKEND REPO: https://github.com/flaviogragnolati/quizapp_BACKEND/edit/main/README.md
+BACKEND REPO: https://github.com/flaviogragnolati/quizapp_BACKEND
 
 Rutas:
 
